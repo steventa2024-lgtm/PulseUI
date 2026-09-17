@@ -588,44 +588,111 @@ function Studio() {
               <section className="flex flex-col min-h-0 overflow-hidden border-r border-white/10">
                 <div className="flex flex-1 flex-col overflow-y-auto p-5">
                   {activeNav === "dashboard" ? (
-                    <div className="space-y-6">
-                      <div>
-                        <h2 className="text-2xl font-semibold text-white">Dashboard</h2>
-                        <p className="mt-1 text-sm text-white/50">Overview of your generation activity.</p>
+                    <div className="flex flex-1 flex-col items-center justify-center space-y-8 py-8">
+                      <div className="inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1.5 text-xs text-violet-200">
+                        <span className="flex -space-x-1.5">
+                          <span className="inline-block size-5 rounded-full border-2 border-[#0f0620] bg-violet-500" />
+                          <span className="inline-block size-5 rounded-full border-2 border-[#0f0620] bg-fuchsia-500" />
+                          <span className="inline-block size-5 rounded-full border-2 border-[#0f0620] bg-cyan-500" />
+                        </span>
+                        <span>Ready to generate</span>
+                        <span className="text-violet-300">→</span>
                       </div>
 
-                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                        <div className="glass-card p-5">
-                          <p className="text-xs uppercase tracking-wider text-white/40">Total Chats</p>
-                          <p className="mt-2 text-3xl font-semibold text-white">{history.length}</p>
+                      <div className="text-center">
+                        <h2 className="text-4xl font-semibold tracking-tight text-white">
+                          Let&apos;s build something, ZeroPulse
+                        </h2>
+                        <p className="mt-3 text-sm text-white/50">
+                          Describe a component below and Qwen will generate it locally.
+                        </p>
+                      </div>
+
+                      <div className="w-full max-w-2xl">
+                        <div className="glass-card flex items-center gap-2 p-2">
+                          <button
+                            type="button"
+                            onClick={() => setActiveNav("chat")}
+                            className="flex size-9 shrink-0 items-center justify-center rounded-lg text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+                            aria-label="Open chat"
+                          >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                              <path d="M12 5v14M5 12h14" />
+                            </svg>
+                          </button>
+                          <input
+                            type="text"
+                            value={prompt}
+                            onChange={(e) => setPrompt(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" && prompt.trim().length >= 3) {
+                                setActiveNav("chat");
+                                run(prompt);
+                              }
+                            }}
+                            placeholder="Describe a component to build…"
+                            className="flex-1 bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (prompt.trim().length >= 3) {
+                                setActiveNav("chat");
+                                run(prompt);
+                              }
+                            }}
+                            disabled={prompt.trim().length < 3}
+                            className="rounded-lg bg-gradient-to-r from-violet-600 to-purple-500 px-4 py-2 text-xs font-medium text-white transition-opacity hover:from-violet-500 hover:to-purple-400 disabled:opacity-40"
+                          >
+                            Generate
+                          </button>
                         </div>
-                        <div className="glass-card p-5">
-                          <p className="text-xs uppercase tracking-wider text-white/40">Components Generated</p>
-                          <p className="mt-2 text-3xl font-semibold text-white">{history.length}</p>
+                      </div>
+
+                      <div className="grid w-full max-w-2xl grid-cols-3 gap-6">
+                        <div className="text-center">
+                          <p className="text-2xl font-semibold text-white">{history.length}</p>
+                          <p className="mt-1 text-xs text-white/50">Generations</p>
                         </div>
-                        <div className="glass-card p-5">
-                          <p className="text-xs uppercase tracking-wider text-white/40">Last Activity</p>
-                          <p className="mt-2 text-lg font-semibold text-white">
-                            {history[0]?.at ?? "—"}
+                        <div className="text-center">
+                          <p className="text-2xl font-semibold text-white">
+                            {history.length > 0 ? "Active" : "—"}
                           </p>
+                          <p className="mt-1 text-xs text-white/50">Status</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-2xl font-semibold text-white">{history[0]?.at ?? "—"}</p>
+                          <p className="mt-1 text-xs text-white/50">Last Activity</p>
                         </div>
                       </div>
 
-                      <div>
-                        <p className="mb-3 text-xs uppercase tracking-wider text-white/40">Recent Generations</p>
-                        {history.length === 0 ? (
-                          <p className="text-sm text-white/50">No generations yet. Start from the chat panel.</p>
-                        ) : (
-                          <ul className="space-y-2">
-                            {history.slice(0, 5).map((item) => (
-                              <li key={item.id} className="glass-card flex items-center justify-between px-4 py-3">
-                                <span className="line-clamp-1 text-sm text-white/80">{item.prompt}</span>
-                                <span className="ml-3 shrink-0 text-xs text-white/40">{item.at}</span>
-                              </li>
+                      {history.length > 0 && (
+                        <div className="w-full max-w-2xl">
+                          <p className="mb-3 text-center text-xs uppercase tracking-wider text-white/40">
+                            Recent Generations
+                          </p>
+                          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                            {history.slice(0, 4).map((item) => (
+                              <button
+                                key={item.id}
+                                type="button"
+                                onClick={() => {
+                                  setActiveNav("chat");
+                                  setActiveChatId(item.id);
+                                  setMessages(item.messages ?? []);
+                                  setCode(item.code);
+                                  setPrompt(item.prompt);
+                                  setTab("preview");
+                                }}
+                                className="glass-card p-3 text-left transition-colors hover:bg-white/[0.06]"
+                              >
+                                <p className="line-clamp-2 text-xs text-white/80">{item.prompt}</p>
+                                <p className="mt-2 text-[10px] text-white/40">{item.at}</p>
+                              </button>
                             ))}
-                          </ul>
-                        )}
-                      </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div className="flex flex-1 items-center justify-center">
