@@ -122,6 +122,8 @@ function Studio() {
   const [viewport, setViewport] = useState<"desktop" | "mobile">("desktop");
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [templates, setTemplates] = useState<TemplateItem[]>([]);
+  const [projects, setProjects] = useState<string[]>([]);
+  const [activeProject, setActiveProject] = useState<string | null>(null);
   const [messages, setMessages] = useState<{ role: "user" | "assistant"; content: string; code?: string }[]>([]);
   const [historyReady, setHistoryReady] = useState(false);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
@@ -149,6 +151,8 @@ function Studio() {
     try {
       const savedTemplates = window.localStorage.getItem("promptui.templates.v1");
       if (savedTemplates) setTemplates(JSON.parse(savedTemplates));
+      const savedProjects = window.localStorage.getItem("promptui.projects.v1");
+      if (savedProjects) setProjects(JSON.parse(savedProjects));
     } catch {
       // ignore
     }
@@ -172,6 +176,15 @@ function Studio() {
       // Ignore
     }
   }, [templates, historyReady]);
+
+  useEffect(() => {
+    if (!historyReady) return;
+    try {
+      window.localStorage.setItem("promptui.projects.v1", JSON.stringify(projects));
+    } catch {
+      // Ignore
+    }
+  }, [projects, historyReady]);
 
   // Persist UI state (active nav, active chat, search query)
   useEffect(() => {
@@ -579,7 +592,18 @@ try {
             {/* Projects */}
             <div className="border-t border-white/5 px-2 py-3">
               <div className="px-3 pb-2 text-[10px] font-medium uppercase tracking-wider text-white/40">Projects</div>
-              <button className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm text-white/70 transition-colors hover:bg-white/5 hover:text-white">
+              <button
+                onClick={() => {
+                  setActiveProject(null);
+                  setActiveNav("chat");
+                }}
+                className={cn(
+                  "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors",
+                  activeProject === null && activeNav === "chat"
+                    ? "bg-violet-500/15 text-white"
+                    : "text-white/70 hover:bg-white/5 hover:text-white",
+                )}
+              >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M2 6a2 2 0 0 1 2-2h5l2 2h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z" /></svg>
                 All projects
               </button>
@@ -595,6 +619,28 @@ try {
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
                 My projects
               </button>
+              {projects.length > 0 && (
+                <div className="ml-4 mt-1 space-y-0.5 border-l border-white/10 pl-2">
+                  {projects.map((proj) => (
+                    <button
+                      key={proj}
+                      onClick={() => {
+                        setActiveProject(proj === activeProject ? null : proj);
+                        setActiveNav("chat");
+                      }}
+                      className={cn(
+                        "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-xs transition-colors",
+                        activeProject === proj
+                          ? "bg-violet-500/15 text-violet-200"
+                          : "text-white/50 hover:bg-white/5 hover:text-white/80",
+                      )}
+                    >
+                      <span className="inline-block size-1.5 rounded-full bg-violet-400/60" />
+                      {proj}
+                    </button>
+                  ))}
+                </div>
+              )}
               <button
                 className={cn(
                   "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors",
@@ -655,6 +701,9 @@ try {
                 .filter((item) =>
                   !searchQuery.trim() ||
                   item.prompt.toLowerCase().includes(searchQuery.trim().toLowerCase()),
+                )
+                .filter((item) =>
+                  !activeProject || (item as { project?: string }).project === activeProject,
                 )
                 .map((item) => (
                 <div key={item.id} className="group relative mb-0.5">
@@ -792,6 +841,34 @@ try {
                                   className="rounded-lg border border-violet-400/30 bg-violet-500/10 px-3 py-1.5 text-xs font-medium text-violet-200 hover:bg-violet-500/20"
                                 >
                                   Save as Template
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const targetId = activeChatId ?? history[0]?.id;
+                                    if (!targetId) {
+                                      toast.error("No chat to tag yet.");
+                                      return;
+                                    }
+                                    const name = window.prompt("Project name:", "My Project");
+                                    if (!name) return;
+                                    const clean = name.trim().slice(0, 40);
+                                    if (!clean) return;
+                                    if (!projects.includes(clean)) {
+                                      setProjects((prev) => [...prev, clean]);
+                                    }
+                                    setHistory((prev) =>
+                                      prev.map((h) =>
+                                        h.id === targetId
+                                          ? ({ ...h, project: clean } as typeof h)
+                                          : h,
+                                      ),
+                                    );
+                                    setActiveProject(clean);
+                                  }}
+                                  className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white"
+                                >
+                                  Add to Project
                                 </button>
                               </div>
                             </>
@@ -1596,6 +1673,74 @@ try {
                           </div>
                         </div>
                       </div>
+                    </div>
+                  ) : activeNav === "projects" ? (
+                    <div className="space-y-6">
+                      <div>
+                        <h2 className="text-2xl font-semibold tracking-tight text-white">Projects</h2>
+                        <p className="mt-1 text-sm text-white/50">
+                          Group related chats. Click a project to filter the sidebar.
+                        </p>
+                      </div>
+
+                      {projects.length === 0 ? (
+                        <div className="glass-card p-8 text-center">
+                          <p className="text-sm text-white/70">No projects yet.</p>
+                          <p className="mt-2 text-xs text-white/50">
+                            Open any chat and click &quot;Add to Project&quot; on an assistant bubble.
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                          {projects.map((proj) => {
+                            const count = history.filter(
+                              (h) => (h as { project?: string }).project === proj,
+                            ).length;
+                            return (
+                              <div key={proj} className="group relative">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setActiveProject(proj);
+                                    setActiveNav("chat");
+                                  }}
+                                  className={cn(
+                                    "glass-card w-full p-4 text-left transition-colors hover:bg-white/[0.06]",
+                                    activeProject === proj && "border-violet-400/40",
+                                  )}
+                                >
+                                  <div className="flex items-center gap-2">
+                                    <span className="inline-block size-2 rounded-full bg-violet-400" />
+                                    <p className="text-sm font-medium text-white">{proj}</p>
+                                  </div>
+                                  <p className="mt-3 text-[10px] text-white/40">
+                                    {count} {count === 1 ? "chat" : "chats"}
+                                  </p>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setProjects((prev) => prev.filter((p) => p !== proj));
+                                    setHistory((prev) =>
+                                      prev.map((h) =>
+                                        (h as { project?: string }).project === proj
+                                          ? ({ ...h, project: undefined } as typeof h)
+                                          : h,
+                                      ),
+                                    );
+                                    if (activeProject === proj) setActiveProject(null);
+                                  }}
+                                  className="absolute right-2 top-2 hidden rounded-md px-1.5 py-0.5 text-xs text-white/40 transition-colors hover:bg-red-500/20 hover:text-red-300 group-hover:block"
+                                  aria-label="Delete project"
+                                >
+                                  ×
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
                   ) : activeNav === "templates" ? (
                     <div className="space-y-6">
