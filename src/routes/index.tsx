@@ -124,6 +124,8 @@ function Studio() {
   const [templates, setTemplates] = useState<TemplateItem[]>([]);
   const [projects, setProjects] = useState<string[]>([]);
   const [activeProject, setActiveProject] = useState<string | null>(null);
+  const chatScrollRef = useRef<HTMLDivElement | null>(null);
+  const [showScrollButton, setShowScrollButton] = useState(false);
   const [messages, setMessages] = useState<{ role: "user" | "assistant"; content: string; code?: string }[]>([]);
   const [historyReady, setHistoryReady] = useState(false);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
@@ -479,6 +481,30 @@ try {
     URL.revokeObjectURL(url);
   };
 
+  const handleChatScroll = () => {
+    const el = chatScrollRef.current;
+    if (!el) return;
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    setShowScrollButton(distanceFromBottom > 80);
+  };
+
+  const scrollToBottom = () => {
+    const el = chatScrollRef.current;
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+    setShowScrollButton(false);
+  };
+
+  // Auto-scroll when new messages arrive, unless user scrolled up
+  useEffect(() => {
+    const el = chatScrollRef.current;
+    if (!el) return;
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    if (distanceFromBottom < 200) {
+      el.scrollTop = el.scrollHeight;
+    }
+  }, [messages, streamText]);
+
   const toggleModifier = (id: string) =>
     setModifiers((prev) => (prev.includes(id) ? prev.filter((m) => m !== id) : [...prev, id]));
 
@@ -752,8 +778,8 @@ try {
 
         {/* MIDDLE — prompt + controls + history */}
         {activeNav === "chat" && (
-          <section className="flex flex-col min-h-0 overflow-hidden border-r border-white/10">
-            <div className="flex flex-1 flex-col overflow-y-auto p-5">
+          <section className="relative flex flex-col min-h-0 overflow-hidden border-r border-white/10">
+            <div ref={chatScrollRef} onScroll={handleChatScroll} className="flex flex-1 flex-col overflow-y-auto p-5">
               {messages.length > 0 && (
                 <div className="mb-5 space-y-3 border-b border-white/5 pb-5">
                   {messages.map((m, i) => (
@@ -912,6 +938,19 @@ try {
                   restart the dev server.
                 </p>
               </div>
+            )}
+
+            {showScrollButton && (
+              <button
+                type="button"
+                onClick={scrollToBottom}
+                className="absolute bottom-4 right-4 z-20 flex size-9 items-center justify-center rounded-full border border-violet-400/30 bg-violet-500/20 text-violet-100 shadow-[0_8px_24px_-8px_rgba(139,92,246,0.5)] backdrop-blur-xl transition-all hover:bg-violet-500/30 hover:scale-105"
+                aria-label="Scroll to latest"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 5v14M19 12l-7 7-7-7" />
+                </svg>
+              </button>
             )}
 
             <div className="space-y-2.5">

@@ -759,15 +759,15 @@ try {
                   {messages.map((m, i) => (
                     <div key={i} className={m.role === "user" ? "flex justify-end" : "flex justify-start"}>
                       {m.role === "user" ? (
-                        <div className="max-w-[85%] rounded-2xl border border-violet-400/30 bg-violet-500/20 px-4 py-2.5 text-sm text-white">
+                        <div className="max-w-[85%] rounded-2xl border border-violet-400/20 bg-violet-500/[0.12] px-4 py-2.5 text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
                           {m.content}
                         </div>
                       ) : (
-                        <div className="max-w-[85%] space-y-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white/80">
+                        <div className="max-w-[85%] space-y-2 rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
                           <div>{m.content}</div>
                           {m.code && (
                             <>
-                              <details className="rounded-lg border border-white/10 bg-black/30">
+                              <details className="rounded-lg border border-white/[0.08] bg-black/25">
                                 <summary className="cursor-pointer px-3 py-2 text-xs font-medium text-white/70 hover:text-white">
                                   View code
                                 </summary>
@@ -882,7 +882,7 @@ try {
 
               {mutation.isPending && (
                 <div className="mb-5 flex justify-start">
-                  <div className="max-w-[85%] space-y-3 rounded-2xl border border-violet-400/30 bg-violet-500/[0.06] px-4 py-3 text-sm text-white/80">
+                  <div className="max-w-[85%] space-y-3 rounded-2xl border border-violet-400/20 bg-violet-500/[0.05] px-4 py-3 text-sm text-white/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
                     <div className="flex items-center gap-2 text-xs font-medium text-violet-200">
                       <span className="inline-block size-2 animate-pulse rounded-full bg-violet-400 shadow-[0_0_8px_rgba(168,85,247,0.6)]" />
                       <span>Pulse is generating…</span>
@@ -1907,12 +1907,12 @@ try {
                       viewport === "mobile" ? "w-[390px]" : "w-full",
                     )}
                   >
-                    <div className="flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-[#0a0616] shadow-2xl">
+                    <div className="flex h-full flex-col overflow-hidden rounded-xl border border-white/[0.08] bg-[#0a0616]/95 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.8)]">
                       <div className="flex items-center gap-2 border-b border-white/5 bg-white/[0.03] px-3 py-2">
                         <span className="size-2.5 rounded-full bg-[#ff5f57]" />
                         <span className="size-2.5 rounded-full bg-[#febc2e]" />
                         <span className="size-2.5 rounded-full bg-[#28c840]" />
-                        <div className="ml-3 flex flex-1 items-center gap-2 rounded-md border border-white/5 bg-black/40 px-3 py-1">
+                        <div className="ml-3 flex flex-1 items-center gap-2 rounded-md border border-white/[0.06] bg-black/30 px-3 py-1">
                           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/30">
                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
