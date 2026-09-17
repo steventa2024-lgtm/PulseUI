@@ -431,16 +431,43 @@ function Studio() {
                                   <code>{m.code}</code>
                                 </pre>
                               </details>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setCode(m.code || "");
-                                  setTab("preview");
-                                }}
-                                className="rounded-lg border border-violet-400/30 bg-violet-500/10 px-3 py-1.5 text-xs font-medium text-violet-200 hover:bg-violet-500/20"
-                              >
-                                Show in Preview →
-                              </button>
+                              <div className="flex flex-wrap gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setCode(m.code || "");
+                                    setTab("preview");
+                                  }}
+                                  className="rounded-lg border border-violet-400/30 bg-violet-500/10 px-3 py-1.5 text-xs font-medium text-violet-200 hover:bg-violet-500/20"
+                                >
+                                  Show in Preview →
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    if (m.code) navigator.clipboard.writeText(m.code);
+                                  }}
+                                  className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white"
+                                >
+                                  Copy code
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    if (!m.code) return;
+                                    const blob = new Blob([m.code], { type: "text/plain" });
+                                    const url = URL.createObjectURL(blob);
+                                    const a = document.createElement("a");
+                                    a.href = url;
+                                    a.download = "component.tsx";
+                                    a.click();
+                                    URL.revokeObjectURL(url);
+                                  }}
+                                  className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white"
+                                >
+                                  Download .tsx
+                                </button>
+                              </div>
                             </>
                           )}
                         </div>

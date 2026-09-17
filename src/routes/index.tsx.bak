@@ -47,7 +47,7 @@ export const Route = createFileRoute("/")({
   component: Studio,
 });
 
-type HistoryItem = { id: string; prompt: string; code: string; at: string };
+type HistoryItem = { id: string; prompt: string; code: string; at: string; messages: { role: "user" | "assistant"; content: string; code?: string }[] };
 
 const HISTORY_KEY = "promptui-studio:history";
 const HISTORY_LIMIT = 20;
@@ -111,6 +111,7 @@ function Studio() {
   const [tab, setTab] = useState<"preview" | "code">("preview");
   const [viewport, setViewport] = useState<"desktop" | "mobile">("desktop");
   const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [messages, setMessages] = useState<{ role: "user" | "assistant"; content: string; code?: string }[]>([]);
   const [historyReady, setHistoryReady] = useState(false);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [activeNav, setActiveNav] = useState<"dashboard" | "search" | "connectors" | "settings" | "projects" | "chat">("chat");
@@ -192,6 +193,11 @@ function Studio() {
       return finished;
     },
     onSuccess: (result, input) => {
+      const newMessages = [
+        ...messages,
+        { role: "assistant" as const, content: "Generated a component for: " + input.prompt.slice(0, 60) + (input.prompt.length > 60 ? "…" : ""), code: result.code },
+      ];
+      setMessages(newMessages);
       setCode(result.code);
       setStreamText("");
       setTab("preview");
@@ -202,6 +208,7 @@ function Studio() {
             prompt: input.prompt,
             code: result.code,
             at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            messages: newMessages,
           },
           ...prev,
         ].slice(0, HISTORY_LIMIT),
@@ -219,6 +226,7 @@ function Studio() {
       toast.error("Describe the component you want first.");
       return;
     }
+    setMessages((prev) => [...prev, { role: "user", content: text }]);
     mutation.mutate({ prompt: text, modifiers });
   };
 
@@ -339,22 +347,59 @@ function Studio() {
 
             {/* Recent chats */}
             <div className="flex-1 overflow-y-auto border-t border-white/5 px-2 py-3">
-              <div className="px-3 pb-2 text-[10px] font-medium uppercase tracking-wider text-white/40">Recent</div>
-              {HIST.map((item) => (
+              <div className="flex items-center justify-between px-3 pb-2">
+                <span className="text-[10px] font-medium uppercase tracking-wider text-white/40">Recent</span>
                 <button
-                  key={item.id}
+                  type="button"
                   onClick={() => {
-                    setPrompt(item.prompt);
-                    setActiveChatId(item.id);
+                    setMessages([]);
+                    setPrompt("");
+                    setCode(WELCOME);
+                    setStreamText("");
+                    setActiveChatId(null);
+                    setTab("preview");
                   }}
-                  className={`mb-0.5 block w-full rounded-lg px-3 py-2 text-left text-xs transition-colors ${
-                    activeChatId === item.id
-                      ? "bg-violet-500/15 border border-violet-400/30 text-white"
-                      : "text-white/60 hover:bg-white/5 hover:text-white/90"
-                  }`}
+                  className="rounded-md px-2 py-0.5 text-[10px] font-medium text-white/50 transition-colors hover:bg-white/10 hover:text-white"
                 >
-                  <div className="line-clamp-2 leading-snug">{item.prompt}</div>
+                  + New
                 </button>
+              </div>
+              {history.map((item) => (
+                <div key={item.id} className="group relative mb-0.5">
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => {
+                      setPrompt(item.prompt);
+                      setActiveChatId(item.id);
+                      setMessages([]);
+                    }}
+                    className={`block w-full rounded-lg px-3 py-2 pr-8 text-left text-xs transition-colors cursor-pointer ${
+                      activeChatId === item.id
+                        ? "bg-violet-500/15 border border-violet-400/30 text-white"
+                        : "text-white/60 hover:bg-white/5 hover:text-white/90"
+                    }`}
+                  >
+                    <div className="line-clamp-2 leading-snug">{item.prompt}</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setHistory((prev) => prev.filter((h) => h.id !== item.id));
+                      if (activeChatId === item.id) {
+                        setMessages([]);
+                        setPrompt("");
+                        setCode(WELCOME);
+                        setActiveChatId(null);
+                      }
+                    }}
+                    className="absolute right-1.5 top-1/2 hidden -translate-y-1/2 rounded-md px-1.5 py-0.5 text-xs text-white/40 transition-colors hover:bg-red-500/20 hover:text-red-300 group-hover:block"
+                    aria-label="Delete chat"
+                  >
+                    ×
+                  </button>
+                </div>
               ))}
             </div>
 
@@ -365,6 +410,45 @@ function Studio() {
         {activeNav === "chat" && (
           <section className="flex flex-col min-h-0 overflow-hidden border-r border-white/10">
             <div className="flex flex-1 flex-col overflow-y-auto p-5">
+              {messages.length > 0 && (
+                <div className="mb-5 space-y-3 border-b border-white/5 pb-5">
+                  {messages.map((m, i) => (
+                    <div key={i} className={m.role === "user" ? "flex justify-end" : "flex justify-start"}>
+                      {m.role === "user" ? (
+                        <div className="max-w-[85%] rounded-2xl border border-violet-400/30 bg-violet-500/20 px-4 py-2.5 text-sm text-white">
+                          {m.content}
+                        </div>
+                      ) : (
+                        <div className="max-w-[85%] space-y-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white/80">
+                          <div>{m.content}</div>
+                          {m.code && (
+                            <>
+                              <details className="rounded-lg border border-white/10 bg-black/30">
+                                <summary className="cursor-pointer px-3 py-2 text-xs font-medium text-white/70 hover:text-white">
+                                  View code
+                                </summary>
+                                <pre className="max-h-64 overflow-y-auto px-3 py-2 text-xs text-white/70">
+                                  <code>{m.code}</code>
+                                </pre>
+                              </details>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setCode(m.code || "");
+                                  setTab("preview");
+                                }}
+                                className="rounded-lg border border-violet-400/30 bg-violet-500/10 px-3 py-1.5 text-xs font-medium text-violet-200 hover:bg-violet-500/20"
+                              >
+                                Show in Preview →
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
               {unconfigured && (
               <div className="flex gap-2.5 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2.5">
                 <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-destructive" />
@@ -456,6 +540,7 @@ function Studio() {
           </div>
             </section>
 
+            )}
             {activeNav !== "chat" && (
               <section className="flex flex-col min-h-0 overflow-hidden border-r border-white/10">
                 <div className="flex flex-1 flex-col overflow-y-auto p-5">
