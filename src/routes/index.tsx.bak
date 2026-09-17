@@ -116,6 +116,8 @@ function Studio() {
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [activeNav, setActiveNav] = useState<"dashboard" | "search" | "connectors" | "settings" | "projects" | "chat">("chat");
   const [searchQuery, setSearchQuery] = useState("");
+  const [placeholderText, setPlaceholderText] = useState("");
+  const [placeholderPromptIdx, setPlaceholderPromptIdx] = useState(0);
 
   // Read after mount: reading during render would desync SSR and hydration.
   useEffect(() => {
@@ -131,6 +133,59 @@ function Studio() {
       // Storage can be full or blocked; history stays in memory for this session.
     }
   }, [history, historyReady]);
+
+  // Animated typing placeholder — cycles through example prompts like Lovable.
+  useEffect(() => {
+    const PLACEHOLDER_PROMPTS = [
+      "Ask Pulse to make a document that...",
+      "Ask Pulse to build my prototype...",
+      "Ask Pulse to build my landing page for my...",
+      "Ask Pulse to design a dashboard for...",
+      "Ask Pulse to create a pricing card with...",
+      "Ask Pulse to build a hero section for...",
+      "Ask Pulse to make a signup form with...",
+      "Ask Pulse to create a chat interface for...",
+      "Ask Pulse to design a settings panel with...",
+      "Ask Pulse to build a checkout flow for...",
+      "Ask Pulse to create a blog layout with...",
+      "Ask Pulse to design a stats dashboard with...",
+      "Ask Pulse to build a login screen for my...",
+      "Ask Pulse to create a product gallery for...",
+      "Ask Pulse to make an onboarding wizard for...",
+      "Ask Pulse to build a pricing table for...",
+      "Ask Pulse to design a testimonial slider for...",
+      "Ask Pulse to create an analytics panel for...",
+    ];
+
+    let charIdx = 0;
+    let deleting = false;
+    let timer: ReturnType<typeof setTimeout>;
+
+    const tick = () => {
+      const current = PLACEHOLDER_PROMPTS[placeholderPromptIdx % PLACEHOLDER_PROMPTS.length];
+      if (!deleting) {
+        charIdx++;
+        setPlaceholderText(current.slice(0, charIdx));
+        if (charIdx >= current.length) {
+          deleting = true;
+          timer = setTimeout(tick, 2200);
+          return;
+        }
+        timer = setTimeout(tick, 55);
+      } else {
+        charIdx--;
+        setPlaceholderText(current.slice(0, charIdx));
+        if (charIdx <= 0) {
+          setPlaceholderPromptIdx((i) => (i + 1) % PLACEHOLDER_PROMPTS.length);
+          return;
+        }
+        timer = setTimeout(tick, 22);
+      }
+    };
+
+    timer = setTimeout(tick, 400);
+    return () => clearTimeout(timer);
+  }, [placeholderPromptIdx]);
 
   const generate = useServerFn(streamComponent);
   const readInfo = useServerFn(getGeneratorInfo);
@@ -630,7 +685,7 @@ function Studio() {
                                 run(prompt);
                               }
                             }}
-                            placeholder="Describe a component to build…"
+                            placeholder={placeholderText || "Ask Pulse to build something…"}
                             className="flex-1 bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none"
                           />
                           <button
