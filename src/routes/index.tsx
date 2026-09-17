@@ -384,6 +384,64 @@ function Studio() {
     mutation.mutate({ prompt: finalPrompt, modifiers });
   };
 
+  const exportStandaloneHTML = (code: string, prompt: string) => {
+    if (!code) return;
+    const slug =
+      prompt
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "")
+        .slice(0, 40) || "component";
+
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>${prompt.slice(0, 60)}</title>
+<script src="https://cdn.tailwindcss.com"><\/script>
+<style>
+  html, body { margin: 0; background: #0a0616; color: #fff; font-family: system-ui, -apple-system, sans-serif; }
+  #status { position: fixed; bottom: 12px; right: 12px; padding: 8px 12px; background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.4); border-radius: 8px; font-size: 12px; color: #e9d5ff; font-family: monospace; z-index: 9999; }
+  #status.error { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.4); color: #fecaca; }
+  #status.hidden { display: none; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div id="status">Loading React…</div>
+
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"><\/script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"><\/script>
+<script src="https://unpkg.com/@babel/standalone@7.24.0/babel.min.js"><\/script>
+
+<script type="text/babel" data-presets="react,typescript">
+const status = document.getElementById("status");
+try {
+  const { useState, useEffect, useRef, useMemo, useCallback, useReducer, createContext, useContext, Fragment } = React;
+  ${code}
+  const root = ReactDOM.createRoot(document.getElementById("root"));
+  root.render(React.createElement(GeneratedComponent));
+  status.textContent = "Rendered ✓";
+  setTimeout(() => status.classList.add("hidden"), 1500);
+} catch (err) {
+  status.classList.add("error");
+  status.textContent = "Error: " + (err && err.message ? err.message : String(err));
+  console.error(err);
+}
+<\/script>
+</body>
+</html>`;
+
+    const blob = new Blob([html], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = slug + ".html";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const toggleModifier = (id: string) =>
     setModifiers((prev) => (prev.includes(id) ? prev.filter((m) => m !== id) : [...prev, id]));
 
@@ -667,6 +725,16 @@ function Studio() {
                                   className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white"
                                 >
                                   Download .tsx
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    if (!m.code) return;
+                                    exportStandaloneHTML(m.code, m.content);
+                                  }}
+                                  className="rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-200 hover:bg-emerald-500/20"
+                                >
+                                  Export HTML
                                 </button>
                               </div>
                             </>

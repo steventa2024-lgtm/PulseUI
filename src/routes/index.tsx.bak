@@ -333,9 +333,12 @@ function Studio() {
       return finished;
     },
     onSuccess: (result, input) => {
+      const assistantSummary = input.prompt.startsWith("Here is the current component code:")
+        ? "Refined the component."
+        : "Generated a component for: " + input.prompt.slice(0, 60) + (input.prompt.length > 60 ? "…" : "");
       const newMessages = [
         ...messages,
-        { role: "assistant" as const, content: "Generated a component for: " + input.prompt.slice(0, 60) + (input.prompt.length > 60 ? "…" : ""), code: result.code },
+        { role: "assistant" as const, content: assistantSummary, code: result.code },
       ];
       setMessages(newMessages);
       setCode(result.code);
@@ -379,6 +382,47 @@ function Studio() {
 
     setMessages((prev) => [...prev, { role: "user", content: displayText }]);
     mutation.mutate({ prompt: finalPrompt, modifiers });
+  };
+
+  const exportStandaloneHTML = (code: string, prompt: string) => {
+    if (!code) return;
+    const slug =
+      prompt
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "")
+        .slice(0, 40) || "component";
+
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>${prompt.slice(0, 60)}</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>html, body { margin: 0; background: #0a0616; }</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react,typescript">
+const { useState, useEffect, useRef, useMemo, useCallback, useReducer } = React;
+${code}
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(React.createElement(GeneratedComponent));
+</script>
+</body>
+</html>`;
+
+    const blob = new Blob([html], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = slug + ".html";
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const toggleModifier = (id: string) =>
@@ -664,6 +708,16 @@ function Studio() {
                                   className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white"
                                 >
                                   Download .tsx
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    if (!m.code) return;
+                                    exportStandaloneHTML(m.code, m.content);
+                                  }}
+                                  className="rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-200 hover:bg-emerald-500/20"
+                                >
+                                  Export HTML
                                 </button>
                               </div>
                             </>
