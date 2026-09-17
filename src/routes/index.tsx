@@ -115,6 +115,7 @@ function Studio() {
   const [historyReady, setHistoryReady] = useState(false);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [activeNav, setActiveNav] = useState<"dashboard" | "search" | "connectors" | "settings" | "projects" | "chat">("chat");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Read after mount: reading during render would desync SSR and hydration.
   useEffect(() => {
@@ -347,6 +348,15 @@ function Studio() {
 
             {/* Recent chats */}
             <div className="flex-1 overflow-y-auto border-t border-white/5 px-2 py-3">
+              <div className="px-3 pb-2">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search chats…"
+                  className="w-full rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs text-white placeholder:text-white/30 focus:border-violet-400/40 focus:outline-none"
+                />
+              </div>
               <div className="flex items-center justify-between px-3 pb-2">
                 <span className="text-[10px] font-medium uppercase tracking-wider text-white/40">Recent</span>
                 <button
@@ -364,7 +374,12 @@ function Studio() {
                   + New
                 </button>
               </div>
-              {history.map((item) => (
+              {history
+                .filter((item) =>
+                  !searchQuery.trim() ||
+                  item.prompt.toLowerCase().includes(searchQuery.trim().toLowerCase()),
+                )
+                .map((item) => (
                 <div key={item.id} className="group relative mb-0.5">
                   <div
                     role="button"
