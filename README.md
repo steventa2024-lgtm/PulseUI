@@ -237,3 +237,10 @@ Watch the quota: the Gemini API free tier allows **20 requests per day** for
 `gemini-3.7-flash` (`GenerateRequestsPerDayPerProjectPerModel-FreeTier`). That
 is enough to try the studio out, not to develop against it — enable billing on
 the Google Cloud project behind the key if you are iterating.
+
+---
+
+## Contributors
+
+- [void58429-creator](https://github.com/void58429-creator)
+- [steventa2024-igtm](https://github.com/steventa2024-igtm)
