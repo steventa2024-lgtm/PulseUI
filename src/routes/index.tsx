@@ -47,7 +47,7 @@ export const Route = createFileRoute("/")({
   component: Studio,
 });
 
-type HistoryItem = { id: string; prompt: string; code: string; at: string };
+type HistoryItem = { id: string; prompt: string; code: string; at: string; messages: { role: "user" | "assistant"; content: string; code?: string }[] };
 
 const HISTORY_KEY = "promptui-studio:history";
 const HISTORY_LIMIT = 20;
@@ -111,7 +111,7 @@ function Studio() {
   const [tab, setTab] = useState<"preview" | "code">("preview");
   const [viewport, setViewport] = useState<"desktop" | "mobile">("desktop");
   const [history, setHistory] = useState<HistoryItem[]>([]);
-  const [messages, setMessages] = useState<{ role: "user" | "assistant"; content: string }[]>([]);
+  const [messages, setMessages] = useState<{ role: "user" | "assistant"; content: string; code?: string }[]>([]);
   const [historyReady, setHistoryReady] = useState(false);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [activeNav, setActiveNav] = useState<"dashboard" | "search" | "connectors" | "settings" | "projects" | "chat">("chat");
@@ -193,10 +193,15 @@ function Studio() {
       return finished;
     },
     onSuccess: (result, input) => {
+      const newMessages = [
+        ...messages,
+        { role: "user" as const, content: input.prompt },
+        { role: "assistant" as const, content: "Generated a component for: " + input.prompt.slice(0, 60) + (input.prompt.length > 60 ? "…" : ""), code: result.code },
+      ];
+      setMessages(newMessages);
       setCode(result.code);
       setStreamText("");
       setTab("preview");
-      setMessages((prev) => [...prev, { role: "assistant", content: "Generated: " + input.prompt.slice(0, 80) }]);
       setHistory((prev) =>
         [
           {
@@ -204,6 +209,7 @@ function Studio() {
             prompt: input.prompt,
             code: result.code,
             at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            messages: newMessages,
           },
           ...prev,
         ].slice(0, HISTORY_LIMIT),
@@ -373,15 +379,37 @@ function Studio() {
                 <div className="mb-5 space-y-3 border-b border-white/5 pb-5">
                   {messages.map((m, i) => (
                     <div key={i} className={m.role === "user" ? "flex justify-end" : "flex justify-start"}>
-                      <div
-                        className={
-                          m.role === "user"
-                            ? "max-w-[85%] rounded-2xl border border-violet-400/30 bg-violet-500/20 px-4 py-2.5 text-sm text-white"
-                            : "max-w-[85%] rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white/80"
-                        }
-                      >
-                        {m.content}
-                      </div>
+                      {m.role === "user" ? (
+                        <div className="max-w-[85%] rounded-2xl border border-violet-400/30 bg-violet-500/20 px-4 py-2.5 text-sm text-white">
+                          {m.content}
+                        </div>
+                      ) : (
+                        <div className="max-w-[85%] space-y-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white/80">
+                          <div>{m.content}</div>
+                          {m.code && (
+                            <>
+                              <details className="rounded-lg border border-white/10 bg-black/30">
+                                <summary className="cursor-pointer px-3 py-2 text-xs font-medium text-white/70 hover:text-white">
+                                  View code
+                                </summary>
+                                <pre className="max-h-64 overflow-y-auto px-3 py-2 text-xs text-white/70">
+                                  <code>{m.code}</code>
+                                </pre>
+                              </details>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setCode(m.code || "");
+                                  setTab("preview");
+                                }}
+                                className="rounded-lg border border-violet-400/30 bg-violet-500/10 px-3 py-1.5 text-xs font-medium text-violet-200 hover:bg-violet-500/20"
+                              >
+                                Show in Preview →
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
