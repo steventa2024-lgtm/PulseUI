@@ -662,6 +662,29 @@ function Studio() {
                   ))}
                 </div>
               )}
+
+              {mutation.isPending && (
+                <div className="mb-5 flex justify-start">
+                  <div className="max-w-[85%] space-y-3 rounded-2xl border border-violet-400/30 bg-violet-500/[0.06] px-4 py-3 text-sm text-white/80">
+                    <div className="flex items-center gap-2 text-xs font-medium text-violet-200">
+                      <span className="inline-block size-2 animate-pulse rounded-full bg-violet-400 shadow-[0_0_8px_rgba(168,85,247,0.6)]" />
+                      <span>Pulse is generating…</span>
+                    </div>
+                    {streamText ? (
+                      <pre className="max-h-48 overflow-y-auto whitespace-pre-wrap break-words rounded-lg border border-white/10 bg-black/30 px-3 py-2 font-mono text-[11px] leading-relaxed text-white/60">
+                        {streamText.slice(-1200)}
+                      </pre>
+                    ) : (
+                      <div className="space-y-1.5">
+                        <div className="h-2 w-3/4 animate-pulse rounded bg-white/10" />
+                        <div className="h-2 w-1/2 animate-pulse rounded bg-white/10" />
+                        <div className="h-2 w-5/6 animate-pulse rounded bg-white/10" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {unconfigured && (
               <div className="flex gap-2.5 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2.5">
                 <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-destructive" />

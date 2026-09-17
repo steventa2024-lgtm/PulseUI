@@ -129,6 +129,7 @@ function Studio() {
   });
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [refineMode, setRefineMode] = useState(false);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [placeholderText, setPlaceholderText] = useState("");
   const [placeholderPromptIdx, setPlaceholderPromptIdx] = useState(0);
@@ -366,8 +367,18 @@ function Studio() {
       toast.error("Describe the component you want first.");
       return;
     }
-    setMessages((prev) => [...prev, { role: "user", content: text }]);
-    mutation.mutate({ prompt: text, modifiers });
+
+    let finalPrompt = text;
+    let displayText = text;
+
+    // Refine mode: send the existing component as context
+    if (refineMode && code && code !== WELCOME) {
+      finalPrompt = `Here is the current component code:\n\n${code}\n\nNow apply this change and return the full updated component:\n\n${text}`;
+      displayText = `Refine: ${text}`;
+    }
+
+    setMessages((prev) => [...prev, { role: "user", content: displayText }]);
+    mutation.mutate({ prompt: finalPrompt, modifiers });
   };
 
   const toggleModifier = (id: string) =>
@@ -536,6 +547,7 @@ function Studio() {
                     setStreamText("");
                     setActiveChatId(null);
                     setTab("preview");
+                    setRefineMode(false);
                   }}
                   className="rounded-md px-2 py-0.5 text-[10px] font-medium text-white/50 transition-colors hover:bg-white/10 hover:text-white"
                 >
@@ -714,13 +726,43 @@ function Studio() {
                 placeholder="Build a modern pricing card with 3 tiers and a toggle for annual billing…"
                 className="min-h-32 resize-none bg-elevated font-mono text-[13px]"
               />
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setRefineMode(false)}
+                  disabled={mutation.isPending}
+                  className={
+                    refineMode
+                      ? "flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/50 transition-colors hover:text-white disabled:opacity-40"
+                      : "flex-1 rounded-lg border border-violet-400/40 bg-violet-500/15 px-3 py-1.5 text-xs font-medium text-violet-200 disabled:opacity-40"
+                  }
+                >
+                  New
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRefineMode(true)}
+                  disabled={mutation.isPending || !code || code === WELCOME}
+                  className={
+                    refineMode
+                      ? "flex-1 rounded-lg border border-violet-400/40 bg-violet-500/15 px-3 py-1.5 text-xs font-medium text-violet-200 disabled:opacity-40"
+                      : "flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/50 transition-colors hover:text-white disabled:opacity-40"
+                  }
+                >
+                  Refine
+                </button>
+              </div>
               <Button className="w-full hover-glow" disabled={mutation.isPending} onClick={() => run(prompt)}>
                 {mutation.isPending ? (
                   <Loader2 className="size-4 animate-spin" />
                 ) : (
                   <Wand2 className="size-4" />
                 )}
-                {mutation.isPending ? "Generating…" : "Generate component"}
+                {mutation.isPending
+                  ? "Generating…"
+                  : refineMode
+                  ? "Refine component"
+                  : "Generate component"}
               </Button>
               <p className="text-center font-mono text-[10px] text-muted-foreground">⌘ / Ctrl + ↵</p>
             </div>

@@ -9,7 +9,7 @@ import {
 } from "./component-generation.server";
 
 const inputSchema = z.object({
-  prompt: z.string().trim().min(3).max(50000),
+  prompt: z.string().trim().min(3).max(2000),
   modifiers: z.array(z.string().max(40)).max(8).default([]),
 });
 
