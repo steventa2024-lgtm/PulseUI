@@ -202,6 +202,7 @@ function Studio() {
       setCode(result.code);
       setStreamText("");
       setTab("preview");
+      setSearchQuery("");
       setHistory((prev) =>
         [
           {
@@ -586,12 +587,54 @@ function Studio() {
             {activeNav !== "chat" && (
               <section className="flex flex-col min-h-0 overflow-hidden border-r border-white/10">
                 <div className="flex flex-1 flex-col overflow-y-auto p-5">
-                  <div className="flex flex-1 items-center justify-center">
-                    <div className="text-center">
-                      <p className="text-2xl font-semibold text-white">{activeNav.charAt(0).toUpperCase() + activeNav.slice(1)}</p>
-                      <p className="mt-2 text-sm text-white/50">Coming soon</p>
+                  {activeNav === "dashboard" ? (
+                    <div className="space-y-6">
+                      <div>
+                        <h2 className="text-2xl font-semibold text-white">Dashboard</h2>
+                        <p className="mt-1 text-sm text-white/50">Overview of your generation activity.</p>
+                      </div>
+
+                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                        <div className="glass-card p-5">
+                          <p className="text-xs uppercase tracking-wider text-white/40">Total Chats</p>
+                          <p className="mt-2 text-3xl font-semibold text-white">{history.length}</p>
+                        </div>
+                        <div className="glass-card p-5">
+                          <p className="text-xs uppercase tracking-wider text-white/40">Components Generated</p>
+                          <p className="mt-2 text-3xl font-semibold text-white">{history.length}</p>
+                        </div>
+                        <div className="glass-card p-5">
+                          <p className="text-xs uppercase tracking-wider text-white/40">Last Activity</p>
+                          <p className="mt-2 text-lg font-semibold text-white">
+                            {history[0]?.at ?? "—"}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div>
+                        <p className="mb-3 text-xs uppercase tracking-wider text-white/40">Recent Generations</p>
+                        {history.length === 0 ? (
+                          <p className="text-sm text-white/50">No generations yet. Start from the chat panel.</p>
+                        ) : (
+                          <ul className="space-y-2">
+                            {history.slice(0, 5).map((item) => (
+                              <li key={item.id} className="glass-card flex items-center justify-between px-4 py-3">
+                                <span className="line-clamp-1 text-sm text-white/80">{item.prompt}</span>
+                                <span className="ml-3 shrink-0 text-xs text-white/40">{item.at}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="flex flex-1 items-center justify-center">
+                      <div className="text-center">
+                        <p className="text-2xl font-semibold text-white">{activeNav.charAt(0).toUpperCase() + activeNav.slice(1)}</p>
+                        <p className="mt-2 text-sm text-white/50">Coming soon</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </section>
             )}
