@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   AlertTriangle,
   Boxes,
@@ -116,6 +116,7 @@ function Studio() {
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [activeNav, setActiveNav] = useState<"dashboard" | "search" | "connectors" | "settings" | "projects" | "chat">("chat");
   const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [placeholderText, setPlaceholderText] = useState("");
   const [placeholderPromptIdx, setPlaceholderPromptIdx] = useState(0);
 
@@ -186,6 +187,34 @@ function Studio() {
     timer = setTimeout(tick, 400);
     return () => clearTimeout(timer);
   }, [placeholderPromptIdx]);
+
+  // Keyboard shortcuts: Cmd/Ctrl + N (new chat), Cmd/Ctrl + K (focus search)
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      const meta = e.metaKey || e.ctrlKey;
+      if (!meta) return;
+
+      if (e.key === "n") {
+        e.preventDefault();
+        setMessages([]);
+        setPrompt("");
+        setCode(WELCOME);
+        setStreamText("");
+        setActiveChatId(null);
+        setTab("preview");
+        setActiveNav("chat");
+      }
+
+      if (e.key === "k") {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+        searchInputRef.current?.select();
+      }
+    };
+
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, []);
 
   const generate = useServerFn(streamComponent);
   const readInfo = useServerFn(getGeneratorInfo);
@@ -406,6 +435,7 @@ function Studio() {
             <div className="flex-1 overflow-y-auto border-t border-white/5 px-2 py-3">
               <div className="px-3 pb-2">
                 <input
+                  ref={searchInputRef}
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}

@@ -749,6 +749,129 @@ function Studio() {
                         </div>
                       )}
                     </div>
+                  ) : activeNav === "settings" ? (
+                    <div className="space-y-6">
+                      <div>
+                        <h2 className="text-2xl font-semibold tracking-tight text-white">Settings</h2>
+                        <p className="mt-1 text-sm text-white/50">
+                          Manage your workspace, data, and preferences.
+                        </p>
+                      </div>
+
+                      <div className="glass-card p-5">
+                        <p className="text-xs uppercase tracking-wider text-white/40">Workspace</p>
+                        <div className="mt-4 space-y-3">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-sm font-medium text-white">Default model</p>
+                              <p className="text-xs text-white/50">Used for new generations</p>
+                            </div>
+                            <span className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 font-mono text-xs text-white/70">
+                              {info.data?.model ?? "—"}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between border-t border-white/5 pt-3">
+                            <div>
+                              <p className="text-sm font-medium text-white">Provider</p>
+                              <p className="text-xs text-white/50">Local llama.cpp backend</p>
+                            </div>
+                            <span className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 font-mono text-xs text-white/70">
+                              {info.data?.providerId ?? "local"}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="glass-card p-5">
+                        <p className="text-xs uppercase tracking-wider text-white/40">Data</p>
+                        <div className="mt-4 space-y-3">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-sm font-medium text-white">Saved chats</p>
+                              <p className="text-xs text-white/50">{history.length} stored locally in your browser</p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (!history.length) return;
+                                const blob = new Blob([JSON.stringify(history, null, 2)], { type: "application/json" });
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement("a");
+                                a.href = url;
+                                a.download = "pulseui-chats.json";
+                                a.click();
+                                URL.revokeObjectURL(url);
+                              }}
+                              disabled={!history.length}
+                              className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white disabled:opacity-40"
+                            >
+                              Export JSON
+                            </button>
+                          </div>
+                          <div className="flex items-center justify-between border-t border-white/5 pt-3">
+                            <div>
+                              <p className="text-sm font-medium text-white">Clear all chats</p>
+                              <p className="text-xs text-white/50">Remove every chat and generated component</p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (!confirm("Delete all chats? This cannot be undone.")) return;
+                                setHistory([]);
+                                setMessages([]);
+                                setCode(WELCOME);
+                                setPrompt("");
+                                setActiveChatId(null);
+                              }}
+                              className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-1.5 text-xs font-medium text-red-300 hover:bg-red-500/20"
+                            >
+                              Delete all
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="glass-card p-5">
+                        <p className="text-xs uppercase tracking-wider text-white/40">Appearance</p>
+                        <div className="mt-4">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-sm font-medium text-white">Theme</p>
+                              <p className="text-xs text-white/50">Purple glassmorphism (default)</p>
+                            </div>
+                            <span className="rounded-lg border border-violet-400/40 bg-violet-500/20 px-3 py-1.5 text-xs font-medium text-violet-200">
+                              Active
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="glass-card p-5">
+                        <p className="text-xs uppercase tracking-wider text-white/40">Keyboard shortcuts</p>
+                        <ul className="mt-4 space-y-2 text-sm">
+                          <li className="flex items-center justify-between">
+                            <span className="text-white/70">Generate component</span>
+                            <span className="rounded border border-white/10 bg-white/5 px-2 py-0.5 font-mono text-xs text-white/60">⌘ / Ctrl + ↵</span>
+                          </li>
+                          <li className="flex items-center justify-between">
+                            <span className="text-white/70">New chat</span>
+                            <span className="rounded border border-white/10 bg-white/5 px-2 py-0.5 font-mono text-xs text-white/60">⌘ / Ctrl + N</span>
+                          </li>
+                          <li className="flex items-center justify-between">
+                            <span className="text-white/70">Focus search</span>
+                            <span className="rounded border border-white/10 bg-white/5 px-2 py-0.5 font-mono text-xs text-white/60">⌘ / Ctrl + K</span>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div className="glass-card p-5">
+                        <p className="text-xs uppercase tracking-wider text-white/40">About</p>
+                        <p className="mt-4 text-sm text-white/70">PulseUi Studio</p>
+                        <p className="mt-1 text-xs text-white/50">
+                          A local-first Tailwind component generator powered by Qwen 9B via llama.cpp.
+                        </p>
+                      </div>
+                    </div>
                   ) : activeNav === "connectors" ? (
                     <div className="relative min-h-full">
                       {/* Rotating background logos */}
