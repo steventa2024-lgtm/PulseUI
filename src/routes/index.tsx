@@ -758,270 +758,270 @@ function Studio() {
                         style={{ maskImage: "linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)" }}
                       >
                         <div className="absolute top-[2%] left-0 right-0">                  <div className="marquee-row marquee-l" style={{ top: "0" }}>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                      <img src="https://cdn.simpleicons.org/openai/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/anthropic/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/huggingface/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/linear/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/mongodb/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/postgresql/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/stripe/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/discord/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/github/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/notion/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/cloudflare/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/figma/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/telegram/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/react/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/slack/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/vercel/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/kubernetes/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/openai/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/anthropic/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/huggingface/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/linear/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/mongodb/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/postgresql/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/stripe/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/discord/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/github/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/notion/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/cloudflare/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/figma/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/telegram/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/react/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/slack/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/vercel/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/kubernetes/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
                   </div></div>
                         <div className="absolute top-[18%] left-0 right-0">                  <div className="marquee-row marquee-r" style={{ top: "0" }}>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                      <img src="https://cdn.simpleicons.org/openai/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/anthropic/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/huggingface/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/linear/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/mongodb/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/postgresql/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/stripe/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/discord/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/github/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/notion/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/cloudflare/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/figma/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/telegram/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/react/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/slack/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/vercel/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/kubernetes/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/openai/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/anthropic/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/huggingface/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/linear/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/mongodb/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/postgresql/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/stripe/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/discord/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/github/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/notion/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/cloudflare/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/figma/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/telegram/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/react/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/slack/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/vercel/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/kubernetes/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
                   </div></div>
                         <div className="absolute top-[34%] left-0 right-0">                  <div className="marquee-row marquee-l" style={{ top: "0" }}>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                      <img src="https://cdn.simpleicons.org/openai/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/anthropic/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/huggingface/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/linear/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/mongodb/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/postgresql/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/stripe/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/discord/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/github/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/notion/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/cloudflare/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/figma/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/telegram/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/react/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/slack/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/vercel/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/kubernetes/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/openai/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/anthropic/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/huggingface/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/linear/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/mongodb/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/postgresql/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/stripe/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/discord/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/github/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/notion/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/cloudflare/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/figma/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/telegram/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/react/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/slack/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/vercel/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/kubernetes/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
                   </div></div>
                         <div className="absolute top-[50%] left-0 right-0">                  <div className="marquee-row marquee-r" style={{ top: "0" }}>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                      <img src="https://cdn.simpleicons.org/openai/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/anthropic/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/huggingface/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/linear/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/mongodb/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/postgresql/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/stripe/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/discord/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/github/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/notion/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/cloudflare/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/figma/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/telegram/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/react/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/slack/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/vercel/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/kubernetes/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/openai/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/anthropic/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/huggingface/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/linear/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/mongodb/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/postgresql/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/stripe/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/discord/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/github/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/notion/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/cloudflare/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/figma/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/telegram/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/react/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/slack/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/vercel/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/kubernetes/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
                   </div></div>
                         <div className="absolute top-[66%] left-0 right-0">                  <div className="marquee-row marquee-l" style={{ top: "0" }}>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                      <img src="https://cdn.simpleicons.org/openai/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/anthropic/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/huggingface/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/linear/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/mongodb/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/postgresql/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/stripe/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/discord/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/github/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/notion/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/cloudflare/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/figma/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/telegram/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/react/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/slack/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/vercel/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/kubernetes/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/openai/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/anthropic/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/huggingface/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/linear/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/mongodb/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/postgresql/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/stripe/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/discord/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/github/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/notion/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/cloudflare/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/figma/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/telegram/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/react/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/slack/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/vercel/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/kubernetes/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
                   </div></div>
                         <div className="absolute top-[82%] left-0 right-0">                  <div className="marquee-row marquee-r" style={{ top: "0" }}>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                      <img src="https://cdn.simpleicons.org/openai/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/anthropic/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/huggingface/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/linear/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/mongodb/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/postgresql/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/stripe/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/discord/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/github/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/notion/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/cloudflare/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/figma/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/telegram/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/react/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/slack/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/vercel/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/kubernetes/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/openai/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/anthropic/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/huggingface/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/linear/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/mongodb/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/postgresql/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/stripe/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/discord/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/github/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/notion/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/cloudflare/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/figma/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/telegram/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/react/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/slack/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/vercel/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/kubernetes/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
                   </div></div>
                         <div className="absolute top-[98%] left-0 right-0">                  <div className="marquee-row marquee-l" style={{ top: "0" }}>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                      <img src="https://cdn.simpleicons.org/openai/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/anthropic/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/huggingface/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/linear/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/mongodb/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/postgresql/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/stripe/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/discord/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/github/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/notion/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/cloudflare/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/figma/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/telegram/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/react/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/slack/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/vercel/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/kubernetes/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/openai/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/anthropic/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/huggingface/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/linear/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/mongodb/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/postgresql/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/stripe/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/discord/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/github/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/notion/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/cloudflare/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/figma/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/telegram/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/react/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/slack/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/vercel/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
+                      <img src="https://cdn.simpleicons.org/kubernetes/ffffff" alt="" className="size-10 shrink-0 opacity-60" loading="lazy" draggable={false} />
                   </div></div>
                       </div>
 
@@ -1092,10 +1092,7 @@ function Studio() {
                           {/* Coming soon: OpenAI */}
                           <div className="glass-card flex items-start gap-3 p-4 opacity-70">
                             <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#0a0a0a] border border-white/10">
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5">
-                                <circle cx="12" cy="12" r="9" />
-                                <path d="M12 3v18M3 12h18" />
-                              </svg>
+                              <img src="https://cdn.simpleicons.org/openai/ffffff" alt="" className="size-5" />
                             </div>
                             <div className="min-w-0 flex-1">
                               <div className="flex items-center gap-2">
@@ -1109,9 +1106,7 @@ function Studio() {
                           {/* Coming soon: Anthropic */}
                           <div className="glass-card flex items-start gap-3 p-4 opacity-70">
                             <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#c96442]">
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5">
-                                <path d="M4 20l8-16 8 16M8 14h8" />
-                              </svg>
+                              <img src="https://cdn.simpleicons.org/anthropic/ffffff" alt="" className="size-5" />
                             </div>
                             <div className="min-w-0 flex-1">
                               <div className="flex items-center gap-2">
@@ -1125,10 +1120,7 @@ function Studio() {
                           {/* Coming soon: Ollama */}
                           <div className="glass-card flex items-start gap-3 p-4 opacity-70">
                             <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#0a0a0a] border border-white/10">
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5">
-                                <circle cx="12" cy="12" r="4" />
-                                <path d="M12 2v4M12 18v4M2 12h4M18 12h4" />
-                              </svg>
+                              <img src="https://cdn.simpleicons.org/ollama/ffffff" alt="" className="size-5" />
                             </div>
                             <div className="min-w-0 flex-1">
                               <p className="text-sm font-medium text-white">Ollama</p>
@@ -1139,10 +1131,7 @@ function Studio() {
                           {/* Coming soon: LM Studio */}
                           <div className="glass-card flex items-start gap-3 p-4 opacity-70">
                             <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600">
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5">
-                                <rect x="3" y="3" width="18" height="18" rx="2" />
-                                <path d="M3 9h18M9 21V9" />
-                              </svg>
+                              <img src="https://cdn.simpleicons.org/lmstudio/ffffff" alt="" className="size-5" />
                             </div>
                             <div className="min-w-0 flex-1">
                               <p className="text-sm font-medium text-white">LM Studio</p>
@@ -1153,7 +1142,7 @@ function Studio() {
                           {/* Coming soon: Hugging Face */}
                           <div className="glass-card flex items-start gap-3 p-4 opacity-70">
                             <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#ffd21e]">
-                              <span className="text-lg">🤗</span>
+                              <img src="https://cdn.simpleicons.org/huggingface/000000" alt="" className="size-5" />
                             </div>
                             <div className="min-w-0 flex-1">
                               <p className="text-sm font-medium text-white">Hugging Face</p>
