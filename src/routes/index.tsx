@@ -50,6 +50,7 @@ export const Route = createFileRoute("/")({
 type HistoryItem = { id: string; prompt: string; code: string; at: string; messages: { role: "user" | "assistant"; content: string; code?: string }[] };
 
 const HISTORY_KEY = "promptui-studio:history";
+const UI_STATE_KEY = "promptui.ui-state.v1";
 const HISTORY_LIMIT = 20;
 
 const HIST = [
@@ -114,7 +115,17 @@ function Studio() {
   const [messages, setMessages] = useState<{ role: "user" | "assistant"; content: string; code?: string }[]>([]);
   const [historyReady, setHistoryReady] = useState(false);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
-  const [activeNav, setActiveNav] = useState<"dashboard" | "search" | "connectors" | "settings" | "projects" | "chat">("chat");
+  const [activeNav, setActiveNav] = useState<"dashboard" | "search" | "connectors" | "settings" | "projects" | "chat">(() => {
+    if (typeof window === "undefined") return "chat";
+    try {
+      const saved = window.localStorage.getItem("promptui.ui-state.v1");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.activeNav) return parsed.activeNav;
+      }
+    } catch {}
+    return "chat";
+  });
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [placeholderText, setPlaceholderText] = useState("");
@@ -134,6 +145,41 @@ function Studio() {
       // Storage can be full or blocked; history stays in memory for this session.
     }
   }, [history, historyReady]);
+
+  // Persist UI state (active nav, active chat, search query)
+  useEffect(() => {
+    if (!historyReady) return;
+    try {
+      window.localStorage.setItem(
+        "promptui.ui-state.v1",
+        JSON.stringify({ activeNav, activeChatId, searchQuery }),
+      );
+    } catch {
+      // Ignore storage failures
+    }
+  }, [activeNav, activeChatId, searchQuery, historyReady]);
+
+  // Restore active chat + search on mount
+  useEffect(() => {
+    if (!historyReady) return;
+    try {
+      const saved = window.localStorage.getItem("promptui.ui-state.v1");
+      if (!saved) return;
+      const parsed = JSON.parse(saved);
+      if (parsed.activeChatId && history.some((h) => h.id === parsed.activeChatId)) {
+        const chat = history.find((h) => h.id === parsed.activeChatId);
+        if (chat) {
+          setActiveChatId(chat.id);
+          setMessages(chat.messages ?? []);
+          setCode(chat.code);
+          setPrompt(chat.prompt);
+        }
+      }
+      if (parsed.searchQuery) setSearchQuery(parsed.searchQuery);
+    } catch {
+      // Ignore
+    }
+  }, [historyReady]);
 
   // Animated typing placeholder — cycles through example prompts like Lovable.
   useEffect(() => {
@@ -471,9 +517,12 @@ function Studio() {
                     role="button"
                     tabIndex={0}
                     onClick={() => {
+                      setActiveNav("chat");
                       setPrompt(item.prompt);
                       setActiveChatId(item.id);
-                      setMessages([]);
+                      setMessages(item.messages ?? []);
+                      setCode(item.code);
+                      setTab("preview");
                     }}
                     className={`block w-full rounded-lg px-3 py-2 pr-8 text-left text-xs transition-colors cursor-pointer ${
                       activeChatId === item.id
