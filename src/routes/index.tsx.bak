@@ -456,7 +456,6 @@ function Studio() {
           </div>
             </section>
 
-            )}
             {activeNav !== "chat" && (
               <section className="flex flex-col min-h-0 overflow-hidden border-r border-white/10">
                 <div className="flex flex-1 flex-col overflow-y-auto p-5">
