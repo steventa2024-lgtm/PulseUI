@@ -333,9 +333,12 @@ function Studio() {
       return finished;
     },
     onSuccess: (result, input) => {
+      const assistantSummary = input.prompt.startsWith("Here is the current component code:")
+        ? "Refined the component."
+        : "Generated a component for: " + input.prompt.slice(0, 60) + (input.prompt.length > 60 ? "…" : "");
       const newMessages = [
         ...messages,
-        { role: "assistant" as const, content: "Generated a component for: " + input.prompt.slice(0, 60) + (input.prompt.length > 60 ? "…" : ""), code: result.code },
+        { role: "assistant" as const, content: assistantSummary, code: result.code },
       ];
       setMessages(newMessages);
       setCode(result.code);
