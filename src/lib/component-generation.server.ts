@@ -2,8 +2,6 @@
  * Server-only helpers for the LLM component generation engine.
  * Never imported by client code directly (see *.functions.ts wrapper).
  */
-import Anthropic from "@anthropic-ai/sdk";
-
 import type { StreamFrame } from "./component-generation.types";
 
 export const SYSTEM_PROMPT = `You are PromptUI Studio's code generation engine.
@@ -107,21 +105,15 @@ export function sanitizeComponentCode(raw: string): string {
 /* ------------------------------------------------------------------ *
  * Providers
  *
- * Gemini 3.7 Flash is the studio's model. It is reachable two ways: a direct
- * Google AI Studio key, or the Lovable AI gateway (injected automatically
- * inside the Lovable sandbox, so it needs no key of your own there). Anthropic
- * remains an explicit opt-in. All three return raw model text for
- * sanitizeComponentCode to clean up.
+ * Gemini 3.7 Flash is the studio's hosted model. A local OpenAI-compatible
+ * model can take over when Gemini is unavailable. Both return raw model text
+ * for sanitizeComponentCode to clean up.
  * ------------------------------------------------------------------ */
 
 /** Direct Google AI Studio model id. */
 export const GEMINI_MODEL = "gemini-3.7-flash";
-/** The same model addressed through the gateway's provider-prefixed id. */
-export const GATEWAY_MODEL = "google/gemini-3.7-flash";
-/** Opt-in only: used when neither Gemini key nor gateway key is present. */
-export const ANTHROPIC_MODEL = "claude-opus-5";
 
-export type ProviderId = "gemini" | "lovable-gateway" | "anthropic" | "local";
+export type ProviderId = "gemini" | "local";
 
 export type Provider = {
   id: ProviderId;
@@ -531,122 +523,9 @@ function localProvider(config: LocalConfig): Provider {
   };
 }
 
-export async function generateWithGateway(
-  systemPrompt: string,
-  userPrompt: string,
-  apiKey: string,
-): Promise<string> {
-  const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Lovable-API-Key": apiKey,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: GATEWAY_MODEL,
-      // Reasoning off: code generation here is a fast, deterministic task and
-      // reasoning mode pushes latency past the request timeout.
-      reasoning_effort: "none",
-      stream: true,
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt },
-      ],
-    }),
-  });
-
-  if (response.status === 429) throw new Error("Rate limit reached. Try again in a moment.");
-  if (response.status === 402) throw new Error("AI credits exhausted. Add credits to continue.");
-  if (!response.ok || !response.body) {
-    const detail = await response.text().catch(() => "");
-    console.error("AI gateway error", response.status, detail);
-    throw new Error("The generation service failed. Please try again.");
-  }
-
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder();
-  let buffer = "";
-  let content = "";
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-
-    let index: number;
-    while ((index = buffer.indexOf("\n")) !== -1) {
-      const line = buffer.slice(0, index).trim();
-      buffer = buffer.slice(index + 1);
-      if (!line.startsWith("data:")) continue;
-      const payload = line.slice(5).trim();
-      if (!payload || payload === "[DONE]") continue;
-      try {
-        const chunk = JSON.parse(payload) as {
-          choices?: Array<{ delta?: { content?: string } }>;
-        };
-        content += chunk.choices?.[0]?.delta?.content ?? "";
-      } catch {
-        // Ignore partial/non-JSON keepalive frames.
-      }
-    }
-  }
-
-  if (!content.trim()) throw new Error("The model returned an empty response.");
-  return content;
-}
-
-export async function generateWithAnthropic(
-  systemPrompt: string,
-  userPrompt: string,
-  apiKey: string,
-): Promise<string> {
-  const client = new Anthropic({ apiKey });
-
-  try {
-    // Streaming keeps the request under the SDK's HTTP timeout at this
-    // max_tokens. Effort is deliberately low: one self-contained component is a
-    // fast, well-specified task, and latency is what a live studio is judged on.
-    const stream = client.messages.stream({
-      model: ANTHROPIC_MODEL,
-      max_tokens: 16000,
-      system: systemPrompt,
-      thinking: { type: "adaptive" },
-      output_config: { effort: "low" },
-      messages: [{ role: "user", content: userPrompt }],
-    });
-
-    const message = await stream.finalMessage();
-
-    if (message.stop_reason === "refusal") {
-      throw new Error("The model declined this request. Try rewording the prompt.");
-    }
-
-    const text = message.content
-      .filter((block) => block.type === "text")
-      .map((block) => block.text)
-      .join("");
-
-    if (!text.trim()) throw new Error("The model returned an empty response.");
-    return text;
-  } catch (error) {
-    if (error instanceof Anthropic.AuthenticationError) {
-      throw new Error("ANTHROPIC_API_KEY was rejected. Check the key in your .env.local file.");
-    }
-    if (error instanceof Anthropic.RateLimitError) {
-      throw new Error("Rate limit reached. Try again in a moment.");
-    }
-    if (error instanceof Anthropic.APIError) {
-      console.error("Anthropic API error", error.status, error.message);
-      throw new Error("The generation service failed. Please try again.");
-    }
-    throw error;
-  }
-}
-
 /**
- * Pick a provider from the environment. Gemini wins by default; the Lovable
- * gateway serves the same model without a key of your own inside the Lovable
- * sandbox. Anthropic is last and only used when it is the sole key present.
+ * Pick a provider from the environment. Gemini is preferred and a configured
+ * local model is used when no Gemini key is available.
  */
 export function resolveProvider(): Provider {
   const geminiKey = process.env["GEMINI_API_KEY"] ?? process.env["GOOGLE_API_KEY"];
@@ -656,30 +535,6 @@ export function resolveProvider(): Provider {
       label: GEMINI_MODEL,
       run: (system, user) => generateWithGemini(system, user, geminiKey),
       stream: (system, user) => streamWithGemini(system, user, geminiKey),
-    };
-  }
-
-  const gatewayKey = process.env["LOVABLE_API_KEY"];
-  if (gatewayKey) {
-    return {
-      id: "lovable-gateway",
-      label: GATEWAY_MODEL,
-      run: (system, user) => generateWithGateway(system, user, gatewayKey),
-      stream: streamFromRun(GATEWAY_MODEL, (system, user) =>
-        generateWithGateway(system, user, gatewayKey),
-      ),
-    };
-  }
-
-  const anthropicKey = process.env["ANTHROPIC_API_KEY"];
-  if (anthropicKey) {
-    return {
-      id: "anthropic",
-      label: ANTHROPIC_MODEL,
-      run: (system, user) => generateWithAnthropic(system, user, anthropicKey),
-      stream: streamFromRun(ANTHROPIC_MODEL, (system, user) =>
-        generateWithAnthropic(system, user, anthropicKey),
-      ),
     };
   }
 

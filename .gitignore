@@ -31,9 +31,8 @@ dist-ssr
 *.sln
 *.sw?
 
-# Secrets — .env itself is committed in this project, so keep keys in .env.local
+# Secrets
+.env
 .env.local
 
-# Lovable sandbox metadata — .workspace/.git/config embeds a read-scoped access
-# token, so it must never be committed.
 .workspace/

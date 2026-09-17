@@ -4,7 +4,7 @@ An AI-powered component and Tailwind CSS code generator. Describe a UI block in
 natural language, and the studio returns production-ready React + Tailwind JSX
 with a live interactive preview beside the code.
 
-Built with [Lovable](https://lovable.dev) on TanStack Start.
+Built with TanStack Start.
 
 ---
 
@@ -16,7 +16,6 @@ Built with [Lovable](https://lovable.dev) on TanStack Start.
 | UI        | React 19, Tailwind CSS v4, shadcn/ui, Lucide icons           |
 | Server    | TanStack server functions (the equivalent of server actions) |
 | AI        | Gemini 3.7 Flash, with a local Ollama model as fallback      |
-| Data      | Supabase (provisioned, not yet used by the studio)           |
 
 ---
 
@@ -29,8 +28,6 @@ src/
 │   │   ├── CodeView.tsx        Syntax-highlighted code pane, copy + .jsx download
 │   │   └── PreviewFrame.tsx    Sandboxed iframe that compiles and renders the output
 │   └── ui/                     shadcn/ui primitives
-├── integrations/
-│   └── supabase/               Client, auth middleware, generated types
 ├── lib/
 │   ├── component-generation.server.ts     System prompt, sanitizer, providers
 │   ├── component-generation.functions.ts  Server functions the client calls
@@ -41,7 +38,7 @@ src/
 │   └── index.tsx               The split-screen studio
 ├── router.tsx                  Router + React Query wiring
 ├── server.ts                   SSR entry with an error wrapper
-├── start.ts                    Server middleware (CSRF, Supabase auth, errors)
+├── start.ts                    Server middleware (CSRF and errors)
 └── styles.css                  Dark-first design tokens
 ```
 
@@ -62,8 +59,7 @@ lookup depends on.
 bun install
 ```
 
-Add your Gemini key to **`.env.local`** — not `.env`, which is committed to
-this repository and syncs back to Lovable. Create one at
+Copy `.env.example` to `.env.local`, then add your Gemini key. Create one at
 [aistudio.google.com/apikey](https://aistudio.google.com/apikey):
 
 ```bash
@@ -77,8 +73,8 @@ bun run dev
 ```
 
 The studio is at `http://localhost:3000`. The header badge shows the model
-actually in use. If it reads "not configured", the server found none of
-`GEMINI_API_KEY`, `LOVABLE_API_KEY` or `ANTHROPIC_API_KEY`.
+actually in use. If it reads "not configured", set `GEMINI_API_KEY` or
+`LOCAL_AI_MODEL` in `.env.local`.
 
 <details>
 <summary>Using npm/Node instead of Bun</summary>
@@ -108,10 +104,9 @@ bun run format    # prettier
 
 1. **`src/routes/index.tsx`** collects the prompt plus any active style
    modifiers and calls the `streamComponent` server function.
-2. **`resolveProvider()`** takes the first key present in this order:
-   `GEMINI_API_KEY` (direct Google AI Studio) → `LOVABLE_API_KEY` (same Gemini
-   model via the gateway) → `ANTHROPIC_API_KEY` → `LOCAL_AI_MODEL` (a local
-   Ollama / LM Studio model). No key ever reaches the browser.
+2. **`resolveProvider()`** uses `GEMINI_API_KEY` (direct Google AI Studio), or
+   `LOCAL_AI_MODEL` (a local Ollama / LM Studio model). No key ever reaches the
+   browser.
 3. The **system prompt** forces a single `function GeneratedComponent()`
    declaration styled only with Tailwind utilities — no markdown, no imports,
    no external libraries.
@@ -138,10 +133,7 @@ studio switches to the Code tab on submit and back to Live Preview on success,
 and copy/download stay disabled until the component is whole so you can never
 walk away with half a file.
 
-Providers that cannot stream (`generateWithGateway`, `generateWithAnthropic`)
-go through `streamFromRun()`, which delivers the finished component as a single
-delta. They keep working; they just do not fill in progressively. Gemini and the
-local provider both stream for real.
+Gemini and the local provider both stream token batches for progressive display.
 
 ## Local model fallback
 
@@ -198,16 +190,10 @@ All three model IDs live at the top of the providers block in
 
 ```ts
 export const GEMINI_MODEL = "gemini-3.7-flash";
-export const GATEWAY_MODEL = "google/gemini-3.7-flash";
-export const ANTHROPIC_MODEL = "claude-opus-5";
 ```
 
-`GEMINI_MODEL` and `GATEWAY_MODEL` are the same model reached by two different
-routes, so change them together.
-
-Latency is tuned for a live studio. All three paths run with reasoning off or
-low: Gemini sets `thinkingConfig: { thinkingBudget: 0 }`, the gateway sets
-`reasoning_effort: "none"`, and Anthropic uses `effort: "low"`.
+Latency is tuned for a live studio. Gemini runs with reasoning disabled via
+`thinkingConfig: { thinkingBudget: 0 }`.
 
 This matters more than it looks. Measured on the pricing-table prompt,
 `gemini-3.7-flash` took **~40s** with its default thinking budget and **~10s**
