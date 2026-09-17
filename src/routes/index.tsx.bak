@@ -842,6 +842,34 @@ try {
                                 >
                                   Save as Template
                                 </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const targetId = activeChatId ?? history[0]?.id;
+                                    if (!targetId) {
+                                      toast.error("No chat to tag yet.");
+                                      return;
+                                    }
+                                    const name = window.prompt("Project name:", "My Project");
+                                    if (!name) return;
+                                    const clean = name.trim().slice(0, 40);
+                                    if (!clean) return;
+                                    if (!projects.includes(clean)) {
+                                      setProjects((prev) => [...prev, clean]);
+                                    }
+                                    setHistory((prev) =>
+                                      prev.map((h) =>
+                                        h.id === targetId
+                                          ? ({ ...h, project: clean } as typeof h)
+                                          : h,
+                                      ),
+                                    );
+                                    setActiveProject(clean);
+                                  }}
+                                  className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white"
+                                >
+                                  Add to Project
+                                </button>
                               </div>
                             </>
                           )}
@@ -1645,6 +1673,74 @@ try {
                           </div>
                         </div>
                       </div>
+                    </div>
+                  ) : activeNav === "projects" ? (
+                    <div className="space-y-6">
+                      <div>
+                        <h2 className="text-2xl font-semibold tracking-tight text-white">Projects</h2>
+                        <p className="mt-1 text-sm text-white/50">
+                          Group related chats. Click a project to filter the sidebar.
+                        </p>
+                      </div>
+
+                      {projects.length === 0 ? (
+                        <div className="glass-card p-8 text-center">
+                          <p className="text-sm text-white/70">No projects yet.</p>
+                          <p className="mt-2 text-xs text-white/50">
+                            Open any chat and click &quot;Add to Project&quot; on an assistant bubble.
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                          {projects.map((proj) => {
+                            const count = history.filter(
+                              (h) => (h as { project?: string }).project === proj,
+                            ).length;
+                            return (
+                              <div key={proj} className="group relative">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setActiveProject(proj);
+                                    setActiveNav("chat");
+                                  }}
+                                  className={cn(
+                                    "glass-card w-full p-4 text-left transition-colors hover:bg-white/[0.06]",
+                                    activeProject === proj && "border-violet-400/40",
+                                  )}
+                                >
+                                  <div className="flex items-center gap-2">
+                                    <span className="inline-block size-2 rounded-full bg-violet-400" />
+                                    <p className="text-sm font-medium text-white">{proj}</p>
+                                  </div>
+                                  <p className="mt-3 text-[10px] text-white/40">
+                                    {count} {count === 1 ? "chat" : "chats"}
+                                  </p>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setProjects((prev) => prev.filter((p) => p !== proj));
+                                    setHistory((prev) =>
+                                      prev.map((h) =>
+                                        (h as { project?: string }).project === proj
+                                          ? ({ ...h, project: undefined } as typeof h)
+                                          : h,
+                                      ),
+                                    );
+                                    if (activeProject === proj) setActiveProject(null);
+                                  }}
+                                  className="absolute right-2 top-2 hidden rounded-md px-1.5 py-0.5 text-xs text-white/40 transition-colors hover:bg-red-500/20 hover:text-red-300 group-hover:block"
+                                  aria-label="Delete project"
+                                >
+                                  ×
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
                   ) : activeNav === "templates" ? (
                     <div className="space-y-6">

@@ -1907,7 +1907,29 @@ try {
                       viewport === "mobile" ? "w-[390px]" : "w-full",
                     )}
                   >
-                    <PreviewFrame code={code} surface={surface} />
+                    <div className="flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-[#0a0616] shadow-2xl">
+                      <div className="flex items-center gap-2 border-b border-white/5 bg-white/[0.03] px-3 py-2">
+                        <span className="size-2.5 rounded-full bg-[#ff5f57]" />
+                        <span className="size-2.5 rounded-full bg-[#febc2e]" />
+                        <span className="size-2.5 rounded-full bg-[#28c840]" />
+                        <div className="ml-3 flex flex-1 items-center gap-2 rounded-md border border-white/5 bg-black/40 px-3 py-1">
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/30">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                          </svg>
+                          <span className="font-mono text-[10px] text-white/40">preview.pulseui.local</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white/30">
+                            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+                            <path d="M21 3v5h-5" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="flex-1 overflow-hidden bg-black/20">
+                        <PreviewFrame code={code} surface={surface} />
+                      </div>
+                    </div>
                   </div>
                 </div>
               ) : (
