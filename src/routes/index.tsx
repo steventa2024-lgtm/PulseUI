@@ -111,6 +111,7 @@ function Studio() {
   const [tab, setTab] = useState<"preview" | "code">("preview");
   const [viewport, setViewport] = useState<"desktop" | "mobile">("desktop");
   const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [messages, setMessages] = useState<{ role: "user" | "assistant"; content: string }[]>([]);
   const [historyReady, setHistoryReady] = useState(false);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [activeNav, setActiveNav] = useState<"dashboard" | "search" | "connectors" | "settings" | "projects" | "chat">("chat");
@@ -195,6 +196,7 @@ function Studio() {
       setCode(result.code);
       setStreamText("");
       setTab("preview");
+      setMessages((prev) => [...prev, { role: "assistant", content: "Generated: " + input.prompt.slice(0, 80) }]);
       setHistory((prev) =>
         [
           {
@@ -219,6 +221,7 @@ function Studio() {
       toast.error("Describe the component you want first.");
       return;
     }
+    setMessages((prev) => [...prev, { role: "user", content: text }]);
     mutation.mutate({ prompt: text, modifiers });
   };
 
@@ -346,6 +349,7 @@ function Studio() {
                   onClick={() => {
                     setPrompt(item.prompt);
                     setActiveChatId(item.id);
+                    setMessages([]);
                   }}
                   className={`mb-0.5 block w-full rounded-lg px-3 py-2 text-left text-xs transition-colors ${
                     activeChatId === item.id
@@ -365,6 +369,23 @@ function Studio() {
         {activeNav === "chat" && (
           <section className="flex flex-col min-h-0 overflow-hidden border-r border-white/10">
             <div className="flex flex-1 flex-col overflow-y-auto p-5">
+              {messages.length > 0 && (
+                <div className="mb-5 space-y-3 border-b border-white/5 pb-5">
+                  {messages.map((m, i) => (
+                    <div key={i} className={m.role === "user" ? "flex justify-end" : "flex justify-start"}>
+                      <div
+                        className={
+                          m.role === "user"
+                            ? "max-w-[85%] rounded-2xl border border-violet-400/30 bg-violet-500/20 px-4 py-2.5 text-sm text-white"
+                            : "max-w-[85%] rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white/80"
+                        }
+                      >
+                        {m.content}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
               {unconfigured && (
               <div className="flex gap-2.5 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2.5">
                 <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-destructive" />
