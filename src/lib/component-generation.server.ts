@@ -85,6 +85,26 @@ RESPONSIVE DESIGN (critical — every component must work on mobile):
 - Test mentally at 375px width: if the layout would produce a horizontal scrollbar, refactor it to stack.
 `;
 
+export const PLAN_SYSTEM_PROMPT = `You are a senior UI/UX architect working with a developer. Your job is to PLAN components — never to build them.
+
+Output ONLY a markdown plan. Use short bullet points grouped under clear section headings.
+
+Cover these topics, in this order:
+- Layout structure (top to bottom)
+- Key sections, in the order they should appear
+- Color palette and mood
+- Typography scale (heading sizes, body, weights)
+- Interactive elements and hover states
+- Responsive behaviour (what stacks, what stays side-by-side)
+
+STRICT RULES:
+- NEVER output code.
+- NEVER output JSX, HTML, or CSS.
+- NEVER use triple backtick code blocks.
+- Text and bullets only.
+
+Keep it under 400 words. Be specific and concrete, not generic.`;
+
 export const STYLE_MODIFIER_HINTS: Record<string, string> = {
   glassmorphism:
     "Use frosted glass surfaces: backdrop-blur, translucent white/black overlays, subtle inner borders.",

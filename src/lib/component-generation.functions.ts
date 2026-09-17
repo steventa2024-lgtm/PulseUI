@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import {
   SYSTEM_PROMPT,
+  PLAN_SYSTEM_PROMPT,
   buildUserPrompt,
   resolveFallbackProvider,
   resolveProvider,
@@ -11,6 +12,7 @@ import {
 const inputSchema = z.object({
   prompt: z.string().trim().min(3).max(50000),
   modifiers: z.array(z.string().max(40)).max(8).default([]),
+  mode: z.enum(["build", "plan"]).default("build"),
 });
 
 /**
@@ -26,12 +28,13 @@ export const streamComponent = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const provider = resolveProvider();
     const userPrompt = buildUserPrompt(data.prompt, data.modifiers);
+    const systemPrompt = data.mode === "plan" ? PLAN_SYSTEM_PROMPT : SYSTEM_PROMPT;
 
     let stream: ReadableStream<Uint8Array>;
     let model = provider.label;
 
     try {
-      stream = await provider.stream(SYSTEM_PROMPT, userPrompt);
+      stream = await provider.stream(systemPrompt, userPrompt);
     } catch (error) {
       // Nothing has been sent yet, so we are still free to try someone else.
       // This is the point of the local fallback: hosted tiers run out of quota,
@@ -42,7 +45,7 @@ export const streamComponent = createServerFn({ method: "POST" })
       console.warn(
         `${provider.label} failed (${error instanceof Error ? error.message : String(error)}); falling back to ${fallback.label}.`,
       );
-      stream = await fallback.stream(SYSTEM_PROMPT, userPrompt);
+      stream = await fallback.stream(systemPrompt, userPrompt);
       model = fallback.label;
     }
 

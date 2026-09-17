@@ -124,6 +124,8 @@ function Studio() {
   const [templates, setTemplates] = useState<TemplateItem[]>([]);
   const [projects, setProjects] = useState<string[]>([]);
   const [activeProject, setActiveProject] = useState<string | null>(null);
+  const chatScrollRef = useRef<HTMLDivElement | null>(null);
+  const [showScrollButton, setShowScrollButton] = useState(false);
   const [messages, setMessages] = useState<{ role: "user" | "assistant"; content: string; code?: string }[]>([]);
   const [historyReady, setHistoryReady] = useState(false);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
@@ -141,6 +143,7 @@ function Studio() {
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [refineMode, setRefineMode] = useState(false);
+  const [composeMode, setComposeMode] = useState<"build" | "plan">("build");
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [placeholderText, setPlaceholderText] = useState("");
   const [placeholderPromptIdx, setPlaceholderPromptIdx] = useState(0);
@@ -370,24 +373,48 @@ function Studio() {
       return finished;
     },
     onSuccess: (result, input) => {
-      const assistantSummary = input.prompt.startsWith("Here is the current component code:")
+      const isPlan = input.prompt.startsWith("[PLAN MODE]");
+      const isRefine = input.prompt.startsWith("Here is the current component code:");
+
+      const assistantSummary = isPlan
+        ? result.code
+        : isRefine
         ? "Refined the component."
         : "Generated a component for: " + input.prompt.slice(0, 60) + (input.prompt.length > 60 ? "…" : "");
+
       const newMessages = [
         ...messages,
-        { role: "assistant" as const, content: assistantSummary, code: result.code },
+        {
+          role: "assistant" as const,
+          content: assistantSummary,
+          code: isPlan ? undefined : result.code,
+        },
       ];
       setMessages(newMessages);
-      setCode(result.code);
+
+      if (!isPlan) {
+        setCode(result.code);
+        setTab("preview");
+      }
+
       setStreamText("");
-      setTab("preview");
       setSearchQuery("");
+
+      let historyPrompt = input.prompt;
+      if (isPlan) {
+        const m = input.prompt.match(/Request:\s*([\s\S]+)$/);
+        historyPrompt = "[Plan] " + (m ? m[1].trim() : "plan");
+      } else if (isRefine) {
+        const m = input.prompt.match(/Now apply this change and return the full updated component:\s*([\s\S]+)$/);
+        historyPrompt = "Refine: " + (m ? m[1].trim() : "refinement");
+      }
+
       setHistory((prev) =>
         [
           {
             id: newId(),
-            prompt: input.prompt,
-            code: result.code,
+            prompt: historyPrompt,
+            code: isPlan ? "" : result.code,
             at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
             messages: newMessages,
           },
@@ -411,8 +438,10 @@ function Studio() {
     let finalPrompt = text;
     let displayText = text;
 
-    // Refine mode: send the existing component as context
-    if (refineMode && code && code !== WELCOME) {
+    if (composeMode === "plan") {
+      finalPrompt = `[PLAN MODE] You are a senior UI/UX architect. Do NOT write any code.\n\nFor the request below, return a concise plan (6-10 bullet points) covering:\n- Layout structure\n- Key sections in order\n- Color palette suggestions\n- Typography and spacing\n- Interactive elements\n- Responsive breakpoints\n\nRequest: ${text}`;
+      displayText = text;
+    } else if (refineMode && code && code !== WELCOME) {
       finalPrompt = `Here is the current component code:\n\n${code}\n\nNow apply this change and return the full updated component:\n\n${text}`;
       displayText = `Refine: ${text}`;
     }
@@ -478,6 +507,30 @@ try {
     a.click();
     URL.revokeObjectURL(url);
   };
+
+  const handleChatScroll = () => {
+    const el = chatScrollRef.current;
+    if (!el) return;
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    setShowScrollButton(distanceFromBottom > 80);
+  };
+
+  const scrollToBottom = () => {
+    const el = chatScrollRef.current;
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+    setShowScrollButton(false);
+  };
+
+  // Auto-scroll when new messages arrive, unless user scrolled up
+  useEffect(() => {
+    const el = chatScrollRef.current;
+    if (!el) return;
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    if (distanceFromBottom < 200) {
+      el.scrollTop = el.scrollHeight;
+    }
+  }, [messages, streamText]);
 
   const toggleModifier = (id: string) =>
     setModifiers((prev) => (prev.includes(id) ? prev.filter((m) => m !== id) : [...prev, id]));
@@ -752,8 +805,8 @@ try {
 
         {/* MIDDLE — prompt + controls + history */}
         {activeNav === "chat" && (
-          <section className="flex flex-col min-h-0 overflow-hidden border-r border-white/10">
-            <div className="flex flex-1 flex-col overflow-y-auto p-5">
+          <section className="relative flex flex-col min-h-0 overflow-hidden border-r border-white/10">
+            <div ref={chatScrollRef} onScroll={handleChatScroll} className="flex flex-1 flex-col overflow-y-auto p-5">
               {messages.length > 0 && (
                 <div className="mb-5 space-y-3 border-b border-white/5 pb-5">
                   {messages.map((m, i) => (
@@ -914,6 +967,19 @@ try {
               </div>
             )}
 
+            {showScrollButton && (
+              <button
+                type="button"
+                onClick={scrollToBottom}
+                className="absolute bottom-4 right-4 z-20 flex size-9 items-center justify-center rounded-full border border-violet-400/30 bg-violet-500/20 text-violet-100 shadow-[0_8px_24px_-8px_rgba(139,92,246,0.5)] backdrop-blur-xl transition-all hover:bg-violet-500/30 hover:scale-105"
+                aria-label="Scroll to latest"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 5v14M19 12l-7 7-7-7" />
+                </svg>
+              </button>
+            )}
+
             <div className="space-y-2.5">
               <label
                 htmlFor="prompt"
@@ -934,29 +1000,62 @@ try {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => setRefineMode(false)}
+                  onClick={() => {
+                    setComposeMode("build");
+                  }}
                   disabled={mutation.isPending}
                   className={
-                    refineMode
-                      ? "flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/50 transition-colors hover:text-white disabled:opacity-40"
-                      : "flex-1 rounded-lg border border-violet-400/40 bg-violet-500/15 px-3 py-1.5 text-xs font-medium text-violet-200 disabled:opacity-40"
-                  }
-                >
-                  New
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setRefineMode(true)}
-                  disabled={mutation.isPending || !code || code === WELCOME}
-                  className={
-                    refineMode
+                    composeMode === "build"
                       ? "flex-1 rounded-lg border border-violet-400/40 bg-violet-500/15 px-3 py-1.5 text-xs font-medium text-violet-200 disabled:opacity-40"
                       : "flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/50 transition-colors hover:text-white disabled:opacity-40"
                   }
                 >
-                  Refine
+                  Build
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setComposeMode("plan");
+                    setRefineMode(false);
+                  }}
+                  disabled={mutation.isPending}
+                  className={
+                    composeMode === "plan"
+                      ? "flex-1 rounded-lg border border-amber-400/40 bg-amber-500/15 px-3 py-1.5 text-xs font-medium text-amber-200 disabled:opacity-40"
+                      : "flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/50 transition-colors hover:text-white disabled:opacity-40"
+                  }
+                >
+                  Plan
                 </button>
               </div>
+              {composeMode === "build" && (
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setRefineMode(false)}
+                    disabled={mutation.isPending}
+                    className={
+                      refineMode
+                        ? "flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/50 transition-colors hover:text-white disabled:opacity-40"
+                        : "flex-1 rounded-lg border border-violet-400/40 bg-violet-500/15 px-3 py-1.5 text-xs font-medium text-violet-200 disabled:opacity-40"
+                    }
+                  >
+                    New
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setRefineMode(true)}
+                    disabled={mutation.isPending || !code || code === WELCOME}
+                    className={
+                      refineMode
+                        ? "flex-1 rounded-lg border border-violet-400/40 bg-violet-500/15 px-3 py-1.5 text-xs font-medium text-violet-200 disabled:opacity-40"
+                        : "flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/50 transition-colors hover:text-white disabled:opacity-40"
+                    }
+                  >
+                    Refine
+                  </button>
+                </div>
+              )}
               <Button className="w-full hover-glow" disabled={mutation.isPending} onClick={() => run(prompt)}>
                 {mutation.isPending ? (
                   <Loader2 className="size-4 animate-spin" />
@@ -965,6 +1064,8 @@ try {
                 )}
                 {mutation.isPending
                   ? "Generating…"
+                  : composeMode === "plan"
+                  ? "Generate plan"
                   : refineMode
                   ? "Refine component"
                   : "Generate component"}

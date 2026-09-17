@@ -7,6 +7,7 @@ import {
   Boxes,
   Code2,
   Eye,
+  FileText,
   History,
   Loader2,
   Monitor,
@@ -118,7 +119,7 @@ function Studio() {
   // Raw text as it streams in. The preview keeps rendering the last finished
   // component until a generation completes, since partial JSX cannot compile.
   const [streamText, setStreamText] = useState("");
-  const [tab, setTab] = useState<"preview" | "code">("preview");
+  const [tab, setTab] = useState<"preview" | "code" | "plan">("preview");
   const [viewport, setViewport] = useState<"desktop" | "mobile">("desktop");
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [templates, setTemplates] = useState<TemplateItem[]>([]);
@@ -143,6 +144,8 @@ function Studio() {
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [refineMode, setRefineMode] = useState(false);
+  const [composeMode, setComposeMode] = useState<"build" | "plan">("build");
+  const [planText, setPlanText] = useState("");
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [placeholderText, setPlaceholderText] = useState("");
   const [placeholderPromptIdx, setPlaceholderPromptIdx] = useState(0);
@@ -320,7 +323,7 @@ function Studio() {
   });
 
   const mutation = useMutation({
-    mutationFn: async (input: { prompt: string; modifiers: string[] }) => {
+    mutationFn: async (input: { prompt: string; modifiers: string[]; mode: "build" | "plan" }) => {
       setStreamText("");
       // Show the code pane while tokens arrive; the preview has nothing to show
       // until the component is complete.
@@ -372,24 +375,51 @@ function Studio() {
       return finished;
     },
     onSuccess: (result, input) => {
-      const assistantSummary = input.prompt.startsWith("Here is the current component code:")
+      const isPlan = input.prompt.startsWith("[PLAN MODE]");
+      const isRefine = input.prompt.startsWith("Here is the current component code:");
+
+      const assistantSummary = isPlan
+        ? result.code
+        : isRefine
         ? "Refined the component."
         : "Generated a component for: " + input.prompt.slice(0, 60) + (input.prompt.length > 60 ? "…" : "");
+
       const newMessages = [
         ...messages,
-        { role: "assistant" as const, content: assistantSummary, code: result.code },
+        {
+          role: "assistant" as const,
+          content: assistantSummary,
+          code: isPlan ? undefined : result.code,
+        },
       ];
       setMessages(newMessages);
-      setCode(result.code);
+
+      if (isPlan) {
+        setPlanText(result.code);
+        setTab("plan");
+      } else {
+        setCode(result.code);
+        setTab("preview");
+      }
+
       setStreamText("");
-      setTab("preview");
       setSearchQuery("");
+
+      let historyPrompt = input.prompt;
+      if (isPlan) {
+        const m = input.prompt.match(/Request:\s*([\s\S]+)$/);
+        historyPrompt = "[Plan] " + (m ? m[1].trim() : "plan");
+      } else if (isRefine) {
+        const m = input.prompt.match(/Now apply this change and return the full updated component:\s*([\s\S]+)$/);
+        historyPrompt = "Refine: " + (m ? m[1].trim() : "refinement");
+      }
+
       setHistory((prev) =>
         [
           {
             id: newId(),
-            prompt: input.prompt,
-            code: result.code,
+            prompt: historyPrompt,
+            code: isPlan ? "" : result.code,
             at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
             messages: newMessages,
           },
@@ -413,14 +443,16 @@ function Studio() {
     let finalPrompt = text;
     let displayText = text;
 
-    // Refine mode: send the existing component as context
-    if (refineMode && code && code !== WELCOME) {
+    if (composeMode === "plan") {
+      finalPrompt = `[PLAN MODE] You are a senior UI/UX architect. Do NOT write any code.\n\nFor the request below, return a concise plan (6-10 bullet points) covering:\n- Layout structure\n- Key sections in order\n- Color palette suggestions\n- Typography and spacing\n- Interactive elements\n- Responsive breakpoints\n\nRequest: ${text}`;
+      displayText = text;
+    } else if (refineMode && code && code !== WELCOME) {
       finalPrompt = `Here is the current component code:\n\n${code}\n\nNow apply this change and return the full updated component:\n\n${text}`;
       displayText = `Refine: ${text}`;
     }
 
     setMessages((prev) => [...prev, { role: "user", content: displayText }]);
-    mutation.mutate({ prompt: finalPrompt, modifiers });
+    mutation.mutate({ prompt: finalPrompt, modifiers, mode: composeMode });
   };
 
   const exportStandaloneHTML = (code: string, prompt: string) => {
@@ -973,29 +1005,62 @@ try {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => setRefineMode(false)}
+                  onClick={() => {
+                    setComposeMode("build");
+                  }}
                   disabled={mutation.isPending}
                   className={
-                    refineMode
-                      ? "flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/50 transition-colors hover:text-white disabled:opacity-40"
-                      : "flex-1 rounded-lg border border-violet-400/40 bg-violet-500/15 px-3 py-1.5 text-xs font-medium text-violet-200 disabled:opacity-40"
-                  }
-                >
-                  New
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setRefineMode(true)}
-                  disabled={mutation.isPending || !code || code === WELCOME}
-                  className={
-                    refineMode
+                    composeMode === "build"
                       ? "flex-1 rounded-lg border border-violet-400/40 bg-violet-500/15 px-3 py-1.5 text-xs font-medium text-violet-200 disabled:opacity-40"
                       : "flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/50 transition-colors hover:text-white disabled:opacity-40"
                   }
                 >
-                  Refine
+                  Build
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setComposeMode("plan");
+                    setRefineMode(false);
+                  }}
+                  disabled={mutation.isPending}
+                  className={
+                    composeMode === "plan"
+                      ? "flex-1 rounded-lg border border-amber-400/40 bg-amber-500/15 px-3 py-1.5 text-xs font-medium text-amber-200 disabled:opacity-40"
+                      : "flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/50 transition-colors hover:text-white disabled:opacity-40"
+                  }
+                >
+                  Plan
                 </button>
               </div>
+              {composeMode === "build" && (
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setRefineMode(false)}
+                    disabled={mutation.isPending}
+                    className={
+                      refineMode
+                        ? "flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/50 transition-colors hover:text-white disabled:opacity-40"
+                        : "flex-1 rounded-lg border border-violet-400/40 bg-violet-500/15 px-3 py-1.5 text-xs font-medium text-violet-200 disabled:opacity-40"
+                    }
+                  >
+                    New
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setRefineMode(true)}
+                    disabled={mutation.isPending || !code || code === WELCOME}
+                    className={
+                      refineMode
+                        ? "flex-1 rounded-lg border border-violet-400/40 bg-violet-500/15 px-3 py-1.5 text-xs font-medium text-violet-200 disabled:opacity-40"
+                        : "flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/50 transition-colors hover:text-white disabled:opacity-40"
+                    }
+                  >
+                    Refine
+                  </button>
+                </div>
+              )}
               <Button className="w-full hover-glow" disabled={mutation.isPending} onClick={() => run(prompt)}>
                 {mutation.isPending ? (
                   <Loader2 className="size-4 animate-spin" />
@@ -1004,6 +1069,8 @@ try {
                 )}
                 {mutation.isPending
                   ? "Generating…"
+                  : composeMode === "plan"
+                  ? "Generate plan"
                   : refineMode
                   ? "Refine component"
                   : "Generate component"}
@@ -1857,6 +1924,7 @@ try {
                   [
                     { id: "preview", label: "Live Preview", icon: Eye },
                     { id: "code", label: "Code", icon: Code2 },
+                    ...(planText ? [{ id: "plan" as const, label: "Plan", icon: FileText }] : []),
                   ] as const
                 ).map(({ id, label, icon: Icon }) => (
                   <button
@@ -1938,7 +2006,13 @@ try {
                 </div>
               )}
 
-              {tab === "preview" ? (
+              {tab === "plan" ? (
+                <div className="flex-1 overflow-y-auto rounded-xl border border-white/[0.08] bg-black/20 p-6">
+                  <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-white/80">
+                    {planText}
+                  </pre>
+                </div>
+              ) : tab === "preview" ? (
                 <div className="flex h-full justify-center">
                   <div
                     className={cn(
