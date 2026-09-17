@@ -348,7 +348,23 @@ function Studio() {
 
             {/* Recent chats */}
             <div className="flex-1 overflow-y-auto border-t border-white/5 px-2 py-3">
-              <div className="px-3 pb-2 text-[10px] font-medium uppercase tracking-wider text-white/40">Recent</div>
+              <div className="flex items-center justify-between px-3 pb-2">
+                <span className="text-[10px] font-medium uppercase tracking-wider text-white/40">Recent</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMessages([]);
+                    setPrompt("");
+                    setCode(WELCOME);
+                    setStreamText("");
+                    setActiveChatId(null);
+                    setTab("preview");
+                  }}
+                  className="rounded-md px-2 py-0.5 text-[10px] font-medium text-white/50 transition-colors hover:bg-white/10 hover:text-white"
+                >
+                  + New
+                </button>
+              </div>
               {HIST.map((item) => (
                 <button
                   key={item.id}
