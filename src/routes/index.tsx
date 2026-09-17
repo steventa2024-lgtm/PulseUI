@@ -365,22 +365,42 @@ function Studio() {
                   + New
                 </button>
               </div>
-              {HIST.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setPrompt(item.prompt);
-                    setActiveChatId(item.id);
-                    setMessages([]);
-                  }}
-                  className={`mb-0.5 block w-full rounded-lg px-3 py-2 text-left text-xs transition-colors ${
-                    activeChatId === item.id
-                      ? "bg-violet-500/15 border border-violet-400/30 text-white"
-                      : "text-white/60 hover:bg-white/5 hover:text-white/90"
-                  }`}
-                >
-                  <div className="line-clamp-2 leading-snug">{item.prompt}</div>
-                </button>
+              {history.map((item) => (
+                <div key={item.id} className="group relative mb-0.5">
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => {
+                      setPrompt(item.prompt);
+                      setActiveChatId(item.id);
+                      setMessages([]);
+                    }}
+                    className={`block w-full rounded-lg px-3 py-2 pr-8 text-left text-xs transition-colors cursor-pointer ${
+                      activeChatId === item.id
+                        ? "bg-violet-500/15 border border-violet-400/30 text-white"
+                        : "text-white/60 hover:bg-white/5 hover:text-white/90"
+                    }`}
+                  >
+                    <div className="line-clamp-2 leading-snug">{item.prompt}</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setHistory((prev) => prev.filter((h) => h.id !== item.id));
+                      if (activeChatId === item.id) {
+                        setMessages([]);
+                        setPrompt("");
+                        setCode(WELCOME);
+                        setActiveChatId(null);
+                      }
+                    }}
+                    className="absolute right-1.5 top-1/2 hidden -translate-y-1/2 rounded-md px-1.5 py-0.5 text-xs text-white/40 transition-colors hover:bg-red-500/20 hover:text-red-300 group-hover:block"
+                    aria-label="Delete chat"
+                  >
+                    ×
+                  </button>
+                </div>
               ))}
             </div>
 

@@ -64,6 +64,13 @@ DESIGN VARIETY (critical — never repeat yourself):
 - NEVER default to a purple gradient SaaS look if the prompt doesn't call for it. That is a failure mode, not a default.
 - Each generation should look like it was made by a different designer on a different day.
 
+HONORING EXPLICIT INSTRUCTIONS (highest priority):
+- If the user's prompt names a specific COLOR, honor it literally. Examples: "off-white", "cream", "beige", "white", "light gray", "pale blue", "black", "charcoal", "navy", "forest green". Do NOT substitute a dark theme for a light background request, and do NOT substitute purple for a specific color the user named.
+- If the user's prompt names a specific TYPOGRAPHY style, honor it. "Serif", "monospace", "display", "handwritten", "sans-serif".
+- If the user's prompt names a specific ERA or MOOD ("80s", "retro-futuristic", "editorial", "cozy", "brutalist", "luxury", "playful"), commit fully.
+- Explicit instructions in the prompt ALWAYS override the DESIGN VARIETY defaults. The variety rules only apply to aspects the user did not specify.
+- If the user says "off-white background with serif headings", the result MUST have an off-white background and serif headings. Full stop.
+
 Return the component source, starting with "function GeneratedComponent()".
 RESPONSIVE DESIGN (critical — every component must work on mobile):
 - Default mobile-first. Every multi-column layout must STACK on small screens.
