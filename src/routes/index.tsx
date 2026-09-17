@@ -50,6 +50,14 @@ export const Route = createFileRoute("/")({
 
 type HistoryItem = { id: string; prompt: string; code: string; at: string; messages: { role: "user" | "assistant"; content: string; code?: string }[] };
 
+type TemplateItem = {
+  id: string;
+  name: string;
+  prompt: string;
+  code: string;
+  at: string;
+};
+
 const HISTORY_KEY = "promptui-studio:history";
 const UI_STATE_KEY = "promptui.ui-state.v1";
 const HISTORY_LIMIT = 20;
@@ -113,10 +121,11 @@ function Studio() {
   const [tab, setTab] = useState<"preview" | "code">("preview");
   const [viewport, setViewport] = useState<"desktop" | "mobile">("desktop");
   const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [templates, setTemplates] = useState<TemplateItem[]>([]);
   const [messages, setMessages] = useState<{ role: "user" | "assistant"; content: string; code?: string }[]>([]);
   const [historyReady, setHistoryReady] = useState(false);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
-  const [activeNav, setActiveNav] = useState<"dashboard" | "search" | "connectors" | "settings" | "projects" | "chat">(() => {
+  const [activeNav, setActiveNav] = useState<"dashboard" | "search" | "connectors" | "settings" | "projects" | "chat" | "templates">(() => {
     if (typeof window === "undefined") return "chat";
     try {
       const saved = window.localStorage.getItem("promptui.ui-state.v1");
@@ -137,6 +146,12 @@ function Studio() {
   // Read after mount: reading during render would desync SSR and hydration.
   useEffect(() => {
     setHistory(loadHistory());
+    try {
+      const savedTemplates = window.localStorage.getItem("promptui.templates.v1");
+      if (savedTemplates) setTemplates(JSON.parse(savedTemplates));
+    } catch {
+      // ignore
+    }
     setHistoryReady(true);
   }, []);
 
@@ -148,6 +163,15 @@ function Studio() {
       // Storage can be full or blocked; history stays in memory for this session.
     }
   }, [history, historyReady]);
+
+  useEffect(() => {
+    if (!historyReady) return;
+    try {
+      window.localStorage.setItem("promptui.templates.v1", JSON.stringify(templates));
+    } catch {
+      // Ignore
+    }
+  }, [templates, historyReady]);
 
   // Persist UI state (active nav, active chat, search query)
   useEffect(() => {
@@ -583,6 +607,18 @@ try {
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
                 Shared projects
               </button>
+              <button
+                className={cn(
+                  "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors",
+                  activeNav === "templates"
+                    ? "bg-violet-500/15 text-white"
+                    : "text-white/70 hover:bg-white/5 hover:text-white",
+                )}
+                onClick={() => setActiveNav("templates")}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" /></svg>
+                Templates
+              </button>
             </div>
 
             {/* Recent chats */}
@@ -735,6 +771,27 @@ try {
                                   className="rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-200 hover:bg-emerald-500/20"
                                 >
                                   Export HTML
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    if (!m.code) return;
+                                    const name = window.prompt("Name this template:", m.content.slice(0, 40));
+                                    if (!name) return;
+                                    setTemplates((prev) => [
+                                      {
+                                        id: newId(),
+                                        name: name.trim().slice(0, 60),
+                                        prompt: m.content,
+                                        code: m.code || "",
+                                        at: new Date().toLocaleDateString(),
+                                      },
+                                      ...prev,
+                                    ]);
+                                  }}
+                                  className="rounded-lg border border-violet-400/30 bg-violet-500/10 px-3 py-1.5 text-xs font-medium text-violet-200 hover:bg-violet-500/20"
+                                >
+                                  Save as Template
                                 </button>
                               </div>
                             </>
@@ -1539,6 +1596,61 @@ try {
                           </div>
                         </div>
                       </div>
+                    </div>
+                  ) : activeNav === "templates" ? (
+                    <div className="space-y-6">
+                      <div>
+                        <h2 className="text-2xl font-semibold tracking-tight text-white">Templates</h2>
+                        <p className="mt-1 text-sm text-white/50">
+                          Saved components you can reload and refine anytime.
+                        </p>
+                      </div>
+
+                      {templates.length === 0 ? (
+                        <div className="glass-card p-8 text-center">
+                          <p className="text-sm text-white/70">No templates yet.</p>
+                          <p className="mt-2 text-xs text-white/50">
+                            Generate a component, then click &quot;Save as Template&quot; on its bubble.
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                          {templates.map((tpl) => (
+                            <div key={tpl.id} className="group relative">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setActiveNav("chat");
+                                  setMessages([
+                                    { role: "user", content: tpl.prompt },
+                                    { role: "assistant", content: "Loaded from template: " + tpl.name, code: tpl.code },
+                                  ]);
+                                  setCode(tpl.code);
+                                  setPrompt(tpl.prompt);
+                                  setActiveChatId(null);
+                                  setTab("preview");
+                                }}
+                                className="glass-card w-full p-4 text-left transition-colors hover:bg-white/[0.06]"
+                              >
+                                <p className="text-sm font-medium text-white">{tpl.name}</p>
+                                <p className="mt-1 line-clamp-2 text-xs text-white/60">{tpl.prompt}</p>
+                                <p className="mt-3 text-[10px] text-white/40">{tpl.at}</p>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setTemplates((prev) => prev.filter((t) => t.id !== tpl.id));
+                                }}
+                                className="absolute right-2 top-2 hidden rounded-md px-1.5 py-0.5 text-xs text-white/40 transition-colors hover:bg-red-500/20 hover:text-red-300 group-hover:block"
+                                aria-label="Delete template"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div className="flex flex-1 items-center justify-center">
