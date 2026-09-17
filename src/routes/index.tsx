@@ -538,13 +538,13 @@ try {
         >
           <div className="flex flex-col h-full">
             {/* Nav */}
-            <nav className="flex flex-col gap-0.5 p-2">
+            <nav className="flex flex-col gap-0.5 p-2 pb-1">
               <button
                 className={cn(
-                  "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors",
+                  "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[13px] transition-colors",
                   activeNav === "dashboard"
-                    ? "bg-violet-500/15 text-white"
-                    : "text-white/70 hover:bg-white/5 hover:text-white",
+                    ? "bg-white/[0.07] text-white"
+                    : "text-white/60 hover:bg-white/[0.04] hover:text-white",
                 )}
                 onClick={() => setActiveNav("dashboard")}
               >
@@ -553,10 +553,10 @@ try {
               </button>
               <button
                 className={cn(
-                  "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors",
+                  "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[13px] transition-colors",
                   activeNav === "search"
-                    ? "bg-violet-500/15 text-white"
-                    : "text-white/70 hover:bg-white/5 hover:text-white",
+                    ? "bg-white/[0.07] text-white"
+                    : "text-white/60 hover:bg-white/[0.04] hover:text-white",
                 )}
                 onClick={() => setActiveNav("search")}
               >
@@ -565,10 +565,10 @@ try {
               </button>
               <button
                 className={cn(
-                  "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors",
+                  "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[13px] transition-colors",
                   activeNav === "connectors"
-                    ? "bg-violet-500/15 text-white"
-                    : "text-white/70 hover:bg-white/5 hover:text-white",
+                    ? "bg-white/[0.07] text-white"
+                    : "text-white/60 hover:bg-white/[0.04] hover:text-white",
                 )}
                 onClick={() => setActiveNav("connectors")}
               >
@@ -577,10 +577,10 @@ try {
               </button>
               <button
                 className={cn(
-                  "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors",
+                  "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[13px] transition-colors",
                   activeNav === "settings"
-                    ? "bg-violet-500/15 text-white"
-                    : "text-white/70 hover:bg-white/5 hover:text-white",
+                    ? "bg-white/[0.07] text-white"
+                    : "text-white/60 hover:bg-white/[0.04] hover:text-white",
                 )}
                 onClick={() => setActiveNav("settings")}
               >
