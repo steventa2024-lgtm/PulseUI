@@ -195,7 +195,6 @@ function Studio() {
     onSuccess: (result, input) => {
       const newMessages = [
         ...messages,
-        { role: "user" as const, content: input.prompt },
         { role: "assistant" as const, content: "Generated a component for: " + input.prompt.slice(0, 60) + (input.prompt.length > 60 ? "…" : ""), code: result.code },
       ];
       setMessages(newMessages);
