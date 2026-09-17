@@ -128,6 +128,7 @@ function Studio() {
     return "chat";
   });
   const [searchQuery, setSearchQuery] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [placeholderText, setPlaceholderText] = useState("");
   const [placeholderPromptIdx, setPlaceholderPromptIdx] = useState(0);
@@ -234,6 +235,12 @@ function Studio() {
     timer = setTimeout(tick, 400);
     return () => clearTimeout(timer);
   }, [placeholderPromptIdx]);
+
+  // Auto-close the mobile drawer whenever the user navigates
+  useEffect(() => {
+    if (mobileMenuOpen) setMobileMenuOpen(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeChatId, activeNav]);
 
   // Keyboard shortcuts: Cmd/Ctrl + N (new chat), Cmd/Ctrl + K (focus search)
   useEffect(() => {
@@ -389,9 +396,37 @@ function Studio() {
         </Badge>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)_minmax(0,1fr)] h-screen w-full">
+      {/* Mobile header — visible only below the lg breakpoint */}
+      <header className="fixed top-0 left-0 right-0 z-30 flex items-center justify-between border-b border-white/10 bg-black/40 px-4 py-3 backdrop-blur-xl lg:hidden">
+        <button
+          type="button"
+          onClick={() => setMobileMenuOpen(true)}
+          className="flex size-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/70 hover:bg-white/10"
+          aria-label="Open menu"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M3 6h18M3 12h18M3 18h18" />
+          </svg>
+        </button>
+        <span className="text-sm font-semibold text-white">PulseUi Studio</span>
+        <div className="size-9" />
+      </header>
+
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      <div className="grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)_minmax(0,1fr)] h-screen w-full pt-14 lg:pt-0">
         {/* LEFT SIDEBAR — placeholder */}
-        <aside className="hidden lg:flex flex-col border-r border-white/10 bg-black/20 backdrop-blur-xl overflow-y-auto">
+        <aside
+          className={cn(
+            "fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col border-r border-white/10 bg-black/40 backdrop-blur-xl overflow-y-auto transition-transform duration-200 lg:relative lg:translate-x-0",
+            mobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+          )}
+        >
           <div className="flex flex-col h-full">
             {/* Nav */}
             <nav className="flex flex-col gap-0.5 p-2">
