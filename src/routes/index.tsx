@@ -13,6 +13,7 @@ import {
   Smartphone,
   Sparkles,
   Trash2,
+  RefreshCw,
   Wand2,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -1416,6 +1417,21 @@ function Studio() {
                     : `Waiting for ${info.data?.model ?? "the model"}…`}
                 </span>
               )}
+
+              <div className="ml-auto flex items-center gap-2">
+                <span className="hidden rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 font-mono text-[10px] text-white/50 sm:inline-block">
+                  {info.data?.model ?? "—"}
+                </span>
+                <button
+                  type="button"
+                  title="Regenerate"
+                  disabled={mutation.isPending || !prompt.trim() || prompt.trim().length < 3}
+                  onClick={() => run(prompt)}
+                  className="flex size-7 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/60 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-40"
+                >
+                  <RefreshCw className="size-3.5" />
+                </button>
+              </div>
 
               {tab === "preview" && (
                 <div className="flex rounded-lg border border-border bg-panel p-1">
