@@ -750,111 +750,431 @@ function Studio() {
                       )}
                     </div>
                   ) : activeNav === "connectors" ? (
-                    <div className="space-y-6">
-                      <div>
-                        <h2 className="text-2xl font-semibold text-white">Connectors</h2>
-                        <p className="mt-1 text-sm text-white/50">Local AI backends connected to this workspace.</p>
+                    <div className="relative min-h-full">
+                      {/* Rotating background logos */}
+                      <div
+                        className="pointer-events-none absolute inset-0 overflow-hidden opacity-[0.5]"
+                        aria-hidden="true"
+                        style={{ maskImage: "linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)" }}
+                      >
+                        <div className="absolute top-[2%] left-0 right-0">                  <div className="marquee-row marquee-l" style={{ top: "0" }}>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                  </div></div>
+                        <div className="absolute top-[18%] left-0 right-0">                  <div className="marquee-row marquee-r" style={{ top: "0" }}>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                  </div></div>
+                        <div className="absolute top-[34%] left-0 right-0">                  <div className="marquee-row marquee-l" style={{ top: "0" }}>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                  </div></div>
+                        <div className="absolute top-[50%] left-0 right-0">                  <div className="marquee-row marquee-r" style={{ top: "0" }}>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                  </div></div>
+                        <div className="absolute top-[66%] left-0 right-0">                  <div className="marquee-row marquee-l" style={{ top: "0" }}>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                  </div></div>
+                        <div className="absolute top-[82%] left-0 right-0">                  <div className="marquee-row marquee-r" style={{ top: "0" }}>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                  </div></div>
+                        <div className="absolute top-[98%] left-0 right-0">                  <div className="marquee-row marquee-l" style={{ top: "0" }}>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">O</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">A</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">H</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">L</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">M</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">P</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">S</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">D</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">G</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">W</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">N</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">C</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">F</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">T</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">R</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">B</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">X</div>
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-white/50">K</div>
+                  </div></div>
                       </div>
 
-                      <div className="glass-card p-5">
-                        <div className="flex items-start justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-600">
+                      {/* Foreground content */}
+                      <div className="relative z-10 space-y-6">
+                        <div>
+                          <h2 className="text-2xl font-semibold tracking-tight text-white">Connectors</h2>
+                          <p className="mt-1 text-sm text-white/50">
+                            Connect Pulse to the tools you use every day.
+                          </p>
+                        </div>
+
+                        <div className="rounded-2xl border border-white/10 bg-black/40 p-6 text-center backdrop-blur-sm">
+                          <h3 className="text-xl font-semibold text-white">Build from what you already use</h3>
+                          <p className="mx-auto mt-2 max-w-md text-sm text-white/50">
+                            Connectors let your Pulse talk to external tools. Enable one and ask the agent to get started.
+                          </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                          {/* Active: Qwen 9B Coder */}
+                          <div className="glass-card flex items-start gap-3 p-4">
+                            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-purple-600">
                               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5">
                                 <path d="M12 2L2 7l10 5 10-5-10-5z" />
                                 <path d="M2 17l10 5 10-5" />
                                 <path d="M2 12l10 5 10-5" />
                               </svg>
                             </div>
-                            <div>
-                              <p className="text-sm font-medium text-white">Qwen 9B Coder</p>
-                              <p className="text-xs text-white/50">llama.cpp · local endpoint</p>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-2">
+                                <p className="text-sm font-medium text-white">Qwen 9B Coder</p>
+                                <span
+                                  className={
+                                    "inline-block size-2 rounded-full " +
+                                    (info.data?.configured
+                                      ? "animate-pulse bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]"
+                                      : "bg-red-400")
+                                  }
+                                />
+                              </div>
+                              <p className="mt-0.5 text-xs text-white/50">
+                                llama.cpp · {info.data?.configured ? "Connected" : "Disconnected"}
+                              </p>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <span
-                              className={
-                                info.data?.configured
-                                  ? "inline-block size-2 animate-pulse rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]"
-                                  : "inline-block size-2 rounded-full bg-red-400"
-                              }
-                            />
-                            <span className="text-xs text-white/60">
-                              {info.data?.configured ? "Connected" : "Disconnected"}
-                            </span>
-                          </div>
-                        </div>
 
-                        <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                          <div className="rounded-lg border border-white/5 bg-black/20 px-3 py-2">
-                            <p className="text-[10px] uppercase tracking-wider text-white/40">Base URL</p>
-                            <p className="mt-1 font-mono text-xs text-white/80">http://127.0.0.1:8083/v1</p>
-                          </div>
-                          <div className="rounded-lg border border-white/5 bg-black/20 px-3 py-2">
-                            <p className="text-[10px] uppercase tracking-wider text-white/40">Model</p>
-                            <p className="mt-1 font-mono text-xs text-white/80">{info.data?.model ?? "—"}</p>
-                          </div>
-                          <div className="rounded-lg border border-white/5 bg-black/20 px-3 py-2">
-                            <p className="text-[10px] uppercase tracking-wider text-white/40">Context Window</p>
-                            <p className="mt-1 font-mono text-xs text-white/80">32,768 tokens</p>
-                          </div>
-                          <div className="rounded-lg border border-white/5 bg-black/20 px-3 py-2">
-                            <p className="text-[10px] uppercase tracking-wider text-white/40">Runtime</p>
-                            <p className="mt-1 font-mono text-xs text-white/80">llama.cpp · Q4_K_M</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="glass-card p-5">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600">
+                          {/* Active: Local Storage */}
+                          <div className="glass-card flex items-start gap-3 p-4">
+                            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600">
                               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5">
                                 <ellipse cx="12" cy="5" rx="9" ry="3" />
                                 <path d="M3 5v14a9 3 0 0 0 18 0V5" />
                                 <path d="M3 12a9 3 0 0 0 18 0" />
                               </svg>
                             </div>
-                            <div>
-                              <p className="text-sm font-medium text-white">Local Storage</p>
-                              <p className="text-xs text-white/50">Chat history persisted in browser</p>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-2">
+                                <p className="text-sm font-medium text-white">Local Storage</p>
+                                <span className="inline-block size-2 rounded-full bg-emerald-400" />
+                              </div>
+                              <p className="mt-0.5 text-xs text-white/50">
+                                {history.length} chats saved in browser
+                              </p>
                             </div>
                           </div>
-                          <span className="inline-block size-2 rounded-full bg-emerald-400" />
-                        </div>
 
-                        <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                          <div className="rounded-lg border border-white/5 bg-black/20 px-3 py-2">
-                            <p className="text-[10px] uppercase tracking-wider text-white/40">Chats saved</p>
-                            <p className="mt-1 font-mono text-xs text-white/80">{history.length}</p>
+                          {/* Coming soon: OpenAI */}
+                          <div className="glass-card flex items-start gap-3 p-4 opacity-70">
+                            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#0a0a0a] border border-white/10">
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5">
+                                <circle cx="12" cy="12" r="9" />
+                                <path d="M12 3v18M3 12h18" />
+                              </svg>
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-2">
+                                <p className="text-sm font-medium text-white">OpenAI</p>
+                                <span className="rounded-full bg-violet-500/20 px-1.5 py-0.5 text-[10px] font-medium text-violet-200">New</span>
+                              </div>
+                              <p className="mt-0.5 text-xs text-white/50">GPT models via your API key</p>
+                            </div>
                           </div>
-                          <div className="rounded-lg border border-white/5 bg-black/20 px-3 py-2">
-                            <p className="text-[10px] uppercase tracking-wider text-white/40">Storage key</p>
-                            <p className="mt-1 font-mono text-xs text-white/80">promptui.history.v1</p>
-                          </div>
-                        </div>
-                      </div>
 
-                      <div className="glass-card p-5">
-                        <div className="flex items-center gap-3">
-                          <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5">
-                              <circle cx="12" cy="12" r="3" />
-                              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-                            </svg>
+                          {/* Coming soon: Anthropic */}
+                          <div className="glass-card flex items-start gap-3 p-4 opacity-70">
+                            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#c96442]">
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5">
+                                <path d="M4 20l8-16 8 16M8 14h8" />
+                              </svg>
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-2">
+                                <p className="text-sm font-medium text-white">Anthropic</p>
+                                <span className="rounded-full bg-violet-500/20 px-1.5 py-0.5 text-[10px] font-medium text-violet-200">New</span>
+                              </div>
+                              <p className="mt-0.5 text-xs text-white/50">Claude Sonnet and Opus models</p>
+                            </div>
                           </div>
-                          <div>
-                            <p className="text-sm font-medium text-white">Custom Connectors</p>
-                            <p className="text-xs text-white/50">Add your own backends — OpenAI, Ollama, LM Studio</p>
+
+                          {/* Coming soon: Ollama */}
+                          <div className="glass-card flex items-start gap-3 p-4 opacity-70">
+                            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#0a0a0a] border border-white/10">
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5">
+                                <circle cx="12" cy="12" r="4" />
+                                <path d="M12 2v4M12 18v4M2 12h4M18 12h4" />
+                              </svg>
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="text-sm font-medium text-white">Ollama</p>
+                              <p className="mt-0.5 text-xs text-white/50">Any local model via Ollama</p>
+                            </div>
+                          </div>
+
+                          {/* Coming soon: LM Studio */}
+                          <div className="glass-card flex items-start gap-3 p-4 opacity-70">
+                            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600">
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <path d="M3 9h18M9 21V9" />
+                              </svg>
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="text-sm font-medium text-white">LM Studio</p>
+                              <p className="mt-0.5 text-xs text-white/50">Desktop model runner</p>
+                            </div>
+                          </div>
+
+                          {/* Coming soon: Hugging Face */}
+                          <div className="glass-card flex items-start gap-3 p-4 opacity-70">
+                            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#ffd21e]">
+                              <span className="text-lg">🤗</span>
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="text-sm font-medium text-white">Hugging Face</p>
+                              <p className="mt-0.5 text-xs text-white/50">Inference API and hosted models</p>
+                            </div>
+                          </div>
+
+                          {/* Coming soon: Custom */}
+                          <div className="glass-card flex items-start gap-3 p-4 opacity-70">
+                            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600">
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5">
+                                <circle cx="12" cy="12" r="3" />
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                              </svg>
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="text-sm font-medium text-white">Custom Connector</p>
+                              <p className="mt-0.5 text-xs text-white/50">Add your own OpenAI-compatible backend</p>
+                            </div>
                           </div>
                         </div>
-                        <button
-                          type="button"
-                          disabled
-                          className="mt-4 w-full cursor-not-allowed rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-xs font-medium text-white/40"
-                        >
-                          Coming soon
-                        </button>
                       </div>
                     </div>
                   ) : (

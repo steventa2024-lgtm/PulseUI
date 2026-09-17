@@ -168,21 +168,3 @@
 .purple-accent {
   background: linear-gradient(135deg, rgb(139, 92, 246) 0%, rgb(168, 85, 247) 100%);
 }
-
-/* === Connector background marquee === */
-@keyframes marquee-l {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-@keyframes marquee-r {
-  from { transform: translateX(-50%); }
-  to   { transform: translateX(0); }
-}
-.marquee-row {
-  display: flex;
-  gap: 1.5rem;
-  width: max-content;
-  white-space: nowrap;
-}
-.marquee-l { animation: marquee-l 80s linear infinite; }
-.marquee-r { animation: marquee-r 80s linear infinite; }

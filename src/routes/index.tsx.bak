@@ -749,6 +749,114 @@ function Studio() {
                         </div>
                       )}
                     </div>
+                  ) : activeNav === "connectors" ? (
+                    <div className="space-y-6">
+                      <div>
+                        <h2 className="text-2xl font-semibold text-white">Connectors</h2>
+                        <p className="mt-1 text-sm text-white/50">Local AI backends connected to this workspace.</p>
+                      </div>
+
+                      <div className="glass-card p-5">
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-600">
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                                <path d="M2 17l10 5 10-5" />
+                                <path d="M2 12l10 5 10-5" />
+                              </svg>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-white">Qwen 9B Coder</p>
+                              <p className="text-xs text-white/50">llama.cpp · local endpoint</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span
+                              className={
+                                info.data?.configured
+                                  ? "inline-block size-2 animate-pulse rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]"
+                                  : "inline-block size-2 rounded-full bg-red-400"
+                              }
+                            />
+                            <span className="text-xs text-white/60">
+                              {info.data?.configured ? "Connected" : "Disconnected"}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                          <div className="rounded-lg border border-white/5 bg-black/20 px-3 py-2">
+                            <p className="text-[10px] uppercase tracking-wider text-white/40">Base URL</p>
+                            <p className="mt-1 font-mono text-xs text-white/80">http://127.0.0.1:8083/v1</p>
+                          </div>
+                          <div className="rounded-lg border border-white/5 bg-black/20 px-3 py-2">
+                            <p className="text-[10px] uppercase tracking-wider text-white/40">Model</p>
+                            <p className="mt-1 font-mono text-xs text-white/80">{info.data?.model ?? "—"}</p>
+                          </div>
+                          <div className="rounded-lg border border-white/5 bg-black/20 px-3 py-2">
+                            <p className="text-[10px] uppercase tracking-wider text-white/40">Context Window</p>
+                            <p className="mt-1 font-mono text-xs text-white/80">32,768 tokens</p>
+                          </div>
+                          <div className="rounded-lg border border-white/5 bg-black/20 px-3 py-2">
+                            <p className="text-[10px] uppercase tracking-wider text-white/40">Runtime</p>
+                            <p className="mt-1 font-mono text-xs text-white/80">llama.cpp · Q4_K_M</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="glass-card p-5">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600">
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5">
+                                <ellipse cx="12" cy="5" rx="9" ry="3" />
+                                <path d="M3 5v14a9 3 0 0 0 18 0V5" />
+                                <path d="M3 12a9 3 0 0 0 18 0" />
+                              </svg>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-white">Local Storage</p>
+                              <p className="text-xs text-white/50">Chat history persisted in browser</p>
+                            </div>
+                          </div>
+                          <span className="inline-block size-2 rounded-full bg-emerald-400" />
+                        </div>
+
+                        <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                          <div className="rounded-lg border border-white/5 bg-black/20 px-3 py-2">
+                            <p className="text-[10px] uppercase tracking-wider text-white/40">Chats saved</p>
+                            <p className="mt-1 font-mono text-xs text-white/80">{history.length}</p>
+                          </div>
+                          <div className="rounded-lg border border-white/5 bg-black/20 px-3 py-2">
+                            <p className="text-[10px] uppercase tracking-wider text-white/40">Storage key</p>
+                            <p className="mt-1 font-mono text-xs text-white/80">promptui.history.v1</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="glass-card p-5">
+                        <div className="flex items-center gap-3">
+                          <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5">
+                              <circle cx="12" cy="12" r="3" />
+                              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-white">Custom Connectors</p>
+                            <p className="text-xs text-white/50">Add your own backends — OpenAI, Ollama, LM Studio</p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          disabled
+                          className="mt-4 w-full cursor-not-allowed rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-xs font-medium text-white/40"
+                        >
+                          Coming soon
+                        </button>
+                      </div>
+                    </div>
                   ) : (
                     <div className="flex flex-1 items-center justify-center">
                       <div className="text-center">
