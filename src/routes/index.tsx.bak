@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   AlertTriangle,
   Boxes,
@@ -49,7 +50,7 @@ export const Route = createFileRoute("/")({
   component: Studio,
 });
 
-type HistoryItem = { id: string; prompt: string; code: string; at: string; messages: { role: "user" | "assistant"; content: string; code?: string }[] };
+type HistoryItem = { id: string; prompt: string; code: string; at: string; messages: { role: "user" | "assistant"; content: string; code?: string }[]; versions?: { code: string; prompt: string; at: string }[] };
 
 type TemplateItem = {
   id: string;
@@ -147,6 +148,7 @@ function Studio() {
   const [composeMode, setComposeMode] = useState<"build" | "plan">("build");
   const [planText, setPlanText] = useState("");
   const [lightboxCode, setLightboxCode] = useState<string | null>(null);
+  const [activeVersionIdx, setActiveVersionIdx] = useState<number>(-1);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [placeholderText, setPlaceholderText] = useState("");
   const [placeholderPromptIdx, setPlaceholderPromptIdx] = useState(0);
@@ -434,22 +436,48 @@ function Studio() {
         const m = input.prompt.match(/Request:\s*([\s\S]+)$/);
         historyPrompt = "[Plan] " + (m ? m[1].trim() : "plan");
       } else if (isRefine) {
-        const m = input.prompt.match(/Now apply this change and return the full updated component:\s*([\s\S]+)$/);
+        const m = input.prompt.match(/REQUESTED CHANGE:\s*\n([\s\S]+?)\n\nSTRICT RULES:/);
         historyPrompt = "Refine: " + (m ? m[1].trim() : "refinement");
       }
 
-      setHistory((prev) =>
-        [
-          {
-            id: newId(),
-            prompt: historyPrompt,
-            code: isPlan ? "" : result.code,
-            at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-            messages: newMessages,
-          },
-          ...prev,
-        ].slice(0, HISTORY_LIMIT),
-      );
+      const versionEntry = {
+        code: result.code,
+        prompt: historyPrompt,
+        at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      };
+
+      if (isRefine && activeChatId) {
+        // Refine: append a version to the existing chat
+        setHistory((prev) =>
+          prev.map((h) =>
+            h.id === activeChatId
+              ? {
+                  ...h,
+                  code: isPlan ? h.code : result.code,
+                  messages: newMessages,
+                  versions: [...(h.versions ?? []), versionEntry],
+                }
+              : h,
+          ),
+        );
+        setActiveVersionIdx((prev) => prev + 1);
+      } else {
+        // New build: create a fresh chat with one version
+        setHistory((prev) =>
+          [
+            {
+              id: newId(),
+              prompt: historyPrompt,
+              code: isPlan ? "" : result.code,
+              at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+              messages: newMessages,
+              versions: isPlan ? [] : [versionEntry],
+            },
+            ...prev,
+          ].slice(0, HISTORY_LIMIT),
+        );
+        setActiveVersionIdx(0);
+      }
     },
     onError: (error: Error) => {
       setStreamText("");
@@ -471,7 +499,7 @@ function Studio() {
       finalPrompt = `[PLAN MODE] You are a senior UI/UX architect. Do NOT write any code.\n\nFor the request below, return a concise plan (6-10 bullet points) covering:\n- Layout structure\n- Key sections in order\n- Color palette suggestions\n- Typography and spacing\n- Interactive elements\n- Responsive breakpoints\n\nRequest: ${text}`;
       displayText = text;
     } else if (refineMode && code && code !== WELCOME) {
-      finalPrompt = `Here is the current component code:\n\n${code}\n\nNow apply this change and return the full updated component:\n\n${text}`;
+      finalPrompt = `Here is the current component code:\n\n${code}\n\n=== REFINE INSTRUCTIONS (strict) ===\n\nYou are editing an EXISTING component. Apply ONE requested change and leave everything else pixel-identical.\n\nREQUESTED CHANGE:\n${text}\n\nSTRICT RULES:\n- PRESERVE every element, section, text, color, and layout detail that the user did NOT mention.\n- If the user says "make the button green", change ONLY the button. Do not touch spacing, copy, layout, or any other element.\n- NEVER remove features, sections, paragraphs, or buttons that already exist.\n- NEVER "clean up", "improve", "modernize", or "simplify" unmentioned parts.\n- NEVER rename variables, restructure the component, or change the component name.\n- If the requested change is ambiguous, err on the side of changing LESS, not more.\n- Output the FULL updated component so it still compiles, but the ONLY differences from the input should be the specific change requested.\n\nReturn only the updated component code, starting with "function GeneratedComponent()".`;
       displayText = `Refine: ${text}`;
     }
 
@@ -894,6 +922,37 @@ try {
                                     );
                                   })}
                                 </div>
+                                {(() => {
+                                  const chat = history.find((h) => h.id === activeChatId);
+                                  const versions = chat?.versions ?? [];
+                                  if (versions.length <= 1) return null;
+                                  return (
+                                    <div className="flex items-center gap-2 rounded-lg border border-white/[0.08] bg-black/20 px-3 py-2">
+                                      <span className="text-[10px] uppercase tracking-wider text-white/40">Versions</span>
+                                      <div className="flex flex-wrap gap-1.5">
+                                        {versions.map((v, idx) => (
+                                          <button
+                                            key={idx}
+                                            type="button"
+                                            onClick={() => {
+                                              setActiveVersionIdx(idx);
+                                              setCode(v.code);
+                                              setTab("preview");
+                                            }}
+                                            className={
+                                              "rounded-md border px-2 py-0.5 text-[10px] font-medium transition-colors " +
+                                              (activeVersionIdx === idx
+                                                ? "border-violet-400/50 bg-violet-500/20 text-violet-100"
+                                                : "border-white/10 bg-white/5 text-white/50 hover:bg-white/10 hover:text-white")
+                                            }
+                                          >
+                                            v{idx + 1}
+                                          </button>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  );
+                                })()}
                                 <div className="flex gap-2">
                                   <button
                                     type="button"
@@ -1063,7 +1122,7 @@ try {
               </div>
             )}
 
-            {lightboxCode && (
+            {lightboxCode && typeof document !== "undefined" && createPortal(
               <div
                 className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-6 backdrop-blur-md"
                 onClick={() => setLightboxCode(null)}
@@ -1107,7 +1166,8 @@ try {
                     <PreviewFrame code={lightboxCode} surface="dark" />
                   </div>
                 </div>
-              </div>
+              </div>,
+              document.body,
             )}
 
             {unconfigured && (

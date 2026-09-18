@@ -715,7 +715,7 @@ export async function streamWithLocal(
   });
 }
 
-function localProvider(config: LocalConfig): Provider {
+export function localProvider(config: LocalConfig): Provider {
   return {
     id: "local",
     label: config.model,

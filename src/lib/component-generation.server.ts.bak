@@ -104,6 +104,22 @@ For any short prompt, apply this expansion checklist:
      star (rating): use the ★ character in an amber-colored span — simpler and always renders
    If unsure of any path, use a text label or ★ character instead of inventing a wrong one.
 
+=== SOCIAL ICON EXACT PATTERN ===
+For a row of social icons in a footer (or anywhere else), use this EXACT structure. Copy the <a> wrapper verbatim and only change the slug, alt text, and href:
+
+<a href="#" className="flex size-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 transition-colors hover:bg-white/10" aria-label="GitHub">
+  <img src="https://cdn.simpleicons.org/github/ffffff" alt="" width="16" height="16" />
+</a>
+
+Rules:
+- The <img> is 16x16, always white on dark bg (use /ffffff), always inside a size-9 glass button.
+- NEVER render a brand as a text character (no <span>X</span> for X/Twitter, no "G" for Google).
+- ALWAYS use the <img> tag with the cdn.simpleicons.org URL.
+- For X / Twitter use slug "x", NOT "twitter".
+- Wrap the row in: <div className="flex items-center gap-2">
+
+A standard footer social row for a dev tool: github, x, discord, youtube — in that order.
+
 === RULE ===
 A user typing "a sign in card" should receive a card that looks like it shipped from a $200/mo SaaS product. Not a bare form. Not a placeholder. A complete, polished, production-ready artifact.`;
 
@@ -699,7 +715,7 @@ export async function streamWithLocal(
   });
 }
 
-function localProvider(config: LocalConfig): Provider {
+export function localProvider(config: LocalConfig): Provider {
   return {
     id: "local",
     label: config.model,

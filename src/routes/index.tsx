@@ -50,7 +50,7 @@ export const Route = createFileRoute("/")({
   component: Studio,
 });
 
-type HistoryItem = { id: string; prompt: string; code: string; at: string; messages: { role: "user" | "assistant"; content: string; code?: string }[] };
+type HistoryItem = { id: string; prompt: string; code: string; at: string; messages: { role: "user" | "assistant"; content: string; code?: string }[]; versions?: { code: string; prompt: string; at: string }[] };
 
 type TemplateItem = {
   id: string;
@@ -63,6 +63,23 @@ type TemplateItem = {
 const HISTORY_KEY = "promptui-studio:history";
 const UI_STATE_KEY = "promptui.ui-state.v1";
 const HISTORY_LIMIT = 20;
+
+const MODELS = [
+  {
+    key: "qwen-9b-coder",
+    label: "Qwen 9B Coder",
+    baseUrl: "http://127.0.0.1:8083/v1",
+    model: "qwen-9b-coder",
+    port: 8083,
+  },
+  {
+    key: "qwen2.5-coder-7b",
+    label: "Qwen2.5 Coder 7B",
+    baseUrl: "http://127.0.0.1:8084/v1",
+    model: "qwen2.5-coder-7b",
+    port: 8084,
+  },
+];
 
 const HIST = [
   { id: "1", prompt: "Build a pricing card with 3 tiers and toggle for annual billing" },
@@ -148,6 +165,13 @@ function Studio() {
   const [composeMode, setComposeMode] = useState<"build" | "plan">("build");
   const [planText, setPlanText] = useState("");
   const [lightboxCode, setLightboxCode] = useState<string | null>(null);
+  const [activeVersionIdx, setActiveVersionIdx] = useState<number>(-1);
+  const [activeModelKey, setActiveModelKey] = useState<string>(() => {
+    if (typeof window === "undefined") return "qwen-9b-coder";
+    return window.localStorage.getItem("pulseui.active-model") ?? "qwen-9b-coder";
+  });
+  const [modelDropdownOpen, setModelDropdownOpen] = useState(false);
+  const [liveStatus, setLiveStatus] = useState<Record<string, boolean>>({});
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [placeholderText, setPlaceholderText] = useState("");
   const [placeholderPromptIdx, setPlaceholderPromptIdx] = useState(0);
@@ -281,6 +305,37 @@ function Studio() {
     return () => clearTimeout(timer);
   }, [placeholderPromptIdx]);
 
+  // Persist active model choice
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem("pulseui.active-model", activeModelKey);
+  }, [activeModelKey]);
+
+  // Ping both model servers to see which are live
+  useEffect(() => {
+    let cancelled = false;
+    const check = async () => {
+      const results: Record<string, boolean> = {};
+      await Promise.all(
+        MODELS.map(async (m) => {
+          try {
+            const r = await fetch(m.baseUrl + "/models", { method: "GET" });
+            results[m.key] = r.ok;
+          } catch {
+            results[m.key] = false;
+          }
+        }),
+      );
+      if (!cancelled) setLiveStatus(results);
+    };
+    check();
+    const interval = setInterval(check, 15000);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, []);
+
   // Auto-close the mobile drawer whenever the user navigates
   useEffect(() => {
     if (mobileMenuOpen) setMobileMenuOpen(false);
@@ -348,7 +403,7 @@ function Studio() {
       : 3;
 
   const mutation = useMutation({
-    mutationFn: async (input: { prompt: string; modifiers: string[]; mode: "build" | "plan" }) => {
+    mutationFn: async (input: { prompt: string; modifiers: string[]; mode: "build" | "plan"; baseUrl?: string; modelName?: string }) => {
       setStreamText("");
       // Show the code pane while tokens arrive; the preview has nothing to show
       // until the component is complete.
@@ -435,22 +490,48 @@ function Studio() {
         const m = input.prompt.match(/Request:\s*([\s\S]+)$/);
         historyPrompt = "[Plan] " + (m ? m[1].trim() : "plan");
       } else if (isRefine) {
-        const m = input.prompt.match(/Now apply this change and return the full updated component:\s*([\s\S]+)$/);
+        const m = input.prompt.match(/REQUESTED CHANGE:\s*\n([\s\S]+?)\n\nSTRICT RULES:/);
         historyPrompt = "Refine: " + (m ? m[1].trim() : "refinement");
       }
 
-      setHistory((prev) =>
-        [
-          {
-            id: newId(),
-            prompt: historyPrompt,
-            code: isPlan ? "" : result.code,
-            at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-            messages: newMessages,
-          },
-          ...prev,
-        ].slice(0, HISTORY_LIMIT),
-      );
+      const versionEntry = {
+        code: result.code,
+        prompt: historyPrompt,
+        at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      };
+
+      if (isRefine && activeChatId) {
+        // Refine: append a version to the existing chat
+        setHistory((prev) =>
+          prev.map((h) =>
+            h.id === activeChatId
+              ? {
+                  ...h,
+                  code: isPlan ? h.code : result.code,
+                  messages: newMessages,
+                  versions: [...(h.versions ?? []), versionEntry],
+                }
+              : h,
+          ),
+        );
+        setActiveVersionIdx((prev) => prev + 1);
+      } else {
+        // New build: create a fresh chat with one version
+        setHistory((prev) =>
+          [
+            {
+              id: newId(),
+              prompt: historyPrompt,
+              code: isPlan ? "" : result.code,
+              at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+              messages: newMessages,
+              versions: isPlan ? [] : [versionEntry],
+            },
+            ...prev,
+          ].slice(0, HISTORY_LIMIT),
+        );
+        setActiveVersionIdx(0);
+      }
     },
     onError: (error: Error) => {
       setStreamText("");
@@ -472,12 +553,13 @@ function Studio() {
       finalPrompt = `[PLAN MODE] You are a senior UI/UX architect. Do NOT write any code.\n\nFor the request below, return a concise plan (6-10 bullet points) covering:\n- Layout structure\n- Key sections in order\n- Color palette suggestions\n- Typography and spacing\n- Interactive elements\n- Responsive breakpoints\n\nRequest: ${text}`;
       displayText = text;
     } else if (refineMode && code && code !== WELCOME) {
-      finalPrompt = `Here is the current component code:\n\n${code}\n\nNow apply this change and return the full updated component:\n\n${text}`;
+      finalPrompt = `Here is the current component code:\n\n${code}\n\n=== REFINE INSTRUCTIONS (strict) ===\n\nYou are editing an EXISTING component. Apply ONE requested change and leave everything else pixel-identical.\n\nREQUESTED CHANGE:\n${text}\n\nSTRICT RULES:\n- PRESERVE every element, section, text, color, and layout detail that the user did NOT mention.\n- If the user says "make the button green", change ONLY the button. Do not touch spacing, copy, layout, or any other element.\n- NEVER remove features, sections, paragraphs, or buttons that already exist.\n- NEVER "clean up", "improve", "modernize", or "simplify" unmentioned parts.\n- NEVER rename variables, restructure the component, or change the component name.\n- If the requested change is ambiguous, err on the side of changing LESS, not more.\n- Output the FULL updated component so it still compiles, but the ONLY differences from the input should be the specific change requested.\n\nReturn only the updated component code, starting with "function GeneratedComponent()".`;
       displayText = `Refine: ${text}`;
     }
 
     setMessages((prev) => [...prev, { role: "user", content: displayText }]);
-    mutation.mutate({ prompt: finalPrompt, modifiers, mode: composeMode });
+    const activeModel = MODELS.find((m) => m.key === activeModelKey) ?? MODELS[0];
+    mutation.mutate({ prompt: finalPrompt, modifiers, mode: composeMode, baseUrl: activeModel.baseUrl, modelName: activeModel.model });
   };
 
   const exportStandaloneHTML = (code: string, prompt: string) => {
@@ -582,10 +664,76 @@ try {
             </p>
           </div>
         </div>
-        <Badge variant="outline" className="gap-1.5 font-mono text-[11px] text-muted-foreground">
-          <Sparkles className="size-3 text-primary" />
-          {info.data?.model ?? (unconfigured ? "not configured" : "connecting…")}
-        </Badge>
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setModelDropdownOpen((v) => !v)}
+            className="flex items-center gap-1.5 rounded-full border border-border bg-panel px-3 py-1 font-mono text-[11px] text-muted-foreground transition-colors hover:bg-white/5"
+          >
+            <Sparkles className="size-3 text-primary" />
+            <span>{(MODELS.find((m) => m.key === activeModelKey) ?? MODELS[0]).label}</span>
+            <span
+              className={
+                "inline-block size-1.5 rounded-full " +
+                (liveStatus[activeModelKey] ? "bg-emerald-400" : "bg-red-400/60")
+              }
+            />
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </button>
+          {modelDropdownOpen && (
+            <>
+              <div
+                className="fixed inset-0 z-40"
+                onClick={() => setModelDropdownOpen(false)}
+              />
+              <div className="absolute right-0 top-full z-50 mt-2 w-72 overflow-hidden rounded-xl border border-white/10 bg-[#0a0616] shadow-2xl">
+                <div className="border-b border-white/5 px-3 py-2 text-[10px] uppercase tracking-wider text-white/40">
+                  Available models
+                </div>
+                {MODELS.map((m) => {
+                  const isActive = m.key === activeModelKey;
+                  const isLive = !!liveStatus[m.key];
+                  return (
+                    <button
+                      key={m.key}
+                      type="button"
+                      onClick={() => {
+                        setActiveModelKey(m.key);
+                        setModelDropdownOpen(false);
+                      }}
+                      className={
+                        "flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors " +
+                        (isActive ? "bg-violet-500/10" : "hover:bg-white/5")
+                      }
+                    >
+                      <span
+                        className={
+                          "inline-block size-2 rounded-full " +
+                          (isLive
+                            ? "animate-pulse bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]"
+                            : "bg-white/20")
+                        }
+                      />
+                      <div className="flex-1">
+                        <div className="text-xs font-medium text-white">{m.label}</div>
+                        <div className="font-mono text-[10px] text-white/40">
+                          port {m.port} · {isLive ? "live" : "offline"}
+                        </div>
+                      </div>
+                      {isActive && (
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-violet-300">
+                          <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </div>
       </header>
 
       {/* Mobile header — visible only below the lg breakpoint */}
@@ -895,6 +1043,37 @@ try {
                                     );
                                   })}
                                 </div>
+                                {(() => {
+                                  const chat = history.find((h) => h.id === activeChatId);
+                                  const versions = chat?.versions ?? [];
+                                  if (versions.length <= 1) return null;
+                                  return (
+                                    <div className="flex items-center gap-2 rounded-lg border border-white/[0.08] bg-black/20 px-3 py-2">
+                                      <span className="text-[10px] uppercase tracking-wider text-white/40">Versions</span>
+                                      <div className="flex flex-wrap gap-1.5">
+                                        {versions.map((v, idx) => (
+                                          <button
+                                            key={idx}
+                                            type="button"
+                                            onClick={() => {
+                                              setActiveVersionIdx(idx);
+                                              setCode(v.code);
+                                              setTab("preview");
+                                            }}
+                                            className={
+                                              "rounded-md border px-2 py-0.5 text-[10px] font-medium transition-colors " +
+                                              (activeVersionIdx === idx
+                                                ? "border-violet-400/50 bg-violet-500/20 text-violet-100"
+                                                : "border-white/10 bg-white/5 text-white/50 hover:bg-white/10 hover:text-white")
+                                            }
+                                          >
+                                            v{idx + 1}
+                                          </button>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  );
+                                })()}
                                 <div className="flex gap-2">
                                   <button
                                     type="button"

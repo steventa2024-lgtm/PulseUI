@@ -4,6 +4,7 @@ import { z } from "zod";
 import {
   SYSTEM_PROMPT,
   PLAN_SYSTEM_PROMPT,
+  localProvider,
   buildUserPrompt,
   resolveFallbackProvider,
   resolveProvider,
@@ -13,6 +14,8 @@ const inputSchema = z.object({
   prompt: z.string().trim().min(3).max(50000),
   modifiers: z.array(z.string().max(40)).max(8).default([]),
   mode: z.enum(["build", "plan"]).default("build"),
+  baseUrl: z.string().optional(),
+  modelName: z.string().optional(),
 });
 
 /**
@@ -26,7 +29,10 @@ const inputSchema = z.object({
 export const streamComponent = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => inputSchema.parse(data))
   .handler(async ({ data }) => {
-    const provider = resolveProvider();
+    const provider =
+      data.baseUrl && data.modelName
+        ? localProvider({ baseUrl: data.baseUrl, model: data.modelName })
+        : resolveProvider();
     const userPrompt = buildUserPrompt(data.prompt, data.modifiers);
     const systemPrompt = data.mode === "plan" ? PLAN_SYSTEM_PROMPT : SYSTEM_PROMPT;
 
