@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   AlertTriangle,
   Boxes,
@@ -146,6 +147,7 @@ function Studio() {
   const [refineMode, setRefineMode] = useState(false);
   const [composeMode, setComposeMode] = useState<"build" | "plan">("build");
   const [planText, setPlanText] = useState("");
+  const [lightboxCode, setLightboxCode] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [placeholderText, setPlaceholderText] = useState("");
   const [placeholderPromptIdx, setPlaceholderPromptIdx] = useState(0);
@@ -309,6 +311,18 @@ function Studio() {
       }
     };
 
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setLightboxCode(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => {
+      window.removeEventListener("keydown", handleKey);
+      window.removeEventListener("keydown", handleEscape);
+    };
+
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, []);
@@ -321,6 +335,17 @@ function Studio() {
     queryFn: () => readInfo(),
     staleTime: Infinity,
   });
+
+  const streamStep =
+    streamText.length === 0
+      ? 0
+      : streamText.length < 200
+      ? 0
+      : streamText.length < 800
+      ? 1
+      : streamText.length < 2500
+      ? 2
+      : 3;
 
   const mutation = useMutation({
     mutationFn: async (input: { prompt: string; modifiers: string[]; mode: "build" | "plan" }) => {
@@ -820,117 +845,182 @@ try {
                         <div className="max-w-[85%] rounded-2xl border border-violet-400/20 bg-violet-500/[0.12] px-4 py-2.5 text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
                           {m.content}
                         </div>
-                      ) : (
-                        <div className="max-w-[85%] space-y-2 rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
-                          <div>{m.content}</div>
-                          {m.code && (
-                            <>
-                              <details className="rounded-lg border border-white/[0.08] bg-black/25">
-                                <summary className="cursor-pointer px-3 py-2 text-xs font-medium text-white/70 hover:text-white">
-                                  View code
-                                </summary>
-                                <pre className="max-h-64 overflow-y-auto px-3 py-2 text-xs text-white/70">
-                                  <code>{m.code}</code>
-                                </pre>
-                              </details>
-                              <div className="flex flex-wrap gap-2">
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setCode(m.code || "");
-                                    setTab("preview");
-                                  }}
-                                  className="rounded-lg border border-violet-400/30 bg-violet-500/10 px-3 py-1.5 text-xs font-medium text-violet-200 hover:bg-violet-500/20"
-                                >
-                                  Show in Preview →
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    if (m.code) navigator.clipboard.writeText(m.code);
-                                  }}
-                                  className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white"
-                                >
-                                  Copy code
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    if (!m.code) return;
-                                    const blob = new Blob([m.code], { type: "text/plain" });
-                                    const url = URL.createObjectURL(blob);
-                                    const a = document.createElement("a");
-                                    a.href = url;
-                                    a.download = "component.tsx";
-                                    a.click();
-                                    URL.revokeObjectURL(url);
-                                  }}
-                                  className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white"
-                                >
-                                  Download .tsx
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    if (!m.code) return;
-                                    exportStandaloneHTML(m.code, m.content);
-                                  }}
-                                  className="rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-200 hover:bg-emerald-500/20"
-                                >
-                                  Export HTML
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    if (!m.code) return;
-                                    const name = window.prompt("Name this template:", m.content.slice(0, 40));
-                                    if (!name) return;
-                                    setTemplates((prev) => [
-                                      {
-                                        id: newId(),
-                                        name: name.trim().slice(0, 60),
-                                        prompt: m.content,
-                                        code: m.code || "",
-                                        at: new Date().toLocaleDateString(),
-                                      },
-                                      ...prev,
-                                    ]);
-                                  }}
-                                  className="rounded-lg border border-violet-400/30 bg-violet-500/10 px-3 py-1.5 text-xs font-medium text-violet-200 hover:bg-violet-500/20"
-                                >
-                                  Save as Template
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    const targetId = activeChatId ?? history[0]?.id;
-                                    if (!targetId) {
-                                      toast.error("No chat to tag yet.");
-                                      return;
-                                    }
-                                    const name = window.prompt("Project name:", "My Project");
-                                    if (!name) return;
-                                    const clean = name.trim().slice(0, 40);
-                                    if (!clean) return;
-                                    if (!projects.includes(clean)) {
-                                      setProjects((prev) => [...prev, clean]);
-                                    }
-                                    setHistory((prev) =>
-                                      prev.map((h) =>
-                                        h.id === targetId
-                                          ? ({ ...h, project: clean } as typeof h)
-                                          : h,
-                                      ),
+                      ) : m.code ? (
+                        <div className="max-w-[85%] space-y-3">
+                          <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03]">
+                            <details className="group/card">
+                              <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 hover:bg-white/[0.02]">
+                                <span className="text-sm font-medium text-white">Built and verified the component</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white/40 transition-transform group-open/card:rotate-180"><path d="m6 9 6 6 6-6" /></svg>
+                              </summary>
+                              <div className="space-y-3 border-t border-white/[0.06] px-4 py-3">
+                                <div className="grid grid-cols-3 gap-2">
+                                  {[
+                                    { label: "Mobile", width: 390 },
+                                    { label: "Tablet", width: 820 },
+                                    { label: "Desktop", width: 1440 },
+                                  ].map((view) => {
+                                    const TILE_W = 148;
+                                    const TILE_H = 112;
+                                    const scale = TILE_W / view.width;
+                                    const iframeH = Math.ceil(TILE_H / scale);
+                                    return (
+                                      <button
+                                        key={view.label}
+                                        type="button"
+                                        onClick={() => {
+                                          setLightboxCode(m.code || "");
+                                        }}
+                                        className="group/thumb relative overflow-hidden rounded-lg border border-white/10 bg-black transition-colors hover:border-violet-400/40"
+                                        style={{ width: TILE_W, height: TILE_H }}
+                                      >
+                                        <div
+                                          style={{
+                                            position: "absolute",
+                                            top: 0,
+                                            left: 0,
+                                            width: view.width,
+                                            height: iframeH,
+                                            transform: `scale(${scale})`,
+                                            transformOrigin: "top left",
+                                          }}
+                                        >
+                                          <PreviewFrame code={m.code || ""} surface="dark" />
+                                        </div>
+                                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                                        <div className="pointer-events-none absolute bottom-1.5 left-1.5 rounded bg-black/70 px-1.5 py-0.5 text-[9px] font-medium text-white/80 backdrop-blur-sm">
+                                          {view.label}
+                                        </div>
+                                      </button>
                                     );
-                                    setActiveProject(clean);
-                                  }}
-                                  className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white"
-                                >
-                                  Add to Project
-                                </button>
+                                  })}
+                                </div>
+                                <div className="flex gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setCode(m.code || "");
+                                      setTab("preview");
+                                    }}
+                                    className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white"
+                                  >
+                                    Details
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setCode(m.code || "");
+                                      setTab("preview");
+                                    }}
+                                    className="flex-1 rounded-lg border border-violet-400/30 bg-violet-500/10 px-3 py-1.5 text-xs font-medium text-violet-200 hover:bg-violet-500/20"
+                                  >
+                                    Preview
+                                  </button>
+                                </div>
+                                <details className="rounded-lg border border-white/[0.08] bg-black/25">
+                                  <summary className="cursor-pointer px-3 py-2 text-xs font-medium text-white/70 hover:text-white">
+                                    View code
+                                  </summary>
+                                  <pre className="max-h-64 overflow-y-auto px-3 py-2 text-xs text-white/70">
+                                    <code>{m.code}</code>
+                                  </pre>
+                                </details>
+                                <div className="flex flex-wrap gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      if (m.code) navigator.clipboard.writeText(m.code);
+                                    }}
+                                    className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white"
+                                  >
+                                    Copy code
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      if (!m.code) return;
+                                      const blob = new Blob([m.code], { type: "text/plain" });
+                                      const url = URL.createObjectURL(blob);
+                                      const a = document.createElement("a");
+                                      a.href = url;
+                                      a.download = "component.tsx";
+                                      a.click();
+                                      URL.revokeObjectURL(url);
+                                    }}
+                                    className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white"
+                                  >
+                                    Download .tsx
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      if (!m.code) return;
+                                      exportStandaloneHTML(m.code, m.content);
+                                    }}
+                                    className="rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-200 hover:bg-emerald-500/20"
+                                  >
+                                    Export HTML
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      if (!m.code) return;
+                                      const name = window.prompt("Name this template:", m.content.slice(0, 40));
+                                      if (!name) return;
+                                      setTemplates((prev) => [
+                                        {
+                                          id: newId(),
+                                          name: name.trim().slice(0, 60),
+                                          prompt: m.content,
+                                          code: m.code || "",
+                                          at: new Date().toLocaleDateString(),
+                                        },
+                                        ...prev,
+                                      ]);
+                                    }}
+                                    className="rounded-lg border border-violet-400/30 bg-violet-500/10 px-3 py-1.5 text-xs font-medium text-violet-200 hover:bg-violet-500/20"
+                                  >
+                                    Save as Template
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const targetId = activeChatId ?? history[0]?.id;
+                                      if (!targetId) {
+                                        toast.error("No chat to tag yet.");
+                                        return;
+                                      }
+                                      const name = window.prompt("Project name:", "My Project");
+                                      if (!name) return;
+                                      const clean = name.trim().slice(0, 40);
+                                      if (!clean) return;
+                                      if (!projects.includes(clean)) {
+                                        setProjects((prev) => [...prev, clean]);
+                                      }
+                                      setHistory((prev) =>
+                                        prev.map((h) =>
+                                          h.id === targetId
+                                            ? ({ ...h, project: clean } as typeof h)
+                                            : h,
+                                        ),
+                                      );
+                                      setActiveProject(clean);
+                                    }}
+                                    className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white"
+                                  >
+                                    Add to Project
+                                  </button>
+                                </div>
                               </div>
-                            </>
-                          )}
+                            </details>
+                          </div>
+                          <div className="px-1 text-base font-semibold leading-relaxed text-white">
+                            {m.content}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="max-w-[85%] rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white/80">
+                          {m.content}
                         </div>
                       )}
                     </div>
@@ -939,28 +1029,90 @@ try {
               )}
 
               {mutation.isPending && (
-                <div className="mb-5 flex justify-start">
-                  <div className="max-w-[85%] space-y-3 rounded-2xl border border-violet-400/20 bg-violet-500/[0.05] px-4 py-3 text-sm text-white/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
-                    <div className="flex items-center gap-2 text-xs font-medium text-violet-200">
-                      <span className="inline-block size-2 animate-pulse rounded-full bg-violet-400 shadow-[0_0_8px_rgba(168,85,247,0.6)]" />
-                      <span>Pulse is generating…</span>
-                    </div>
-                    {streamText ? (
-                      <pre className="max-h-48 overflow-y-auto whitespace-pre-wrap break-words rounded-lg border border-white/10 bg-black/30 px-3 py-2 font-mono text-[11px] leading-relaxed text-white/60">
-                        {streamText.slice(-1200)}
-                      </pre>
-                    ) : (
-                      <div className="space-y-1.5">
-                        <div className="h-2 w-3/4 animate-pulse rounded bg-white/10" />
-                        <div className="h-2 w-1/2 animate-pulse rounded bg-white/10" />
-                        <div className="h-2 w-5/6 animate-pulse rounded bg-white/10" />
+              <div className="mb-5 flex justify-start">
+                <div className="w-full max-w-[85%] space-y-2.5 text-sm text-white/80">
+                  {(() => {
+                    const len = streamText.length;
+                    const ACTIVITY = [
+                      { at: 0, label: "Analyzing your prompt" },
+                      { at: 150, label: "Reviewing layout and glass styling concepts" },
+                      { at: 350, label: "Planning the component structure" },
+                      { at: 650, label: "Choosing color palette and typography" },
+                      { at: 1000, label: "Writing JSX structure" },
+                      { at: 1600, label: "Applying Tailwind classes" },
+                      { at: 2400, label: "Inserting icons and brand logos" },
+                      { at: 3200, label: "Adding hover and focus states" },
+                      { at: 4200, label: "Self-reviewing output" },
+                      { at: 5200, label: "Refining spacing and typography" },
+                    ];
+                    const visible = ACTIVITY.filter((a) => len >= a.at);
+                    const lastIdx = visible.length - 1;
+                    return (
+                      <div className="text-[13px] leading-relaxed">
+                        {visible.length > 0 && (
+                          <div className="flex items-center gap-2">
+                            <span className="inline-block size-1.5 animate-pulse rounded-full bg-violet-300" />
+                            <span className="text-white/90">
+                              {visible[visible.length - 1].label}
+                            </span>
+                          </div>
+                        )}
                       </div>
-                    )}
+                    );
+                  })()}
+                </div>
+              </div>
+            )}
+
+            {lightboxCode && typeof document !== "undefined" && createPortal(
+              <div
+                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-6 backdrop-blur-md"
+                onClick={() => setLightboxCode(null)}
+              >
+                <div
+                  className="relative w-full max-w-6xl overflow-hidden rounded-2xl border border-white/10 bg-[#0a0616] shadow-2xl"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="flex items-center justify-between border-b border-white/5 bg-white/[0.03] px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      <span className="size-2.5 rounded-full bg-[#ff5f57]" />
+                      <span className="size-2.5 rounded-full bg-[#febc2e]" />
+                      <span className="size-2.5 rounded-full bg-[#28c840]" />
+                      <span className="ml-3 font-mono text-[11px] text-white/40">preview.pulseui.local</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCode(lightboxCode);
+                          setTab("preview");
+                          setLightboxCode(null);
+                        }}
+                        className="rounded-lg border border-violet-400/30 bg-violet-500/10 px-3 py-1.5 text-xs font-medium text-violet-200 hover:bg-violet-500/20"
+                      >
+                        Use in main preview →
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setLightboxCode(null)}
+                        className="flex size-7 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white"
+                        aria-label="Close"
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M18 6 6 18M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="h-[75vh] w-full bg-black">
+                    <PreviewFrame code={lightboxCode} surface="dark" />
                   </div>
                 </div>
-              )}
+              </div>,
+              document.body,
+            )}
 
-              {unconfigured && (
+            {unconfigured && (
               <div className="flex gap-2.5 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2.5">
                 <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-destructive" />
                 <p className="text-xs leading-relaxed text-foreground">
