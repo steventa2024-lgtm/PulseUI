@@ -7,6 +7,7 @@ import {
   Boxes,
   Code2,
   Eye,
+  FileText,
   History,
   Loader2,
   Monitor,
@@ -118,7 +119,7 @@ function Studio() {
   // Raw text as it streams in. The preview keeps rendering the last finished
   // component until a generation completes, since partial JSX cannot compile.
   const [streamText, setStreamText] = useState("");
-  const [tab, setTab] = useState<"preview" | "code">("preview");
+  const [tab, setTab] = useState<"preview" | "code" | "plan">("preview");
   const [viewport, setViewport] = useState<"desktop" | "mobile">("desktop");
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [templates, setTemplates] = useState<TemplateItem[]>([]);
@@ -144,6 +145,7 @@ function Studio() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [refineMode, setRefineMode] = useState(false);
   const [composeMode, setComposeMode] = useState<"build" | "plan">("build");
+  const [planText, setPlanText] = useState("");
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [placeholderText, setPlaceholderText] = useState("");
   const [placeholderPromptIdx, setPlaceholderPromptIdx] = useState(0);
@@ -321,7 +323,7 @@ function Studio() {
   });
 
   const mutation = useMutation({
-    mutationFn: async (input: { prompt: string; modifiers: string[] }) => {
+    mutationFn: async (input: { prompt: string; modifiers: string[]; mode: "build" | "plan" }) => {
       setStreamText("");
       // Show the code pane while tokens arrive; the preview has nothing to show
       // until the component is complete.
@@ -392,7 +394,10 @@ function Studio() {
       ];
       setMessages(newMessages);
 
-      if (!isPlan) {
+      if (isPlan) {
+        setPlanText(result.code);
+        setTab("plan");
+      } else {
         setCode(result.code);
         setTab("preview");
       }
@@ -447,7 +452,7 @@ function Studio() {
     }
 
     setMessages((prev) => [...prev, { role: "user", content: displayText }]);
-    mutation.mutate({ prompt: finalPrompt, modifiers });
+    mutation.mutate({ prompt: finalPrompt, modifiers, mode: composeMode });
   };
 
   const exportStandaloneHTML = (code: string, prompt: string) => {
@@ -1919,6 +1924,7 @@ try {
                   [
                     { id: "preview", label: "Live Preview", icon: Eye },
                     { id: "code", label: "Code", icon: Code2 },
+                    ...(planText ? [{ id: "plan" as const, label: "Plan", icon: FileText }] : []),
                   ] as const
                 ).map(({ id, label, icon: Icon }) => (
                   <button
@@ -2000,7 +2006,13 @@ try {
                 </div>
               )}
 
-              {tab === "preview" ? (
+              {tab === "plan" ? (
+                <div className="flex-1 overflow-y-auto rounded-xl border border-white/[0.08] bg-black/20 p-6">
+                  <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-white/80">
+                    {planText}
+                  </pre>
+                </div>
+              ) : tab === "preview" ? (
                 <div className="flex h-full justify-center">
                   <div
                     className={cn(

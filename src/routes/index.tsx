@@ -1118,9 +1118,71 @@ try {
                     onClick={() => {
                       setPrompt(preset.prompt);
                     }}
-                    className="rounded-lg border border-border bg-elevated px-3 py-2.5 text-left text-xs font-medium transition-colors hover:border-primary/60 hover:text-primary disabled:opacity-50"
+                    className="group flex flex-col overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.03] text-left transition-colors hover:border-violet-400/40 hover:bg-white/[0.06] disabled:opacity-50"
                   >
-                    {preset.label}
+                    <div className="flex h-16 items-center justify-center gap-1.5 bg-gradient-to-br from-violet-500/[0.08] to-fuchsia-500/[0.04] p-3">
+                      {preset.id.toLowerCase().includes("hero") && (
+                        <div className="flex w-full flex-col gap-1.5">
+                          <div className="h-1.5 w-2/3 rounded-full bg-violet-400/50" />
+                          <div className="h-1 w-full rounded-full bg-white/15" />
+                          <div className="flex gap-1">
+                            <div className="h-2 w-8 rounded-sm bg-violet-400/50" />
+                            <div className="h-2 w-6 rounded-sm bg-white/15" />
+                          </div>
+                        </div>
+                      )}
+                      {preset.id.toLowerCase().includes("pricing") && (
+                        <div className="flex h-full w-full items-end justify-center gap-1">
+                          <div className="h-3/4 w-1/4 rounded-sm bg-white/15" />
+                          <div className="h-full w-1/4 rounded-sm bg-violet-400/50" />
+                          <div className="h-3/4 w-1/4 rounded-sm bg-white/15" />
+                        </div>
+                      )}
+                      {preset.id.toLowerCase().includes("feature") && (
+                        <div className="grid h-full w-full grid-cols-2 gap-1">
+                          <div className="rounded-sm bg-violet-400/40" />
+                          <div className="rounded-sm bg-white/15" />
+                          <div className="rounded-sm bg-white/15" />
+                          <div className="rounded-sm bg-violet-400/40" />
+                        </div>
+                      )}
+                      {preset.id.toLowerCase().includes("testimonial") && (
+                        <div className="flex w-full flex-col gap-1.5 rounded-sm bg-white/5 p-2">
+                          <div className="flex items-center gap-1.5">
+                            <div className="size-3 rounded-full bg-violet-400/60" />
+                            <div className="h-1 w-1/3 rounded-full bg-white/20" />
+                          </div>
+                          <div className="h-1 w-full rounded-full bg-white/15" />
+                          <div className="h-1 w-4/5 rounded-full bg-white/15" />
+                        </div>
+                      )}
+                      {preset.id.toLowerCase().includes("stat") && (
+                        <div className="grid h-full w-full grid-cols-4 gap-1">
+                          <div className="rounded-sm bg-violet-400/40" />
+                          <div className="rounded-sm bg-white/15" />
+                          <div className="rounded-sm bg-white/15" />
+                          <div className="rounded-sm bg-violet-400/40" />
+                        </div>
+                      )}
+                      {preset.id.toLowerCase().includes("auth") && (
+                        <div className="flex h-full w-2/3 flex-col justify-center gap-1 rounded-sm bg-white/5 p-2">
+                          <div className="h-1 w-1/2 rounded-full bg-white/20" />
+                          <div className="h-2 w-full rounded-sm bg-white/10" />
+                          <div className="h-2 w-full rounded-sm bg-white/10" />
+                          <div className="h-2 w-full rounded-sm bg-violet-400/50" />
+                        </div>
+                      )}
+                      {!/hero|pricing|feature|testimonial|stat|auth/.test(preset.id.toLowerCase()) && (
+                        <div className="flex w-full flex-col gap-1">
+                          <div className="h-1.5 w-3/4 rounded-full bg-violet-400/40" />
+                          <div className="h-1 w-full rounded-full bg-white/15" />
+                          <div className="h-1 w-2/3 rounded-full bg-white/15" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="border-t border-white/[0.06] px-2.5 py-2 text-[11px] font-medium text-white/70 group-hover:text-white">
+                      {preset.label}
+                    </div>
                   </button>
                 ))}
               </div>
