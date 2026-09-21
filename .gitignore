@@ -37,3 +37,4 @@ dist-ssr
 
 .workspace/
 .aider*
+*.bak
