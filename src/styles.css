@@ -5,17 +5,127 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * PromptUI Studio design system — dark-first developer studio.
- * Ink black canvas, graphite panels, electric lime accent, cyan secondary.
- * All colors are oklch tokens. Never hardcode colors in components.
+ * PulseUI design system — "Cyber Grid".
+ * Near-black blue canvas, cool-blue hairlines, electric cyan/blue accents and
+ * magenta/signal-pink lighting used sparingly. Components consume the
+ * --pulse-* tokens (or the Tailwind colors mapped below); never raw hex.
  */
 
+:root {
+  /* Canvas & surfaces */
+  --pulse-bg: #04070d;
+  --pulse-bg-deep: #03060b;
+  --pulse-bg-elevated: #070d17;
+  --pulse-surface: #0a1018;
+  --pulse-surface-raised: #0d1420;
+  --pulse-surface-overlay: #111a27;
+  --pulse-surface-hover: #142033;
+
+  /* Lines */
+  --pulse-border: #152236;
+  --pulse-border-strong: #1f3150;
+  --pulse-border-active: #00cfff;
+
+  /* Text */
+  --pulse-text: #e8eef8;
+  --pulse-text-secondary: #a6b3c8;
+  --pulse-text-muted: #6b7a91;
+
+  /* Accents */
+  --pulse-cyan: #00cfff;
+  --pulse-blue: #247cff;
+  --pulse-magenta: #c72cff;
+  --pulse-pink: #ff336b;
+  --pulse-success: #2fd59e;
+  --pulse-warning: #f6b84a;
+  --pulse-danger: #ff4d6d;
+
+  /* Gradients */
+  --pulse-gradient-accent: linear-gradient(
+    90deg,
+    var(--pulse-cyan),
+    var(--pulse-blue) 45%,
+    var(--pulse-magenta)
+  );
+  --pulse-gradient-deploy: linear-gradient(
+    95deg,
+    #e53cff 0%,
+    var(--pulse-magenta) 35%,
+    var(--pulse-pink) 100%
+  );
+  --pulse-gradient-border: linear-gradient(
+    120deg,
+    rgb(0 207 255 / 0.9),
+    rgb(36 124 255 / 0.6) 40%,
+    rgb(199 44 255 / 0.65) 75%,
+    rgb(255 51 107 / 0.8)
+  );
+
+  /* Radius */
+  --pulse-radius-sm: 6px;
+  --pulse-radius-md: 10px;
+  --pulse-radius-lg: 14px;
+  --pulse-radius-xl: 20px;
+
+  /* Elevation & light */
+  --pulse-shadow-panel: 0 24px 60px -28px rgb(0 0 0 / 0.85), 0 0 0 1px rgb(31 49 80 / 0.35);
+  --pulse-glow-blue: 0 0 0 1px rgb(0 207 255 / 0.35), 0 10px 40px -10px rgb(36 124 255 / 0.55);
+  --pulse-glow-magenta: 0 0 0 1px rgb(199 44 255 / 0.3), 0 10px 40px -12px rgb(255 51 107 / 0.45);
+
+  /* Motion */
+  --pulse-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --pulse-duration-hover: 150ms;
+  --pulse-duration-panel: 210ms;
+  --pulse-duration-modal: 220ms;
+
+  /* shadcn/Radix variable bridge */
+  --radius: 10px;
+  --background: var(--pulse-bg);
+  --foreground: var(--pulse-text);
+  --card: var(--pulse-surface);
+  --card-foreground: var(--pulse-text);
+  --popover: var(--pulse-surface-raised);
+  --popover-foreground: var(--pulse-text);
+  --primary: var(--pulse-cyan);
+  --primary-foreground: #021018;
+  --secondary: var(--pulse-surface-overlay);
+  --secondary-foreground: var(--pulse-text);
+  --muted: var(--pulse-surface-raised);
+  --muted-foreground: var(--pulse-text-muted);
+  --accent: var(--pulse-surface-hover);
+  --accent-foreground: var(--pulse-text);
+  --destructive: var(--pulse-danger);
+  --destructive-foreground: #ffffff;
+  --border: var(--pulse-border);
+  --input: var(--pulse-border-strong);
+  --ring: var(--pulse-cyan);
+  --sidebar: var(--pulse-bg-elevated);
+  --sidebar-foreground: var(--pulse-text);
+  --sidebar-border: var(--pulse-border);
+  --sidebar-accent: var(--pulse-surface-hover);
+  --sidebar-accent-foreground: var(--pulse-text);
+  --sidebar-primary: var(--pulse-cyan);
+  --sidebar-primary-foreground: #021018;
+  --sidebar-ring: var(--pulse-cyan);
+  --chart-1: var(--pulse-cyan);
+  --chart-2: var(--pulse-blue);
+  --chart-3: var(--pulse-magenta);
+  --chart-4: var(--pulse-pink);
+  --chart-5: var(--pulse-success);
+
+  color-scheme: dark;
+}
+
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --radius-sm: var(--pulse-radius-sm);
+  --radius-md: var(--pulse-radius-md);
+  --radius-lg: var(--pulse-radius-lg);
+  --radius-xl: var(--pulse-radius-xl);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -35,51 +145,54 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-panel: var(--panel);
-  --color-panel-foreground: var(--panel-foreground);
-  --color-elevated: var(--elevated);
-  --color-code: var(--code-bg);
-  --color-syntax-tag: var(--syntax-tag);
-  --color-syntax-attr: var(--syntax-attr);
-  --color-syntax-string: var(--syntax-string);
-  --color-syntax-keyword: var(--syntax-keyword);
-  --color-syntax-comment: var(--syntax-comment);
-  --font-sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-  --shadow-glow: 0 0 0 1px var(--ring), 0 12px 40px -12px oklch(0.65 0.22 285 / 0.35);
-  --shadow-panel: 0 20px 60px -30px oklch(0 0 0 / 0.9);
-}
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
 
-:root {
-  --radius: 0.75rem;
-  --background: oklch(0.16 0.008 260);
-  --foreground: oklch(0.95 0.005 260);
-  --panel: oklch(0.2 0.01 260);
-  --panel-foreground: oklch(0.94 0.005 260);
-  --elevated: oklch(0.24 0.012 260);
-  --card: oklch(0.2 0.01 260);
-  --card-foreground: oklch(0.95 0.005 260);
-  --popover: oklch(0.21 0.012 260);
-  --popover-foreground: oklch(0.95 0.005 260);
-  --primary: oklch(0.65 0.22 285);
-  --primary-foreground: oklch(0.98 0.005 285);
-  --secondary: oklch(0.26 0.014 260);
-  --secondary-foreground: oklch(0.93 0.005 260);
-  --muted: oklch(0.25 0.012 260);
-  --muted-foreground: oklch(0.68 0.015 260);
-  --accent: oklch(0.70 0.18 290);
-  --accent-foreground: oklch(0.98 0.005 285);
-  --destructive: oklch(0.62 0.21 25);
-  --destructive-foreground: oklch(0.98 0.005 260);
-  --border: oklch(0.3 0.014 260);
-  --input: oklch(0.28 0.014 260);
-  --ring: oklch(0.65 0.22 285 / 0.5);
-  --code-bg: oklch(0.14 0.008 260);
-  --syntax-tag: oklch(0.8 0.15 20);
-  --syntax-attr: oklch(0.85 0.16 95);
-  --syntax-string: oklch(0.84 0.16 145);
-  --syntax-keyword: oklch(0.78 0.13 300);
-  --syntax-comment: oklch(0.55 0.015 260);
+  /* PulseUI palette as Tailwind colors: bg-pulse-surface, text-pulse-cyan, … */
+  --color-pulse-bg: var(--pulse-bg);
+  --color-pulse-bg-deep: var(--pulse-bg-deep);
+  --color-pulse-bg-elevated: var(--pulse-bg-elevated);
+  --color-pulse-surface: var(--pulse-surface);
+  --color-pulse-surface-raised: var(--pulse-surface-raised);
+  --color-pulse-surface-overlay: var(--pulse-surface-overlay);
+  --color-pulse-surface-hover: var(--pulse-surface-hover);
+  --color-pulse-border: var(--pulse-border);
+  --color-pulse-border-strong: var(--pulse-border-strong);
+  --color-pulse-border-active: var(--pulse-border-active);
+  --color-pulse-text: var(--pulse-text);
+  --color-pulse-text-secondary: var(--pulse-text-secondary);
+  --color-pulse-text-muted: var(--pulse-text-muted);
+  --color-pulse-cyan: var(--pulse-cyan);
+  --color-pulse-blue: var(--pulse-blue);
+  --color-pulse-magenta: var(--pulse-magenta);
+  --color-pulse-pink: var(--pulse-pink);
+  --color-pulse-success: var(--pulse-success);
+  --color-pulse-warning: var(--pulse-warning);
+  --color-pulse-danger: var(--pulse-danger);
+
+  --shadow-panel: var(--pulse-shadow-panel);
+  --shadow-glow-blue: var(--pulse-glow-blue);
+  --shadow-glow-magenta: var(--pulse-glow-magenta);
+
+  --ease-pulse: var(--pulse-ease);
+
+  --animate-pulse-float: pulse-float 14s var(--pulse-ease) infinite alternate;
+  --animate-pulse-float-slow: pulse-float 22s var(--pulse-ease) infinite alternate-reverse;
+  --animate-pulse-twinkle: pulse-twinkle 5s ease-in-out infinite;
+  --animate-pulse-grid: pulse-grid 18s linear infinite;
+  --animate-pulse-sheen: pulse-sheen 2.2s linear infinite;
+  --animate-pulse-blink: pulse-blink 1.4s ease-in-out infinite;
 }
 
 @layer base {
@@ -87,102 +200,178 @@
     border-color: var(--color-border);
   }
 
+  html,
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+    background-color: var(--pulse-bg);
+    color: var(--pulse-text);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: rgb(0 207 255 / 0.28);
+    color: var(--pulse-text);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--pulse-cyan);
+    outline-offset: 2px;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--pulse-border-strong) transparent;
   }
 }
 
-@utility studio-grid {
-  background-image:
-    linear-gradient(to right, oklch(1 0 0 / 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, oklch(1 0 0 / 0.035) 1px, transparent 1px);
-  background-size: 32px 32px;
+/* ---------------------------------------------------------------- */
+/* Utilities                                                         */
+/* ---------------------------------------------------------------- */
+
+@utility font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
 }
 
-@utility glow-ring {
-  box-shadow: var(--shadow-glow);
+@utility pulse-text-accent {
+  background: var(--pulse-gradient-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-@utility panel-surface {
-  background-color: var(--color-panel);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-panel);
+@utility pulse-text-deploy {
+  background: var(--pulse-gradient-deploy);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 28px rgb(255 51 107 / 0.35));
+}
+
+/* Gradient hairline border that lights up the active control. */
+@utility pulse-border-glow {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: var(--pulse-gradient-border);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.55;
+    transition: opacity var(--pulse-duration-panel) var(--pulse-ease);
+  }
+  &:focus-within::before,
+  &[data-active="true"]::before {
+    opacity: 1;
+  }
+}
+
+@utility pulse-panel {
+  background-color: var(--pulse-surface);
+  border: 1px solid var(--pulse-border);
+  border-radius: var(--pulse-radius-lg);
+  box-shadow: var(--pulse-shadow-panel);
+}
+
+@utility pulse-glass {
+  background: color-mix(in oklab, var(--pulse-surface-raised) 72%, transparent);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+
+@utility pulse-interactive {
+  transition:
+    background-color var(--pulse-duration-hover) var(--pulse-ease),
+    border-color var(--pulse-duration-hover) var(--pulse-ease),
+    color var(--pulse-duration-hover) var(--pulse-ease),
+    box-shadow var(--pulse-duration-hover) var(--pulse-ease),
+    transform var(--pulse-duration-hover) var(--pulse-ease);
+}
+
+@utility pulse-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--pulse-surface-raised) 0%,
+    var(--pulse-surface-hover) 50%,
+    var(--pulse-surface-raised) 100%
+  );
+  background-size: 200% 100%;
+  animation: pulse-sheen 1.6s linear infinite;
+  border-radius: var(--pulse-radius-sm);
 }
 
 @utility scroll-slim {
   scrollbar-width: thin;
-  scrollbar-color: var(--color-border) transparent;
+  scrollbar-color: var(--pulse-border-strong) transparent;
 }
 
-.glass-card {
-  background: oklch(0.2 0.01 260 / 0.5);
-  backdrop-filter: blur(12px);
-  border: 1px solid oklch(0.3 0.01 260 / 0.3);
-  border-radius: 12px;
+/* ---------------------------------------------------------------- */
+/* Motion                                                            */
+/* ---------------------------------------------------------------- */
+
+@keyframes pulse-float {
+  from {
+    transform: translate3d(0, 0, 0) rotateX(var(--rx, 52deg)) rotateZ(var(--rz, -28deg));
+  }
+  to {
+    transform: translate3d(var(--dx, 0px), var(--dy, -18px), 0) rotateX(var(--rx, 52deg))
+      rotateZ(calc(var(--rz, -28deg) + 6deg));
+  }
 }
 
-.gradient-hero {
-  background: radial-gradient(ellipse at top, oklch(0.3 0.05 280 / 0.3), transparent 70%);
+@keyframes pulse-twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.9;
+  }
 }
 
-.hover-glow {
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-.hover-glow:hover {
-  box-shadow: 0 0 24px oklch(0.6 0.15 280 / 0.4);
-  transform: translateY(-2px);
-}
-/* === Purple Glassmorphism Theme === */
-
-.glass-panel {
-  background: rgba(20, 12, 40, 0.5);
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(168, 85, 247, 0.15);
-  box-shadow:
-    0 0 24px rgba(139, 92, 246, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+@keyframes pulse-grid {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 64px;
+  }
 }
 
-.glass-panel-strong {
-  background: rgba(12, 8, 28, 0.7);
-  backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(168, 85, 247, 0.2);
+@keyframes pulse-sheen {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
 }
 
-.purple-glow {
-  box-shadow:
-    0 0 20px rgba(139, 92, 246, 0.25),
-    0 0 40px rgba(168, 85, 247, 0.15);
+@keyframes pulse-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
 }
 
-.purple-gradient-bg {
-  background:
-    radial-gradient(ellipse at top left, rgba(139, 92, 246, 0.15), transparent 50%),
-    radial-gradient(ellipse at bottom right, rgba(168, 85, 247, 0.12), transparent 50%),
-    #0a0616;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
-
-.purple-accent {
-  background: linear-gradient(135deg, rgb(139, 92, 246) 0%, rgb(168, 85, 247) 100%);
-}
-
-/* === Connector background marquee === */
-@keyframes marquee-l {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-@keyframes marquee-r {
-  from { transform: translateX(-50%); }
-  to   { transform: translateX(0); }
-}
-.marquee-row {
-  display: flex;
-  gap: 1.5rem;
-  width: max-content;
-  white-space: nowrap;
-}
-.marquee-l { animation: marquee-l 80s linear infinite; }
-.marquee-r { animation: marquee-r 80s linear infinite; }

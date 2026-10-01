@@ -1,68 +1,71 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
-  Outlet,
+  HeadContent,
   Link,
+  Outlet,
+  Scripts,
   createRootRouteWithContext,
   useRouter,
-  HeadContent,
-  Scripts,
 } from "@tanstack/react-router";
+import { RotateCcw, TriangleAlert } from "lucide-react";
 import { type ReactNode } from "react";
 
-import appCss from "../styles.css?url";
+import { PulseMark } from "@/components/shared/PulseLogo";
+import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { CommandPaletteProvider } from "@/features/shell/command-palette";
+import appCss from "../styles.css?url";
+
+const DESCRIPTION =
+  "PulseUI is an AI application development environment: describe an app, and Pulse builds real, editable, runnable code with live preview, version history and deployment.";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-dvh items-center justify-center bg-pulse-bg px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+        <PulseMark className="mx-auto mb-6 h-12 w-12" />
+        <p className="font-mono text-sm text-pulse-cyan">404</p>
+        <h1 className="mt-2 font-display text-2xl font-semibold text-pulse-text">
+          This page does not exist
+        </h1>
+        <p className="mt-2 text-sm text-pulse-text-secondary">
+          The link may be outdated, or the project was deleted.
         </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
-          </Link>
-        </div>
+        <Button asChild className="mt-6">
+          <Link to="/">Back to PulseUI</Link>
+        </Button>
       </div>
     </div>
   );
 }
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error(error);
   const router = useRouter();
-
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
-        </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
-          <button
+    <div className="flex min-h-dvh items-center justify-center bg-pulse-bg px-4">
+      <div className="pulse-panel max-w-lg p-8">
+        <div className="mb-4 flex items-center gap-2 text-pulse-danger">
+          <TriangleAlert className="h-5 w-5" />
+          <h1 className="font-display text-lg font-semibold text-pulse-text">
+            This view failed to load
+          </h1>
+        </div>
+        <pre className="max-h-48 overflow-auto rounded-md border border-pulse-border bg-pulse-bg-deep p-3 font-mono text-xs text-pulse-text-secondary whitespace-pre-wrap">
+          {error.message}
+        </pre>
+        <div className="mt-6 flex gap-2">
+          <Button
             onClick={() => {
-              router.invalidate();
+              void router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Try again
-          </button>
-          <a
-            href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-          >
-            Go home
-          </a>
+            <RotateCcw /> Try again
+          </Button>
+          <Button variant="outline" asChild>
+            <a href="/">Go home</a>
+          </Button>
         </div>
       </div>
     </div>
@@ -73,17 +76,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "PromptUI Studio" },
-      {
-        name: "description",
-        content: "AI-powered React and Tailwind CSS component generator with a live preview.",
-      },
-      { property: "og:title", content: "PromptUI Studio" },
-      {
-        property: "og:description",
-        content: "AI-powered React and Tailwind CSS component generator with a live preview.",
-      },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      { title: "PulseUI — Build. Iterate. Deploy." },
+      { name: "description", content: DESCRIPTION },
+      { name: "theme-color", content: "#04070d" },
+      { property: "og:title", content: "PulseUI — AI application builder" },
+      { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -92,13 +90,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap",
       },
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
     ],
   }),
   shellComponent: RootShell,
@@ -109,7 +104,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
         <HeadContent />
       </head>
@@ -123,12 +118,15 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
-      <Toaster position="top-center" />
+      <TooltipProvider delayDuration={250}>
+        <CommandPaletteProvider>
+          {/* Required: nested routes render here. */}
+          <Outlet />
+        </CommandPaletteProvider>
+      </TooltipProvider>
+      <Toaster position="bottom-right" />
     </QueryClientProvider>
   );
 }
