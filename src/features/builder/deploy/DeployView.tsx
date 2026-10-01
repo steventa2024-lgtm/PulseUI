@@ -119,7 +119,7 @@ export function DeployView() {
           </p>
         </div>
 
-        {deployments.isLoading ? (
+        {deployments.isPending ? (
           <div className="pulse-skeleton h-28" />
         ) : !configured.length ? (
           <EmptyState
@@ -176,7 +176,7 @@ export function DeployView() {
               ))}
             </ul>
           ) : (
-            !deployments.isLoading && (
+            !deployments.isPending && (
               <EmptyState icon={Rocket} title="No deployments yet." className="py-10" />
             )
           )}

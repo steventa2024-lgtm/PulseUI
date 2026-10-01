@@ -16,6 +16,11 @@ import { MessageText } from "./MessageText";
 import { RunActivity } from "./RunActivity";
 import { RunTimeline } from "./RunTimeline";
 
+function toolCount(items: Array<{ kind: string }>): string {
+  const count = items.filter((item) => item.kind === "tool").length;
+  return `${count} tool call${count === 1 ? "" : "s"}`;
+}
+
 function UserMessage({ message }: { message: ChatMessage }) {
   return (
     <div className="ml-auto max-w-[92%] rounded-[var(--pulse-radius-lg)] rounded-br-sm border border-pulse-blue/25 bg-pulse-blue/10 px-3.5 py-2.5">
@@ -102,14 +107,14 @@ export function AgentPanel({ className }: { className?: string }) {
         className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4"
         aria-live="polite"
       >
-        {conversation.isLoading && (
+        {conversation.isPending && (
           <div className="space-y-3">
             <div className="pulse-skeleton ml-auto h-14 w-3/4" />
             <div className="pulse-skeleton h-24 w-full" />
           </div>
         )}
 
-        {!conversation.isLoading && !messages.length && !run && (
+        {!conversation.isPending && !messages.length && !run && (
           <div className="rounded-[var(--pulse-radius-lg)] border border-dashed border-pulse-border-strong p-5 text-center">
             <Sparkles className="mx-auto mb-2 h-5 w-5 text-pulse-cyan" />
             <p className="text-sm text-pulse-text">Tell Pulse what to build or change.</p>
@@ -177,8 +182,7 @@ export function AgentPanel({ className }: { className?: string }) {
               {liveView ? (
                 <details className="group rounded-[var(--pulse-radius-md)] border border-pulse-border bg-pulse-surface/60 px-3 py-2">
                   <summary className="cursor-pointer list-none text-[11px] text-pulse-text-muted">
-                    Activity · {liveView.items.filter((item) => item.kind === "tool").length} tool
-                    calls
+                    Activity · {toolCount(liveView.items)}
                   </summary>
                   <div className="mt-2">
                     <RunTimeline view={liveView} />

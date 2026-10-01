@@ -53,16 +53,25 @@ fs.mkdirSync(outDir, { recursive: true });
 for (const id of templates) {
   fs.rmSync(path.join(work, "src"), { recursive: true, force: true });
   fs.cpSync(path.join(startersDir, "base", "src"), path.join(work, "src"), { recursive: true });
-  fs.cpSync(path.join(startersDir, "templates", id, "src"), path.join(work, "src"), { recursive: true });
-
-  const server = spawn(path.join(work, "node_modules", ".bin", "vite"), ["--port", String(port), "--strictPort"], {
-    cwd: work,
-    stdio: "ignore",
-    detached: true,
+  fs.cpSync(path.join(startersDir, "templates", id, "src"), path.join(work, "src"), {
+    recursive: true,
   });
+
+  const server = spawn(
+    path.join(work, "node_modules", ".bin", "vite"),
+    ["--port", String(port), "--strictPort"],
+    {
+      cwd: work,
+      stdio: "ignore",
+      detached: true,
+    },
+  );
   try {
     await waitFor(`http://127.0.0.1:${port}/`);
-    const page = await browser.newPage({ viewport: { width: 1280, height: 800 }, deviceScaleFactor: 1 });
+    const page = await browser.newPage({
+      viewport: { width: 1280, height: 800 },
+      deviceScaleFactor: 1,
+    });
     await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "networkidle" });
     await page.waitForTimeout(1200);
     await page.screenshot({ path: path.join(outDir, `${id}.jpg`), type: "jpeg", quality: 82 });

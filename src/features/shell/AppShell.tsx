@@ -22,7 +22,7 @@ function readCollapsed(): boolean {
 /** Shows the real model in use, or a call to action when nothing is configured. */
 export function ModelStatusChip({ className }: { className?: string }) {
   const models = useModels();
-  if (models.isLoading)
+  if (models.isPending)
     return <div className={cn("pulse-skeleton h-8 w-36 rounded-full", className)} />;
   const current = models.data?.models.find((model) => model.id === models.data?.defaultModelId);
   if (!current) {

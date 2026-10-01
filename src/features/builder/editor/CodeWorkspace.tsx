@@ -291,7 +291,7 @@ export function CodeWorkspace() {
         </div>
         <div className="min-h-0 flex-1 overflow-auto p-1.5">
           {sidebar === "files" ? (
-            tree.isLoading ? (
+            tree.isPending ? (
               <div className="space-y-1.5 p-2">
                 {[0, 1, 2, 3, 4].map((index) => (
                   <div

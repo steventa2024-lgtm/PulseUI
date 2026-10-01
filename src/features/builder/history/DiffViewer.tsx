@@ -4,9 +4,18 @@ import { useMemo, useState } from "react";
 import { parseUnifiedDiff } from "@/lib/versions/diff-parse";
 import { cn } from "@/lib/utils";
 
+const LOCKFILE = /(^|\/)(bun\.lockb?|package-lock\.json|pnpm-lock\.yaml|yarn\.lock)$/;
+
 /** File list + unified diff with line numbers, built from real git output. */
 export default function DiffViewer({ diff }: { diff: string }) {
-  const files = useMemo(() => parseUnifiedDiff(diff), [diff]);
+  // Lockfiles are rarely what you want to read first.
+  const files = useMemo(
+    () =>
+      parseUnifiedDiff(diff).sort(
+        (a, b) => Number(LOCKFILE.test(a.path)) - Number(LOCKFILE.test(b.path)),
+      ),
+    [diff],
+  );
   const [selected, setSelected] = useState(0);
   const file = files[selected];
 

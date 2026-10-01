@@ -50,7 +50,7 @@ function VersionDiff({
     queryKey: ["version-diff", projectId, version.id, against],
     queryFn: () => getVersionDiff({ data: { projectId, versionId: version.id, against } }),
   });
-  if (diff.isLoading)
+  if (diff.isPending)
     return (
       <div className="flex h-full items-center justify-center">
         <Loader2 className="h-5 w-5 animate-spin text-pulse-text-muted" />
@@ -96,7 +96,7 @@ function VersionsTab() {
   const current = list[0];
   const active = selected ?? current ?? null;
 
-  if (versions.isLoading) {
+  if (versions.isPending) {
     return (
       <div className="space-y-2 p-4">
         {[0, 1, 2].map((index) => (
@@ -276,7 +276,7 @@ function GitTab() {
     }
   };
 
-  if (git.isLoading)
+  if (git.isPending)
     return (
       <div className="p-4">
         <div className="pulse-skeleton h-24" />
@@ -380,7 +380,7 @@ function GitTab() {
         </div>
       </aside>
       <div className="min-h-0 min-w-0 flex-1">
-        {diff.isLoading ? null : (
+        {diff.isPending ? null : (
           <Suspense fallback={null}>
             <DiffViewer diff={diff.data?.diff ?? ""} />
           </Suspense>

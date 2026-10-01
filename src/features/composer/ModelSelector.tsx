@@ -55,7 +55,7 @@ export function ModelSelector({
     if (pick) onChange(pick.id, pick);
   }, [autoSelect, models.data, selected, options, onChange]);
 
-  if (models.isLoading) return <div className={cn("pulse-skeleton h-8 w-32", className)} />;
+  if (models.isPending) return <div className={cn("pulse-skeleton h-8 w-32", className)} />;
 
   if (!options.length) {
     return (

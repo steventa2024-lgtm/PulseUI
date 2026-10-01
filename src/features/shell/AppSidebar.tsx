@@ -142,14 +142,14 @@ export function AppSidebar({
           <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-pulse-text-muted">
             Recent
           </p>
-          {projects.isLoading && (
+          {projects.isPending && (
             <div className="space-y-2 px-3">
               {[0, 1, 2].map((index) => (
                 <div key={index} className="pulse-skeleton h-6" />
               ))}
             </div>
           )}
-          {!projects.isLoading && !recent.length && (
+          {!projects.isPending && !recent.length && (
             <p className="px-3 text-xs leading-relaxed text-pulse-text-muted">
               Projects you create will appear here.
             </p>

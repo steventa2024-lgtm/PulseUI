@@ -49,7 +49,7 @@ function SearchPage() {
         >
           Projects
         </h2>
-        {results.isLoading ? (
+        {results.isPending ? (
           <div className="space-y-2">
             {[0, 1].map((index) => (
               <div key={index} className="pulse-skeleton h-14" />
@@ -112,7 +112,7 @@ function SearchPage() {
             ))}
           </ul>
         ) : (
-          !results.isLoading && (
+          !results.isPending && (
             <EmptyState icon={LayoutTemplate} title="No templates match" className="py-8" />
           )
         )}

@@ -48,7 +48,9 @@ export function CommandPaletteProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (state) => state.location.pathname });
   const projectId = PROJECT_ROUTE.exec(pathname)?.[1] ?? null;
-  const projects = useProjects();
+  // Only fetch while open: the provider hydrates before code-split routes, and an early
+  // fetch would make their first client render differ from the server HTML.
+  const projects = useProjects(undefined, { enabled: isOpen });
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {

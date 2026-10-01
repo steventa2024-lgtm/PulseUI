@@ -55,7 +55,7 @@ export function DataView() {
             </Link>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {connections.isLoading
+            {connections.isPending
               ? [0, 1, 2].map((index) => <div key={index} className="pulse-skeleton h-36" />)
               : backends.map((connection) => (
                   <ConnectionCard key={connection.id} connection={connection} />

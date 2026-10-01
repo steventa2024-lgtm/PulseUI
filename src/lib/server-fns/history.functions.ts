@@ -118,9 +118,7 @@ export const getAppSettings = createServerFn({ method: "GET" }).handler(async ()
 });
 
 export const updateAppSettings = createServerFn({ method: "POST" })
-  .validator((data: unknown) =>
-    z.object({ defaultModelId: modelIdSchema.nullable() }).parse(data),
-  )
+  .validator((data: unknown) => z.object({ defaultModelId: modelIdSchema.nullable() }).parse(data))
   .handler(async ({ data }) => {
     settingsRepo.set("defaultModelId", data.defaultModelId);
     return { ok: true };

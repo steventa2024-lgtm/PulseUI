@@ -58,7 +58,7 @@ function ConnectionsPage() {
         />
       )}
 
-      {connections.isLoading ? (
+      {connections.isPending ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {[0, 1, 2, 3, 4, 5].map((index) => (
             <div key={index} className="pulse-skeleton h-40 rounded-[var(--pulse-radius-lg)]" />

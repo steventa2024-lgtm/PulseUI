@@ -31,11 +31,12 @@ export const keys = {
   appSettings: ["app-settings"] as const,
 };
 
-export function useProjects(query?: string) {
+export function useProjects(query?: string, options: { enabled?: boolean } = {}) {
   return useQuery({
     queryKey: keys.projects(query),
     queryFn: () => listProjects({ data: query ? { query } : {} }),
     staleTime: 5_000,
+    enabled: options.enabled ?? true,
   });
 }
 
