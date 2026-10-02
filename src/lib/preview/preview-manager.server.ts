@@ -147,7 +147,7 @@ function portFree(port: number, host: string): Promise<boolean> {
 
 async function allocatePort(preferred: number | null): Promise<number> {
   const env = serverEnv();
-  const host = env.PREVIEW_HOST ?? "127.0.0.1";
+  const host = env.PREVIEW_HOST ?? "localhost";
   const used = new Set(
     [...registry().entries.values()].filter((entry) => entry.child).map((entry) => entry.port),
   );
@@ -170,7 +170,12 @@ async function waitForHttp(entry: PreviewEntry, port: number, timeoutMs: number)
     try {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), 2000);
-      const response = await fetch(`http://127.0.0.1:${port}/`, { signal: controller.signal });
+      const bind = serverEnv().PREVIEW_HOST ?? "localhost";
+      const probeHost = bind === "0.0.0.0" || bind === "::" ? "localhost" : bind;
+      const response = await fetch(
+        `http://${probeHost.includes(":") ? `[${probeHost}]` : probeHost}:${port}/`,
+        { signal: controller.signal },
+      );
       clearTimeout(timer);
       await response.body?.cancel().catch(() => undefined);
       if (response.status < 500) return;
@@ -258,7 +263,7 @@ async function doStart(entry: PreviewEntry, options: StartOptions): Promise<Prev
 
     setStatus(entry, "starting");
     const info = frameworkInfo(root, options.packageManager);
-    const host = env.PREVIEW_HOST ?? "127.0.0.1";
+    const host = env.PREVIEW_HOST ?? "localhost";
     const port = await allocatePort(options.preferredPort ?? entry.port);
     const argv = info.dev.argv(port, host);
     if (!argv.length)

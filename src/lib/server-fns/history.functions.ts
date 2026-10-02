@@ -9,7 +9,6 @@ import {
   deploymentProviders,
   startDeployment,
 } from "../deployment/deployment.server";
-import { logger } from "../log.server";
 import {
   deploymentsRepo,
   projectsRepo,
@@ -23,8 +22,6 @@ import {
   versionDiff,
 } from "../versions/checkpoints.server";
 import { deploymentIdSchema, modelIdSchema, projectIdSchema, versionIdSchema } from "./validators";
-
-const log = logger("history");
 
 /* ---------------------------- versions ---------------------------- */
 
@@ -60,7 +57,11 @@ export const restoreProjectVersion = createServerFn({ method: "POST" })
     if (activeRunId(data.projectId))
       throw new Error("Stop the active Pulse run before restoring a version.");
     const version = await restoreVersion(data.projectId, data.versionId);
-    log.info("version.restore", { projectId: data.projectId, versionId: data.versionId });
+    const { logger } = await import("../log.server");
+    logger("history").info("version.restore", {
+      projectId: data.projectId,
+      versionId: data.versionId,
+    });
     return version;
   });
 
@@ -112,7 +113,7 @@ export const getAppSettings = createServerFn({ method: "GET" }).handler(async ()
     projectCount: projectsRepo.list({ limit: 10_000 }).length,
     agent: { maxSteps: env.AGENT_MAX_STEPS, maxRepairAttempts: env.AGENT_MAX_REPAIR_ATTEMPTS },
     preview: {
-      host: env.PREVIEW_HOST ?? "127.0.0.1",
+      host: env.PREVIEW_HOST ?? "localhost",
       publicHost: env.PREVIEW_PUBLIC_HOST ?? "localhost",
       portRange: `${env.PREVIEW_PORT_START}–${env.PREVIEW_PORT_END}`,
     },

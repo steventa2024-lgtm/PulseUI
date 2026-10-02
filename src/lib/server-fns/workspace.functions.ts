@@ -8,7 +8,6 @@ import {
   workspaceGitLog,
   workspaceGitStatus,
 } from "../git/git.server";
-import { logger } from "../log.server";
 import { projectsRepo } from "../persistence/repositories.server";
 import {
   getPreview,
@@ -19,8 +18,6 @@ import {
 } from "../preview/preview-manager.server";
 import { workspaceFor } from "../workspace/workspace-manager.server";
 import { projectIdSchema, relativePathSchema } from "./validators";
-
-const log = logger("editor");
 
 function projectWorkspace(projectId: string) {
   const project = projectsRepo.get(projectId);
@@ -71,7 +68,8 @@ export const writeProjectFile = createServerFn({ method: "POST" })
     const { workspace } = projectWorkspace(data.projectId);
     const result = workspace.writeFile(data.path, data.content);
     projectsRepo.touch(data.projectId);
-    log.info("file.save", { projectId: data.projectId, path: result.path });
+    const { logger } = await import("../log.server");
+    logger("editor").info("file.save", { projectId: data.projectId, path: result.path });
     return result;
   });
 
