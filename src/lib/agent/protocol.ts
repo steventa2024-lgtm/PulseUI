@@ -56,7 +56,39 @@ function parseArgs(
   }
 }
 
-export function parseAgentOutput(text: string): ParsedOutput {
+const NEXT_TAG = /<(?:action\s|write\s|patch\s|done>|plan>)/;
+
+/**
+ * Models sometimes open <plan> or <done> and never close it (often running
+ * straight into their first <write>). Close such a block before the next tag,
+ * or at the end, so raw tags never leak into the chat and the actions after
+ * it still run.
+ */
+export function closeDanglingBlocks(text: string): string {
+  let out = text;
+  for (const tag of ["plan", "done"] as const) {
+    let from = 0;
+    for (;;) {
+      const open = out.indexOf(`<${tag}>`, from);
+      if (open === -1) break;
+      const bodyStart = open + tag.length + 2;
+      const close = out.indexOf(`</${tag}>`, bodyStart);
+      const next = NEXT_TAG.exec(out.slice(bodyStart));
+      const nextAt = next ? bodyStart + next.index : -1;
+      if (close !== -1 && (nextAt === -1 || close < nextAt)) {
+        from = close;
+        continue;
+      }
+      const insertAt = nextAt === -1 ? out.length : nextAt;
+      out = `${out.slice(0, insertAt)}</${tag}>${out.slice(insertAt)}`;
+      from = insertAt;
+    }
+  }
+  return out;
+}
+
+export function parseAgentOutput(input: string): ParsedOutput {
+  const text = closeDanglingBlocks(input);
   const actions: ParsedAction[] = [];
   const errors: string[] = [];
   let plan: string | null = null;

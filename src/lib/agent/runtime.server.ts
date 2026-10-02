@@ -322,6 +322,7 @@ async function agentLoop(
 ): Promise<LoopOutcome> {
   const prose: string[] = [];
   let actionsRun = 0;
+  let nudges = 0;
 
   for (let step = 0; step < maxSteps; step += 1) {
     if (ctx.signal.aborted) throw new CancelledError();
@@ -358,6 +359,23 @@ async function agentLoop(
     const failures = results.filter((result) => !result.ok);
     if (parsed.done !== null && !failures.length && !parsed.errors.length) {
       return { done: parsed.done, prose, actionsRun, stepLimitHit: false };
+    }
+    if (
+      ctx.mode === "build" &&
+      !parsed.actions.length &&
+      !parsed.errors.length &&
+      parsed.done === null &&
+      (parsed.plan !== null || actionsRun > 0) &&
+      nudges < 2
+    ) {
+      // It planned (or started) but stopped before doing the work: keep going.
+      nudges += 1;
+      messages.push({
+        role: "user",
+        content:
+          "You have not finished. Carry out the plan now: emit the <write>/<patch>/<action> tags for the remaining work in this reply, then <done>summary</done> when everything is complete.",
+      });
+      continue;
     }
     if (!parsed.actions.length && !parsed.errors.length) {
       // Plain answer with no tools: treat it as the final reply.

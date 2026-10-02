@@ -104,3 +104,29 @@ describe("applyPatch", () => {
     expect(patched).not.toContain("function b");
   });
 });
+
+describe("unclosed plan/done blocks", () => {
+  it("closes a plan that runs straight into a write", () => {
+    const parsed = parseAgentOutput(
+      '<plan>\n1. Header\n2. Hero\n<write path="src/App.tsx">\nexport default 1;\n</write>',
+    );
+    expect(parsed.plan).toBe("1. Header\n2. Hero");
+    expect(parsed.prose).toBe("");
+    expect(parsed.actions).toEqual([
+      { tool: "write_file", args: { path: "src/App.tsx", content: "export default 1;" } },
+    ]);
+  });
+
+  it("closes a plan left open at the end of the reply", () => {
+    const parsed = parseAgentOutput("Sure.\n<plan>\n1. Build the hero");
+    expect(parsed.plan).toBe("1. Build the hero");
+    expect(parsed.prose).toBe("Sure.");
+    expect(parsed.actions).toEqual([]);
+  });
+
+  it("leaves well-formed blocks alone", () => {
+    const parsed = parseAgentOutput("<plan>a</plan>\n<done>b</done>");
+    expect(parsed.plan).toBe("a");
+    expect(parsed.done).toBe("b");
+  });
+});
