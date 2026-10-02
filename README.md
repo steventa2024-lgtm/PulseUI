@@ -26,6 +26,8 @@ snapshots, and nothing reports success unless the underlying command succeeded.
 - [Development commands](#development-commands)
 - [Current limitations](#current-limitations)
 
+Trying it by hand? See **[TESTING.md](TESTING.md)** for setup and a checklist.
+
 ---
 
 ## Quick start
@@ -118,8 +120,10 @@ prompt ─▶ project + workspace ─▶ Pulse agent ⇄ tools ─▶ install �
 
 A new project starts from a known-good starter (`starters/base`: React 19,
 TypeScript, Vite, Tailwind CSS v4, lucide-react) rather than asking the model
-to invent `package.json`. Templates in the gallery are full starter projects
-in `starters/templates/<id>` layered on top of the base; their card images in
+to invent `package.json`. The gallery's 15 templates (dashboards, AI chat,
+store, restaurant ordering, booking, CRM, kanban, fitness and budget trackers,
+landing page, portfolio, …) are full, working starter projects in
+`starters/templates/<id>` layered on top of the base; their card images in
 `public/templates` are screenshots of those starters actually running
 (`bun run templates:screenshots`).
 

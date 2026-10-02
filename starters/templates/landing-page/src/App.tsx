@@ -2,6 +2,7 @@ import { ArrowRight, Boxes, Gauge, Lock, Sparkles, Workflow, Zap } from "lucide-
 
 import { Faq } from "./components/Faq";
 import { Pricing } from "./components/Pricing";
+import { Signup } from "./components/Signup";
 
 const FEATURES = [
   { icon: Zap, title: "Instant sync", text: "Changes propagate to every device in under 100ms." },
@@ -18,7 +19,7 @@ export default function App() {
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
         <span className="font-semibold text-white">Nimbus</span>
         <div className="hidden gap-8 text-sm text-slate-400 md:flex"><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div>
-        <button className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-slate-900">Get started</button>
+        <a href="#signup" className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-slate-900">Get started</a>
       </nav>
       <header className="relative mx-auto max-w-6xl px-6 pb-24 pt-20 text-center">
         <div className="absolute left-1/2 top-10 -z-0 h-72 w-[40rem] -translate-x-1/2 rounded-full bg-indigo-600/25 blur-3xl" />
@@ -29,7 +30,7 @@ export default function App() {
           <h1 className="mx-auto mt-6 max-w-3xl text-5xl font-semibold leading-tight tracking-tight text-white sm:text-6xl">The workspace that keeps your team in flow.</h1>
           <p className="mx-auto mt-6 max-w-xl text-lg text-slate-400">Docs, tasks and automations in one fast, focused place.</p>
           <div className="mt-10 flex justify-center gap-3">
-            <button className="flex items-center gap-2 rounded-lg bg-indigo-500 px-5 py-3 font-medium text-white">Start free <ArrowRight className="h-4 w-4" /></button>
+            <a href="#signup" className="flex items-center gap-2 rounded-lg bg-indigo-500 px-5 py-3 font-medium text-white">Start free <ArrowRight className="h-4 w-4" /></a>
             <button className="rounded-lg border border-white/10 px-5 py-3 font-medium">Book a demo</button>
           </div>
         </div>
@@ -61,6 +62,7 @@ export default function App() {
         </div>
       </section>
       <Faq />
+      <Signup />
     </div>
   );
 }

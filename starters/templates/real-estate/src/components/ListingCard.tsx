@@ -1,5 +1,5 @@
 import { Bath, BedDouble, Heart, Ruler } from "lucide-react";
-import { useState } from "react";
+import { usePersistentState } from "../lib/usePersistentState";
 
 export type Listing = { id: number; title: string; city: string; price: number; beds: number; baths: number; sqft: number; tint: string };
 
@@ -13,7 +13,7 @@ export const LISTINGS: Listing[] = [
 ];
 
 export function ListingCard({ listing }: { listing: Listing }) {
-  const [saved, setSaved] = useState(false);
+  const [saved, setSaved] = usePersistentState(`realestate.saved.${listing.id}`, false);
   return (
     <article className="overflow-hidden rounded-2xl border border-slate-200 transition hover:shadow-xl">
       <div className={`relative h-48 bg-gradient-to-br ${listing.tint}`}>

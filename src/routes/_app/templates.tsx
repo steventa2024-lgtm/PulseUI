@@ -15,9 +15,11 @@ export const Route = createFileRoute("/_app/templates")({
 const CATEGORIES: Array<"All" | TemplateCategory> = [
   "All",
   "Dashboard",
-  "AI",
+  "Business",
+  "Productivity",
   "Commerce",
   "Marketing",
+  "AI",
   "Personal",
 ];
 

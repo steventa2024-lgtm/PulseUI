@@ -7,7 +7,8 @@
  * `bun run templates:screenshots` to capture its card image.
  */
 
-export type TemplateCategory = "Dashboard" | "AI" | "Commerce" | "Marketing" | "Personal";
+export type TemplateCategory =
+  "Dashboard" | "AI" | "Commerce" | "Marketing" | "Personal" | "Productivity" | "Business";
 
 export type TemplateDefinition = {
   id: string;
@@ -91,7 +92,7 @@ export const TEMPLATES: TemplateDefinition[] = [
     category: "Dashboard",
     description: "User management table with search, roles, status and bulk actions.",
     image: "/templates/admin-dashboard.jpg",
-    suggestion: "Add an 'invite user' dialog with role selection.",
+    suggestion: "Add an audit log page that records role changes.",
     popular: false,
   },
   {
@@ -100,7 +101,66 @@ export const TEMPLATES: TemplateDefinition[] = [
     category: "Marketing",
     description: "Product hero, feature grid, pricing tiers, testimonials and FAQ.",
     image: "/templates/landing-page.jpg",
-    suggestion: "Add a monthly/yearly toggle to the pricing section.",
+    suggestion: "Add a customer logos strip under the hero.",
+    popular: false,
+  },
+  {
+    id: "kanban-board",
+    name: "Kanban Task Board",
+    category: "Productivity",
+    description:
+      "Drag-and-drop columns, task editor with tags and priorities, progress bar, saved locally.",
+    image: "/templates/kanban-board.jpg",
+    suggestion: "Add due dates with an overdue highlight.",
+    popular: false,
+  },
+  {
+    id: "crm",
+    name: "Small Business CRM",
+    category: "Business",
+    description:
+      "Contacts, deal pipeline by stage, revenue and win-rate KPIs, add/edit/delete, saved locally.",
+    image: "/templates/crm.jpg",
+    suggestion: "Add a tasks list per contact with reminders.",
+    popular: false,
+  },
+  {
+    id: "restaurant",
+    name: "Restaurant & Ordering",
+    category: "Commerce",
+    description:
+      "Menu with categories and dietary filters, cart, pickup/delivery checkout and confirmation.",
+    image: "/templates/restaurant.jpg",
+    suggestion: "Add a table reservation form with party size.",
+    popular: false,
+  },
+  {
+    id: "booking",
+    name: "Appointment Booking",
+    category: "Business",
+    description:
+      "Services, staff, two-week calendar with live availability, booking confirmation and cancel.",
+    image: "/templates/booking.jpg",
+    suggestion: "Add an admin view listing all bookings by day.",
+    popular: false,
+  },
+  {
+    id: "fitness-tracker",
+    name: "Fitness Tracker",
+    category: "Personal",
+    description: "Log workouts, weekly goal, activity chart, streaks and history, saved locally.",
+    image: "/templates/fitness-tracker.jpg",
+    suggestion: "Add personal records per workout type.",
+    popular: false,
+  },
+  {
+    id: "budget-tracker",
+    name: "Budget Tracker",
+    category: "Personal",
+    description:
+      "Income and expenses, category budgets with a donut chart, month filter and CSV export.",
+    image: "/templates/budget-tracker.jpg",
+    suggestion: "Add recurring transactions.",
     popular: false,
   },
 ];

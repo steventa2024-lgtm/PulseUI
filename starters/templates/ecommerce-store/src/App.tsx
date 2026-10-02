@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+
+import { usePersistentState } from "./lib/usePersistentState";
 import { Search, ShoppingBag } from "lucide-react";
 
 import { CartDrawer } from "./components/CartDrawer";
@@ -9,7 +11,7 @@ const CATEGORIES = ["All", "Audio", "Wearables", "Home", "Accessories"];
 export default function App() {
   const [category, setCategory] = useState("All");
   const [query, setQuery] = useState("");
-  const [cart, setCart] = useState<Product[]>([]);
+  const [cart, setCart] = usePersistentState<Product[]>("store.cart", []);
   const [open, setOpen] = useState(false);
 
   const visible = useMemo(
@@ -72,7 +74,7 @@ export default function App() {
         {!visible.length && <p className="py-16 text-center text-stone-500">No products match your search.</p>}
       </main>
 
-      <CartDrawer open={open} items={cart} onClose={() => setOpen(false)} onRemove={(i) => setCart((c) => c.filter((_, idx) => idx !== i))} />
+      <CartDrawer open={open} items={cart} onClose={() => setOpen(false)} onRemove={(i) => setCart((c) => c.filter((_, idx) => idx !== i))} onCheckout={() => setCart([])} />
     </div>
   );
 }
