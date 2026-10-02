@@ -33,6 +33,7 @@ import {
   type Attachment,
   type ModelOption,
 } from "@/lib/domain/types";
+import { useModels } from "@/lib/client/queries";
 import { formatBytes } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { toPayload, useAttachments } from "./attachments";
@@ -83,6 +84,13 @@ export function PulseComposer({
   const fileRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLInputElement>(null);
   const hero = variant === "hero";
+  const models = useModels();
+  // Never let a prompt go nowhere: with no provider, say so instead of creating a dead run.
+  const blockedReason =
+    disabledReason ??
+    (models.data && !models.data.configured
+      ? "Connect an AI provider (Connections page) to start building. Templates still work without one."
+      : null);
 
   useEffect(() => {
     if (initialPrompt) setPrompt(initialPrompt);
@@ -104,7 +112,7 @@ export function PulseComposer({
   const githubUrl = GITHUB_REPO.exec(prompt)?.[0] ?? null;
   const images = attachments.items.filter((item) => item.kind === "image");
   const visionWarning = images.length > 0 && model && !model.option.supportsVision;
-  const canSubmit = prompt.trim().length >= 2 && !busy && !disabledReason;
+  const canSubmit = prompt.trim().length >= 2 && !busy && !blockedReason;
 
   const submit = async () => {
     if (!canSubmit) return;
@@ -362,7 +370,7 @@ export function PulseComposer({
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  {disabledReason ?? (
+                  {blockedReason ?? (
                     <span>
                       Send <kbd className="font-mono">⌘/Ctrl ↵</kbd> · newline{" "}
                       <kbd className="font-mono">⇧↵</kbd>
@@ -416,7 +424,7 @@ export function PulseComposer({
             <TriangleAlert className="h-3.5 w-3.5" /> {error}
           </span>
         ))}
-        {disabledReason && <span className="text-pulse-text-muted">{disabledReason}</span>}
+        {blockedReason && <span className="text-pulse-text-muted">{blockedReason}</span>}
       </div>
 
       <GitHubImportDialog
