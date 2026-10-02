@@ -106,6 +106,8 @@ export const getAppSettings = createServerFn({ method: "GET" }).handler(async ()
   const env = serverEnv();
   return {
     defaultModelId: settingsRepo.get<string | null>("defaultModelId", null),
+    displayName: settingsRepo.get<string>("displayName", ""),
+    editor: settingsRepo.get<"cursor" | "vscode" | "none">("editor", "cursor"),
     dataDirectory: dataPaths().root,
     projectCount: projectsRepo.list({ limit: 10_000 }).length,
     agent: { maxSteps: env.AGENT_MAX_STEPS, maxRepairAttempts: env.AGENT_MAX_REPAIR_ATTEMPTS },
@@ -118,8 +120,18 @@ export const getAppSettings = createServerFn({ method: "GET" }).handler(async ()
 });
 
 export const updateAppSettings = createServerFn({ method: "POST" })
-  .validator((data: unknown) => z.object({ defaultModelId: modelIdSchema.nullable() }).parse(data))
+  .validator((data: unknown) =>
+    z
+      .object({
+        defaultModelId: modelIdSchema.nullable().optional(),
+        displayName: z.string().trim().max(60).optional(),
+        editor: z.enum(["cursor", "vscode", "none"]).optional(),
+      })
+      .parse(data),
+  )
   .handler(async ({ data }) => {
-    settingsRepo.set("defaultModelId", data.defaultModelId);
+    if (data.defaultModelId !== undefined) settingsRepo.set("defaultModelId", data.defaultModelId);
+    if (data.displayName !== undefined) settingsRepo.set("displayName", data.displayName);
+    if (data.editor !== undefined) settingsRepo.set("editor", data.editor);
     return { ok: true };
   });

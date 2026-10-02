@@ -24,6 +24,37 @@ export function readStoredModel(): string | null {
   }
 }
 
+export function storeModel(id: string): void {
+  try {
+    window.localStorage.setItem(STORAGE_KEY, id);
+  } catch {
+    // Storage unavailable.
+  }
+}
+
+/** Real model options plus auto-selection of the stored or server-default model. */
+export function useModelChoice(
+  value: string | null,
+  onChange: (id: string, option: ModelOption) => void,
+  autoSelect = true,
+) {
+  const models = useModels();
+  const options = useMemo(() => models.data?.models ?? [], [models.data]);
+  const selected = options.find((option) => option.id === value) ?? null;
+
+  useEffect(() => {
+    if (!autoSelect || !models.data || selected) return;
+    const stored = readStoredModel();
+    const pick =
+      options.find((option) => option.id === stored) ??
+      options.find((option) => option.id === models.data?.defaultModelId) ??
+      options[0];
+    if (pick) onChange(pick.id, pick);
+  }, [autoSelect, models.data, selected, options, onChange]);
+
+  return { models, options, selected };
+}
+
 /**
  * Lists only models the server can actually use: configured providers plus
  * local servers that answered. With nothing configured it becomes a
@@ -41,19 +72,7 @@ export function ModelSelector({
   /** Pick the stored/default model automatically when nothing is selected. */
   autoSelect?: boolean;
 }) {
-  const models = useModels();
-  const options = useMemo(() => models.data?.models ?? [], [models.data]);
-  const selected = options.find((option) => option.id === value) ?? null;
-
-  useEffect(() => {
-    if (!autoSelect || !models.data || selected) return;
-    const stored = readStoredModel();
-    const pick =
-      options.find((option) => option.id === stored) ??
-      options.find((option) => option.id === models.data?.defaultModelId) ??
-      options[0];
-    if (pick) onChange(pick.id, pick);
-  }, [autoSelect, models.data, selected, options, onChange]);
+  const { models, options, selected } = useModelChoice(value, onChange, autoSelect);
 
   if (models.isPending) return <div className={cn("pulse-skeleton h-8 w-32", className)} />;
 
@@ -106,11 +125,7 @@ export function ModelSelector({
               <DropdownMenuItem
                 key={option.id}
                 onSelect={() => {
-                  try {
-                    window.localStorage.setItem(STORAGE_KEY, option.id);
-                  } catch {
-                    // ignore
-                  }
+                  storeModel(option.id);
                   onChange(option.id, option);
                 }}
                 className="gap-2 text-xs"

@@ -59,9 +59,10 @@ export const TEMPLATES: TemplateDefinition[] = [
   },
   {
     id: "stream-dashboard",
-    name: "Streaming Dashboard",
+    name: "Twitch Dashboard",
     category: "Dashboard",
-    description: "Creator stream stats, live viewer graph, chat feed and stream controls.",
+    description:
+      "Twitch-style creator dashboard: live viewer graph, chat feed, follower stats and stream controls.",
     image: "/templates/stream-dashboard.jpg",
     suggestion: "Add a scheduled streams calendar panel.",
     popular: true,

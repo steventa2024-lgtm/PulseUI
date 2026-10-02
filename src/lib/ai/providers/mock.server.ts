@@ -82,6 +82,10 @@ export function mockRespond(messages: ChatTurn[]): string {
     messages,
     (turn) => turn.role === "user" && turn.content.includes(RUN_MARKER),
   );
+  if (runStart === -1) {
+    // Plain chat (not an agent run).
+    return "I'm the deterministic mock provider used for tests, so I can't really chat. Configure Gemini, an OpenAI-compatible endpoint or a local Ollama model to talk to Pulse.";
+  }
   const request = extractRequest(messages[runStart]);
   const planMode = messages[runStart]?.content.includes("MODE: PLAN") ?? false;
   const last = messages[messages.length - 1];

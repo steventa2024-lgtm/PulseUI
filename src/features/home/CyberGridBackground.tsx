@@ -6,7 +6,7 @@
  * CSS + inline SVG only. Every animation is slow, transform/opacity based, and
  * disabled under prefers-reduced-motion (see styles.css).
  */
-import { memo } from "react";
+import { memo, type CSSProperties } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -31,50 +31,61 @@ const STARS = (() => {
   }));
 })();
 
-function WireCube({ size, color }: { size: number; color: string }) {
-  // Isometric wireframe cube.
-  const s = size;
-  const h = s / 2;
-  const q = s / 4;
-  return (
-    <svg width={s} height={s} viewBox={`0 0 ${s} ${s}`} fill="none" aria-hidden>
-      <g stroke={color} strokeWidth="1" strokeOpacity="0.85">
-        <path d={`M${h} ${1} L${s - 1} ${q} L${h} ${h} L1 ${q} Z`} />
-        <path d={`M1 ${q} L1 ${s - q} L${h} ${s - 1} L${h} ${h}`} />
-        <path d={`M${s - 1} ${q} L${s - 1} ${s - q} L${h} ${s - 1}`} />
-      </g>
-      <path d={`M${h} ${1} L${s - 1} ${q} L${h} ${h} L1 ${q} Z`} fill={color} fillOpacity="0.06" />
-    </svg>
-  );
-}
+type CubeProps = {
+  size: number;
+  /** Colour of the edges facing the viewer. */
+  front: string;
+  /** Colour of the top/side edges. */
+  side: string;
+  rotate: string;
+  className?: string;
+  style?: CSSProperties;
+  dim?: boolean;
+};
 
-function WirePanel({ className, accent }: { className?: string; accent: "cyan" | "magenta" }) {
-  const color = accent === "cyan" ? "var(--pulse-cyan)" : "var(--pulse-magenta)";
-  return (
+/** A translucent CSS 3D cube with neon edges. */
+function NeonCube({ size, front, side, rotate, className, style, dim }: CubeProps) {
+  const half = size / 2;
+  const face = (color: string, transform: string, strength: number) => (
     <div
-      className={cn("absolute rounded-lg border", className)}
+      className="absolute inset-0 rounded-[6px]"
       style={{
-        borderColor: `color-mix(in oklab, ${color} 45%, transparent)`,
-        background: `linear-gradient(135deg, color-mix(in oklab, ${color} 10%, transparent), transparent 70%)`,
-        boxShadow: `0 0 40px -12px ${color}, inset 0 0 24px -16px ${color}`,
-        transformStyle: "preserve-3d",
+        transform,
+        border: `3px solid ${color}`,
+        background: `linear-gradient(135deg, color-mix(in oklab, ${color} ${26 * strength}%, #0a0f2a), color-mix(in oklab, #070b22 88%, transparent) 75%)`,
+        boxShadow: `0 0 ${22 * strength}px ${color}, 0 0 ${6 * strength}px ${color}, inset 0 0 ${22 * strength}px color-mix(in oklab, ${color} 70%, transparent)`,
+        backfaceVisibility: "visible",
       }}
-    >
-      <div
-        className="absolute inset-x-3 top-3 h-1 rounded-full"
-        style={{ background: `color-mix(in oklab, ${color} 35%, transparent)` }}
-      />
-      <div
-        className="absolute inset-x-3 top-6 h-1 w-1/2 rounded-full"
-        style={{ background: `color-mix(in oklab, ${color} 20%, transparent)` }}
-      />
-      <div
-        className="absolute bottom-3 left-3 right-1/3 top-10 rounded border"
-        style={{ borderColor: `color-mix(in oklab, ${color} 25%, transparent)` }}
-      />
+    />
+  );
+  return (
+    <div className={cn("absolute [perspective:900px]", className)} style={style}>
+      <div className="animate-pulse-bob">
+        <div
+          className="relative"
+          style={{
+            width: size,
+            height: size,
+            transformStyle: "preserve-3d",
+            transform: rotate,
+            opacity: dim ? 0.55 : 1,
+          }}
+        >
+          {face(side, `rotateY(180deg) translateZ(${half}px)`, 0.6)}
+          {face(side, `rotateY(-90deg) translateZ(${half}px)`, 0.8)}
+          {face(side, `rotateX(-90deg) translateZ(${half}px)`, 0.6)}
+          {face(side, `rotateX(90deg) translateZ(${half}px)`, 1)}
+          {face(side, `rotateY(90deg) translateZ(${half}px)`, 0.9)}
+          {face(front, `translateZ(${half}px)`, 1.1)}
+        </div>
+      </div>
     </div>
   );
 }
+
+const PINK = "#ff2d8a";
+const BLUE = "#2f7dff";
+const CYAN = "#3aa8ff";
 
 export const CyberGridBackground = memo(function CyberGridBackground({
   className,
@@ -160,68 +171,53 @@ export const CyberGridBackground = memo(function CyberGridBackground({
       {/* Horizon glow line. */}
       <div className="absolute inset-x-0 bottom-[46%] h-px bg-gradient-to-r from-transparent via-pulse-cyan/40 to-transparent" />
 
-      {/* Floating wireframe geometry. */}
-      <div className="absolute inset-0 [perspective:1200px]">
-        <div
-          className="absolute left-[4%] top-[20%] hidden animate-pulse-float md:block"
-          style={{
-            ["--rx" as string]: "48deg",
-            ["--rz" as string]: "-24deg",
-            ["--dy" as string]: "-14px",
-          }}
-        >
-          <WirePanel accent="cyan" className="relative h-28 w-44" />
-        </div>
-        <div
-          className="absolute left-[12%] top-[56%] hidden animate-pulse-float-slow lg:block"
-          style={{
-            ["--rx" as string]: "56deg",
-            ["--rz" as string]: "-36deg",
-            ["--dy" as string]: "-10px",
-          }}
-        >
-          <WirePanel accent="cyan" className="relative h-20 w-32 opacity-70" />
-        </div>
-        <div
-          className="absolute right-[5%] top-[16%] hidden animate-pulse-float-slow md:block"
-          style={{
-            ["--rx" as string]: "50deg",
-            ["--rz" as string]: "26deg",
-            ["--dy" as string]: "-16px",
-          }}
-        >
-          <WirePanel accent="magenta" className="relative h-32 w-48" />
-        </div>
-        <div
-          className="absolute right-[14%] top-[58%] hidden animate-pulse-float lg:block"
-          style={{
-            ["--rx" as string]: "0deg",
-            ["--rz" as string]: "0deg",
-            ["--dy" as string]: "-12px",
-          }}
-        >
-          <WireCube size={64} color="var(--pulse-pink)" />
-        </div>
-        <div
-          className="absolute left-[22%] top-[10%] hidden animate-pulse-float-slow xl:block"
-          style={{
-            ["--rx" as string]: "0deg",
-            ["--rz" as string]: "0deg",
-            ["--dy" as string]: "-8px",
-          }}
-        >
-          <WireCube size={40} color="var(--pulse-cyan)" />
-        </div>
-        <div
-          className="absolute right-[26%] top-[8%] hidden animate-pulse-float xl:block"
-          style={{
-            ["--rx" as string]: "0deg",
-            ["--rz" as string]: "0deg",
-            ["--dy" as string]: "-10px",
-          }}
-        >
-          <WireCube size={32} color="var(--pulse-magenta)" />
-        </div>
+      {/* Floating neon cubes. */}
+      <div className="absolute inset-0 hidden md:block">
+        <NeonCube
+          size={72}
+          front={PINK}
+          side={PINK}
+          rotate="rotateX(-18deg) rotateY(28deg) rotateZ(-14deg)"
+          className="left-[7%] top-[16%]"
+          dim
+        />
+        <NeonCube
+          size={124}
+          front={PINK}
+          side={BLUE}
+          rotate="rotateX(-22deg) rotateY(32deg) rotateZ(-16deg)"
+          className="left-[2%] top-[24%]"
+        />
+        <NeonCube
+          size={50}
+          front={CYAN}
+          side={BLUE}
+          rotate="rotateX(-20deg) rotateY(30deg) rotateZ(10deg)"
+          className="left-[10%] top-[48%] hidden lg:block"
+          style={{ animationDelay: "-3s" }}
+        />
+        <NeonCube
+          size={56}
+          front={BLUE}
+          side={BLUE}
+          rotate="rotateX(-20deg) rotateY(-30deg) rotateZ(12deg)"
+          className="right-[9%] top-[17%]"
+          dim
+        />
+        <NeonCube
+          size={88}
+          front={BLUE}
+          side={CYAN}
+          rotate="rotateX(-20deg) rotateY(-32deg) rotateZ(14deg)"
+          className="right-[6%] top-[23%]"
+        />
+        <NeonCube
+          size={112}
+          front={PINK}
+          side={BLUE}
+          rotate="rotateX(-22deg) rotateY(-34deg) rotateZ(16deg)"
+          className="right-[1%] top-[40%] hidden lg:block"
+        />
       </div>
 
       {/* Bottom fade into the page. */}

@@ -199,6 +199,23 @@ shows each version's real diff (or a diff against the current files) and
 **Restore** rewrites the workspace to that snapshot — after first
 checkpointing the current state, so restores are undoable.
 
+### Home extras
+
+- **Chat with AI** (top right) is a plain streaming chat with the configured
+  model (`POST /api/chat`, same-origin only) for questions and planning. It has
+  no tools and cannot change projects.
+- **Open in Cursor / VS Code**: the composer's destination menu (which also
+  holds the model and Plan/Build mode) can open the new project's folder in a
+  desktop editor via its URL handler, and the builder top bar has the same
+  link. This only works when the browser runs on the same machine as PulseUI.
+  Choose the editor in Settings → Profile.
+- **Avatar**: PulseUI has no accounts; the initial comes from Settings →
+  Profile → Your name.
+- **Upgrade to Pro** explains that a self-hosted PulseUI has no paid plans —
+  everything is included.
+- Fonts (Inter, JetBrains Mono) are bundled, so the UI renders the same
+  offline.
+
 ### Git
 
 Workspaces are ordinary git repositories. The History → Git tab shows branch,

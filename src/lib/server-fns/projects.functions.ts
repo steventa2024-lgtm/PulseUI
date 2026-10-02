@@ -62,11 +62,17 @@ export const createProjectFromPrompt = createServerFn({ method: "POST" })
         modelId: data.modelId ?? null,
         attachments: data.attachments,
       });
-      return { projectId: project.id, runId, error: null as string | null };
+      return {
+        projectId: project.id,
+        workspacePath: toProject(project).workspacePath,
+        runId,
+        error: null as string | null,
+      };
     } catch (error) {
       // The project exists; let the builder show why Pulse could not start.
       return {
         projectId: project.id,
+        workspacePath: toProject(project).workspacePath,
         runId: null,
         error: error instanceof Error ? error.message : String(error),
       };

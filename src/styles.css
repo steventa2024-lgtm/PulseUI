@@ -1,6 +1,8 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -47,12 +49,7 @@
     var(--pulse-blue) 45%,
     var(--pulse-magenta)
   );
-  --pulse-gradient-deploy: linear-gradient(
-    95deg,
-    #e53cff 0%,
-    var(--pulse-magenta) 35%,
-    var(--pulse-pink) 100%
-  );
+  --pulse-gradient-deploy: linear-gradient(95deg, #ff3fa4 0%, #ff4d8a 45%, #ff6470 100%);
   --pulse-gradient-border: linear-gradient(
     120deg,
     rgb(0 207 255 / 0.9),
@@ -117,9 +114,12 @@
 }
 
 @theme inline {
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans:
+    "Inter Variable", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display:
+    "Inter Variable", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono:
+    "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --radius-sm: var(--pulse-radius-sm);
   --radius-md: var(--pulse-radius-md);
@@ -193,6 +193,7 @@
   --animate-pulse-grid: pulse-grid 18s linear infinite;
   --animate-pulse-sheen: pulse-sheen 2.2s linear infinite;
   --animate-pulse-blink: pulse-blink 1.4s ease-in-out infinite;
+  --animate-pulse-bob: pulse-bob 9s ease-in-out infinite alternate;
 }
 
 @layer base {
@@ -246,7 +247,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 0 28px rgb(255 51 107 / 0.35));
+  filter: drop-shadow(0 0 24px rgb(255 60 130 / 0.45));
 }
 
 /* Gradient hairline border that lights up the active control. */
@@ -327,6 +328,15 @@
   }
 }
 
+@keyframes pulse-bob {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -14px, 0);
+  }
+}
+
 @keyframes pulse-twinkle {
   0%,
   100% {
@@ -374,4 +384,16 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Hero composer: blue-to-pink lit border, as in the home design. */
+.pulse-hero-composer::before {
+  padding: 1.5px;
+  background: linear-gradient(
+    100deg,
+    rgb(47 125 255 / 0.95) 0%,
+    rgb(80 110 255 / 0.85) 35%,
+    rgb(170 60 255 / 0.85) 70%,
+    rgb(255 45 138 / 0.95) 100%
+  );
 }

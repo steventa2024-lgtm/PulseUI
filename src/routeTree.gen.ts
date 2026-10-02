@@ -15,6 +15,7 @@ import { Route as AppConnectionsRouteImport } from './routes/_app/connections'
 import { Route as AppSearchRouteImport } from './routes/_app/search'
 import { Route as AppSettingsRouteImport } from './routes/_app/settings'
 import { Route as AppTemplatesRouteImport } from './routes/_app/templates'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ProjectsProjectIdRouteImport } from './routes/projects.$projectId'
 import { Route as AppProjectsIndexRouteImport } from './routes/_app/projects.index'
 import { Route as ProjectsProjectIdIndexRouteImport } from './routes/projects.$projectId.index'
@@ -56,6 +57,11 @@ const AppTemplatesRoute = AppTemplatesRouteImport.update({
   id: '/templates',
   path: '/templates',
   getParentRoute: () => AppRoute,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ProjectsProjectIdRoute = ProjectsProjectIdRouteImport.update({
   id: '/projects/$projectId',
@@ -128,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/search': typeof AppSearchRoute
   '/settings': typeof AppSettingsRoute
   '/templates': typeof AppTemplatesRoute
+  '/api/chat': typeof ApiChatRoute
   '/projects/$projectId': typeof ProjectsProjectIdRouteWithChildren
   '/projects/$projectId/code': typeof ProjectsProjectIdCodeRoute
   '/projects/$projectId/data': typeof ProjectsProjectIdDataRoute
@@ -146,6 +153,7 @@ export interface FileRoutesByTo {
   '/search': typeof AppSearchRoute
   '/settings': typeof AppSettingsRoute
   '/templates': typeof AppTemplatesRoute
+  '/api/chat': typeof ApiChatRoute
   '/': typeof AppIndexRoute
   '/projects/$projectId/code': typeof ProjectsProjectIdCodeRoute
   '/projects/$projectId/data': typeof ProjectsProjectIdDataRoute
@@ -166,6 +174,7 @@ export interface FileRoutesById {
   '/_app/search': typeof AppSearchRoute
   '/_app/settings': typeof AppSettingsRoute
   '/_app/templates': typeof AppTemplatesRoute
+  '/api/chat': typeof ApiChatRoute
   '/projects/$projectId': typeof ProjectsProjectIdRouteWithChildren
   '/_app/': typeof AppIndexRoute
   '/projects/$projectId/code': typeof ProjectsProjectIdCodeRoute
@@ -188,6 +197,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/settings'
     | '/templates'
+    | '/api/chat'
     | '/projects/$projectId'
     | '/projects/$projectId/code'
     | '/projects/$projectId/data'
@@ -206,6 +216,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/settings'
     | '/templates'
+    | '/api/chat'
     | '/'
     | '/projects/$projectId/code'
     | '/projects/$projectId/data'
@@ -225,6 +236,7 @@ export interface FileRouteTypes {
     | '/_app/search'
     | '/_app/settings'
     | '/_app/templates'
+    | '/api/chat'
     | '/projects/$projectId'
     | '/_app/'
     | '/projects/$projectId/code'
@@ -242,6 +254,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
+  ApiChatRoute: typeof ApiChatRoute
   ProjectsProjectIdRoute: typeof ProjectsProjectIdRouteWithChildren
   SitesDeploymentIdSplatRoute: typeof SitesDeploymentIdSplatRoute
   ApiProjectsProjectIdPreviewLogsRoute: typeof ApiProjectsProjectIdPreviewLogsRoute
@@ -291,6 +304,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/templates'
       preLoaderRoute: typeof AppTemplatesRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/projects/$projectId': {
       id: '/projects/$projectId'
@@ -424,6 +444,7 @@ const ProjectsProjectIdRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
+  ApiChatRoute: ApiChatRoute,
   ProjectsProjectIdRoute: ProjectsProjectIdRouteWithChildren,
   SitesDeploymentIdSplatRoute: SitesDeploymentIdSplatRoute,
   ApiProjectsProjectIdPreviewLogsRoute: ApiProjectsProjectIdPreviewLogsRoute,

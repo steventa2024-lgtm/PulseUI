@@ -18,6 +18,8 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { StatusDot } from "@/components/shared/StatusDot";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { EDITOR_LABELS, editorUrl } from "@/features/composer/OpenInMenu";
+import { useAppSettings } from "@/lib/client/queries";
 import { FRAMEWORK_LABELS } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { AgentPanel } from "./agent/AgentPanel";
@@ -64,6 +66,9 @@ const storage = {
 
 function TopBar({ tab }: { tab: string }) {
   const { project, projectId, busy } = useBuilder();
+  const settings = useAppSettings();
+  const editor = settings.data?.editor ?? "cursor";
+  const editorLink = project ? editorUrl(editor, project.workspacePath) : null;
   return (
     <header className="flex h-12 shrink-0 items-center gap-3 border-b border-pulse-border bg-pulse-bg-elevated px-3">
       <Tooltip>
@@ -102,6 +107,22 @@ function TopBar({ tab }: { tab: string }) {
         <div className="pulse-skeleton h-4 w-40" />
       )}
       <div className="ml-auto flex items-center gap-2">
+        {editorLink && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <a
+                href={editorLink}
+                className="pulse-interactive hidden h-8 items-center gap-2 rounded-[var(--pulse-radius-md)] border border-pulse-border-strong px-3 text-sm text-pulse-text-secondary hover:border-pulse-cyan/40 hover:text-pulse-text sm:flex"
+              >
+                <Code2 className="h-4 w-4" /> {EDITOR_LABELS[editor]}
+              </a>
+            </TooltipTrigger>
+            <TooltipContent>
+              Opens this project's folder via the editor's URL handler (PulseUI must run on this
+              computer)
+            </TooltipContent>
+          </Tooltip>
+        )}
         <Link
           to="/projects/$projectId/deploy"
           params={{ projectId }}
