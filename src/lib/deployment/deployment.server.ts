@@ -87,10 +87,12 @@ class LocalStaticProvider implements DeploymentProvider {
 
     let outputDir: string;
     if (info.framework === "vite-react" || info.framework === "vite") {
-      // Relative asset URLs so the site works under /sites/<id>/.
+      // Served under /sites/<id>/: an absolute base keeps asset URLs right on
+      // deep client-side routes, and apps pass import.meta.env.BASE_URL to
+      // their router as the basename.
       const out = ".pulseui-deploy";
       const result = await runCommand(
-        ["vite", "build", "--base", "./", "--outDir", out, "--emptyOutDir"],
+        ["vite", "build", "--base", `/sites/${deployment.id}/`, "--outDir", out, "--emptyOutDir"],
         {
           cwd: root,
           timeoutMs: serverEnv().COMMAND_TIMEOUT_MS,

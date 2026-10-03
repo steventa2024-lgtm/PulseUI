@@ -119,8 +119,12 @@ prompt ─▶ project + workspace ─▶ Pulse agent ⇄ tools ─▶ install �
 ### Projects and workspaces
 
 A new project starts from a known-good starter (`starters/base`: React 19,
-TypeScript, Vite, Tailwind CSS v4, lucide-react) rather than asking the model
-to invent `package.json`. The gallery's 15 templates (dashboards, AI chat,
+TypeScript, Vite, Tailwind CSS v4, shadcn/ui components on Radix,
+react-router-dom, sonner toasts, tw-animate-css and lucide-react) rather than
+asking the model to invent `package.json`. Its `src/index.css` holds a
+light/dark design-token system (colors, radius, gradients, shadows); Pulse is
+instructed to tailor those tokens to each brief and build with the existing
+components, so generated apps share one consistent, themeable design system. The gallery's 15 templates (dashboards, AI chat,
 store, restaurant ordering, booking, CRM, kanban, fitness and budget trackers,
 landing page, portfolio, …) are full, working starter projects in
 `starters/templates/<id>` layered on top of the base; their card images in

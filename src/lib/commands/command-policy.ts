@@ -139,9 +139,12 @@ export function validateArgv(argv: string[]): void {
     );
   }
 
-  for (const arg of args) {
+  for (const [index, arg] of args.entries()) {
     if (arg.includes("\0")) throw new CommandPolicyError("Arguments may not contain NUL bytes.");
     if (/^(https?|git|ssh|file):/i.test(arg)) continue;
+    // Vite's --base is a public URL path (e.g. /sites/<id>/), never read from disk.
+    if (executable === "vite" && (args[index - 1] === "--base" || arg.startsWith("--base=")))
+      continue;
     if (isEscapingPath(arg)) {
       throw new CommandPolicyError(`Argument "${arg}" points outside the project workspace.`);
     }

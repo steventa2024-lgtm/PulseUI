@@ -72,3 +72,13 @@ describe("truncateOutput", () => {
     expect(result.text.endsWith("z".repeat(40))).toBe(true);
   });
 });
+
+describe("vite --base", () => {
+  it("allows a URL path for vite's --base but still blocks absolute file paths", () => {
+    expect(() => validateCommand(["vite", "build", "--base", "/sites/dpl_abc/"])).not.toThrow();
+    expect(() => validateCommand(["vite", "build", "--base=/sites/dpl_abc/"])).not.toThrow();
+    expect(() => validateCommand(["vite", "build", "--outDir", "/etc"])).toThrow(
+      CommandPolicyError,
+    );
+  });
+});

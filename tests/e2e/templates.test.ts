@@ -52,6 +52,13 @@ describe("starter templates", () => {
     }
   });
 
+  it("the base starter (shadcn/ui, router, design tokens) type-checks and builds", () => {
+    fs.rmSync(path.join(work, "src"), { recursive: true, force: true });
+    fs.cpSync(path.join(starters, "base", "src"), path.join(work, "src"), { recursive: true });
+    expect(run("tsc", ["--noEmit", "-p", "."])).toBe("");
+    expect(run("vite", ["build", "--logLevel", "error"])).toBe("");
+  });
+
   it.each(TEMPLATES.map((template) => template.id))("%s type-checks and builds", (id) => {
     fs.rmSync(path.join(work, "src"), { recursive: true, force: true });
     fs.cpSync(path.join(starters, "base", "src"), path.join(work, "src"), { recursive: true });

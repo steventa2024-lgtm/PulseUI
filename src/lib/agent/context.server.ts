@@ -76,6 +76,11 @@ export function buildRunContext(input: ContextInput): { text: string; seen: stri
   addFile("package.json");
   const entry = ENTRY_CANDIDATES.find((candidate) => files.includes(candidate));
   if (entry) addFile(entry);
+  // Design tokens and the home page shape almost every UI request.
+  for (const path of ["src/index.css", "src/pages/Index.tsx"]) addFile(path);
+
+  const kit = uiKit(workspace, files);
+  if (kit) sections.push(kit);
 
   // Files touched by the most recent version are the likeliest follow-up targets.
   const recent = input.latestVersion
@@ -117,6 +122,34 @@ export function buildRunContext(input: ContextInput): { text: string; seen: stri
 
   sections.push(`## Request\n${input.request}`);
   return { text: sections.join("\n\n"), seen };
+}
+
+/**
+ * The project's shadcn/ui components and what each exports, so the model can
+ * import them correctly without reading every file first.
+ */
+function uiKit(workspace: Workspace, files: string[]): string | null {
+  const components = files.filter((file) => /^src\/components\/ui\/[\w-]+\.tsx$/.test(file));
+  if (!components.length) return null;
+  const lines = components.map((file) => {
+    let names: string[] = [];
+    try {
+      const source = workspace.readFile(file, 64 * 1024);
+      for (const match of source.matchAll(/export\s*\{([^}]+)\}/g)) {
+        names.push(
+          ...(match[1] ?? "")
+            .split(",")
+            .map((name) => name.trim().replace(/^type\s+/, ""))
+            .filter(Boolean),
+        );
+      }
+    } catch {
+      names = [];
+    }
+    const id = file.slice("src/components/ui/".length, -".tsx".length);
+    return `@/components/ui/${id}: ${names.join(", ")}`;
+  });
+  return `## UI kit (shadcn/ui, already installed; import, don't recreate)\n${lines.join("\n")}`;
 }
 
 /** Pull "src/foo.tsx:12" style references out of compiler output. */
