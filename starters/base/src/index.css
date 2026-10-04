@@ -1,0 +1,135 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/*
+ * Design system. Components use semantic tokens (bg-background, text-foreground,
+ * bg-primary, text-muted-foreground, border-border, ...) so restyling the whole
+ * app means editing the variables below, not every component.
+ * Light theme in :root, dark theme in .dark (toggle the class on <html>).
+ */
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-sans);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+}
+
+:root {
+  --radius: 0.5rem;
+  --background: oklch(0.99 0.002 286);
+  --foreground: oklch(0.18 0.02 286);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.02 286);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.02 286);
+  --primary: oklch(0.55 0.22 277);
+  --primary-foreground: oklch(0.98 0.01 277);
+  --secondary: oklch(0.96 0.01 286);
+  --secondary-foreground: oklch(0.25 0.02 286);
+  --muted: oklch(0.96 0.008 286);
+  --muted-foreground: oklch(0.52 0.02 286);
+  --accent: oklch(0.95 0.03 277);
+  --accent-foreground: oklch(0.3 0.08 277);
+  --destructive: oklch(0.58 0.22 27);
+  --border: oklch(0.91 0.01 286);
+  --input: oklch(0.91 0.01 286);
+  --ring: oklch(0.55 0.22 277);
+  --chart-1: oklch(0.55 0.22 277);
+  --chart-2: oklch(0.65 0.17 200);
+  --chart-3: oklch(0.7 0.16 150);
+  --chart-4: oklch(0.75 0.15 75);
+  --chart-5: oklch(0.65 0.2 20);
+
+  /* Signature effects, used via the utilities below. */
+  --gradient-primary: linear-gradient(135deg, oklch(0.55 0.22 277), oklch(0.6 0.2 320));
+  --gradient-subtle: linear-gradient(180deg, oklch(0.99 0.002 286), oklch(0.96 0.02 277));
+  --shadow-elegant: 0 10px 30px -10px oklch(0.55 0.22 277 / 0.35);
+  --shadow-glow: 0 0 40px oklch(0.6 0.2 300 / 0.35);
+}
+
+.dark {
+  --background: oklch(0.15 0.015 286);
+  --foreground: oklch(0.97 0.005 286);
+  --card: oklch(0.19 0.015 286);
+  --card-foreground: oklch(0.97 0.005 286);
+  --popover: oklch(0.19 0.015 286);
+  --popover-foreground: oklch(0.97 0.005 286);
+  --primary: oklch(0.68 0.19 277);
+  --primary-foreground: oklch(0.15 0.02 277);
+  --secondary: oklch(0.25 0.015 286);
+  --secondary-foreground: oklch(0.97 0.005 286);
+  --muted: oklch(0.25 0.015 286);
+  --muted-foreground: oklch(0.7 0.015 286);
+  --accent: oklch(0.27 0.04 277);
+  --accent-foreground: oklch(0.97 0.005 286);
+  --destructive: oklch(0.65 0.2 25);
+  --border: oklch(1 0 0 / 0.1);
+  --input: oklch(1 0 0 / 0.14);
+  --ring: oklch(0.68 0.19 277);
+  --gradient-primary: linear-gradient(135deg, oklch(0.68 0.19 277), oklch(0.7 0.18 320));
+  --gradient-subtle: linear-gradient(180deg, oklch(0.15 0.015 286), oklch(0.19 0.04 277));
+  --shadow-elegant: 0 10px 30px -10px oklch(0 0 0 / 0.6);
+  --shadow-glow: 0 0 40px oklch(0.68 0.19 277 / 0.35);
+}
+
+@utility bg-gradient-primary {
+  background-image: var(--gradient-primary);
+}
+@utility bg-gradient-subtle {
+  background-image: var(--gradient-subtle);
+}
+@utility text-gradient {
+  background-image: var(--gradient-primary);
+  background-clip: text;
+  color: transparent;
+}
+@utility shadow-elegant {
+  box-shadow: var(--shadow-elegant);
+}
+@utility shadow-glow {
+  box-shadow: var(--shadow-glow);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--font-sans);
+  }
+}
