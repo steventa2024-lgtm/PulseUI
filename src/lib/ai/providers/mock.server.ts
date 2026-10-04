@@ -7,6 +7,8 @@
  * Special prompt flags (tests only):
  *   [mock:break-build]  first write includes a TypeScript error, so the
  *                       repair loop has something real to fix.
+ *   [mock:stall]        after streaming its edits the reply goes silent, so
+ *                       the stream idle timeout has something to catch.
  */
 import type { AIProvider, ChatTurn, GenerateRequest } from "../types";
 
@@ -168,6 +170,15 @@ export class MockProvider implements AIProvider {
       if (request.signal?.aborted) return;
       yield text.slice(index, index + 48);
       await new Promise((resolve) => setTimeout(resolve, 2));
+    }
+    const stall =
+      /<(write|patch) /.test(text) &&
+      request.messages.some(
+        (turn) => turn.role === "user" && turn.content.includes("[mock:stall]"),
+      );
+    if (stall && request.signal && !request.signal.aborted) {
+      const signal = request.signal;
+      await new Promise((resolve) => signal.addEventListener("abort", resolve, { once: true }));
     }
   }
 }

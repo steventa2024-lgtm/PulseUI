@@ -38,6 +38,8 @@ export type RunView = {
   filesChanged: FileChangeSummary | null;
   lastSeq: number;
   finished: boolean;
+  /** Live detail while the model streams, e.g. "Writing src/pages/Home.tsx". */
+  activity: string | null;
 };
 
 export function emptyRun(runId: string): RunView {
@@ -53,6 +55,7 @@ export function emptyRun(runId: string): RunView {
     filesChanged: null,
     lastSeq: 0,
     finished: false,
+    activity: null,
   };
 }
 
@@ -74,6 +77,10 @@ export function reduceRun(view: RunView, event: AgentEvent): RunView {
       break;
     case "agent.state":
       next.state = event.data["state"] as AgentState;
+      if (next.state !== "planning") next.activity = null;
+      break;
+    case "agent.progress":
+      next.activity = str(event.data["text"]) || null;
       break;
     case "agent.delta": {
       const last = items[items.length - 1];
@@ -170,6 +177,7 @@ export function reduceRun(view: RunView, event: AgentEvent): RunView {
     case "agent.failed":
     case "agent.cancelled":
       next.finished = true;
+      next.activity = null;
       next.state =
         event.type === "agent.completed"
           ? "completed"

@@ -24,7 +24,8 @@ replacement lines
 
 After you emit tool calls, STOP and wait: results arrive in the next message inside <tool_results>.
 You may batch several <write>/<patch> tags in one reply. Never invent tool results.
-Never stop after the plan: in the same reply, start doing the work (read files or write them). A reply with no tags ends your turn.`;
+Never stop after the plan: in the same reply, start doing the work (read files or write them). A reply with no tags ends your turn.
+For big builds, write at most about 8 files per reply (files are saved as each block closes); continue with the rest in the next reply.`;
 
 const RULES = `## Rules
 - Inspect before editing: read the files you will change. Edits to an existing file are refused unless you read it in this run.

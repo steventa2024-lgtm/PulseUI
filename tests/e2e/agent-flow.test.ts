@@ -28,6 +28,7 @@ beforeAll(() => {
     AI_PROVIDER: "mock",
     PREVIEW_PORT_START: "4600",
     PREVIEW_PORT_END: "4699",
+    AGENT_STREAM_IDLE_TIMEOUT_MS: "15000",
   });
 });
 
@@ -152,6 +153,28 @@ describe("Pulse agent end-to-end (mock provider)", () => {
       "count: number = 1",
     );
   });
+
+  it("recovers from a model reply that stalls, keeping edits applied while streaming", async () => {
+    const { runId } = await startAgentRun({
+      projectId,
+      prompt: "Add a status banner [mock:stall]",
+      mode: "build",
+    });
+    const { run, events } = await waitForRun(runId);
+    expect(run.state, run.error ?? "").toBe("completed");
+    const edit = events.find(
+      (event) => event.type === "tool.completed" && event.data["name"] === "patch_file",
+    );
+    const stalled = events.find(
+      (event) =>
+        event.type === "agent.message" && String(event.data["text"]).includes("stopped responding"),
+    );
+    expect(edit && stalled).toBeTruthy();
+    // The edit was applied while the reply was still streaming, before the timeout fired.
+    expect(Date.parse(stalled!.at) - Date.parse(edit!.at)).toBeGreaterThan(10_000);
+    expect(events.some((event) => event.type === "agent.progress")).toBe(true);
+    expect(workspaceFor(projectId).readFile("src/App.tsx")).toContain("Add a status banner");
+  }, 120_000);
 
   it("plan mode never modifies files", async () => {
     const versionsBefore = versionsRepo.list(projectId).length;

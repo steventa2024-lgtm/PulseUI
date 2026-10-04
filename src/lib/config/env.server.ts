@@ -42,6 +42,8 @@ const envSchema = z.object({
 
   AGENT_MAX_STEPS: intFromEnv(16, 2, 64),
   AGENT_MAX_REPAIR_ATTEMPTS: intFromEnv(3, 0, 10),
+  AGENT_STREAM_IDLE_TIMEOUT_MS: intFromEnv(120_000, 15_000, 900_000),
+  AGENT_MAX_RUN_MINUTES: intFromEnv(30, 2, 240),
 
   PREVIEW_HOST: optionalString,
   PREVIEW_PUBLIC_HOST: optionalString,

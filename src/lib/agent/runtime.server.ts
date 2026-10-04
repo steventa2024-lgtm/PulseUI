@@ -33,7 +33,7 @@ import { createCheckpoint, pendingChanges } from "../versions/checkpoints.server
 import { frameworkInfo, needsInstall } from "../workspace/project-commands.server";
 import { workspaceFor, type Workspace } from "../workspace/workspace-manager.server";
 import { resolveFallbackProvider, resolveProvider } from "../ai/registry.server";
-import type { AIProvider, ChatTurn } from "../ai/types";
+import { ProviderError, type AIProvider, type ChatTurn } from "../ai/types";
 import { buildRunContext, filesFromErrors } from "./context.server";
 import { closeChannel, emit } from "./event-bus.server";
 import { parseAgentOutput, visibleProse } from "./protocol";
@@ -293,25 +293,126 @@ function formatResults(results: ExecutedTool[], parseErrors: string[]): string {
   return `<tool_results>\n${blocks.join("\n\n")}\n</tool_results>`;
 }
 
+type TurnResult = { raw: string; executed: ExecutedTool[] };
+
+const STREAMED_TOOLS = new Set(["write_file", "patch_file"]);
+const CLOSING_TAGS = ["</write>", "</patch>"];
+
+function formatSize(chars: number): string {
+  return chars < 1024 ? `${chars} B` : `${(chars / 1024).toFixed(1)} KB`;
+}
+
+/**
+ * Stream one model reply. Completed <write>/<patch> blocks are applied as soon
+ * as they close (in order, stopping at the first other tool so reads still
+ * happen before the edits that depend on them), so files appear one by one
+ * and work survives a reply that is cut off. A stream that goes silent for
+ * AGENT_STREAM_IDLE_TIMEOUT_MS is aborted instead of hanging the run.
+ */
 async function streamTurn(
-  runId: string,
+  ctx: ToolContext,
   provider: AIProvider,
   messages: ChatTurn[],
-  signal: AbortSignal,
-): Promise<string> {
+): Promise<TurnResult> {
+  const { runId, signal } = ctx;
+  const idleMs = serverEnv().AGENT_STREAM_IDLE_TIMEOUT_MS;
+  const controller = new AbortController();
+  const onAbort = () => controller.abort();
+  signal.addEventListener("abort", onAbort, { once: true });
+  let idleTimer: ReturnType<typeof setTimeout> | null = null;
+  let timedOut = false;
+  const armIdle = () => {
+    if (idleTimer) clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      timedOut = true;
+      controller.abort();
+    }, idleMs);
+  };
+
   let raw = "";
   let shown = 0;
-  for await (const delta of provider.stream({ messages: compactHistory(messages), signal })) {
-    if (signal.aborted) throw new CancelledError();
-    raw += delta;
-    const visible = visibleProse(raw);
-    if (visible.length > shown) {
-      emit(runId, "agent.delta", { text: visible.slice(shown) });
-      shown = visible.length;
+  let scannedClose = 0;
+  let lastProgress = 0;
+  let blocked = false;
+  const executed: ExecutedTool[] = [];
+
+  const applyCompleted = async (from: number) => {
+    if (blocked) return;
+    let closeAt = -1;
+    for (const tag of CLOSING_TAGS) {
+      for (let at = raw.indexOf(tag, from); at !== -1; at = raw.indexOf(tag, at + 1)) {
+        closeAt = Math.max(closeAt, at + tag.length);
+      }
     }
+    if (closeAt <= scannedClose) return;
+    scannedClose = closeAt;
+    const { actions } = parseAgentOutput(raw.slice(0, closeAt));
+    for (const action of actions.slice(executed.length)) {
+      if (!STREAMED_TOOLS.has(action.tool)) {
+        blocked = true;
+        return;
+      }
+      if (signal.aborted) throw new CancelledError();
+      executed.push(await executeTool(ctx, action.tool, action.args));
+    }
+  };
+
+  let lastText = "";
+  const progress = () => {
+    const open = /<(write|patch)\s+path="([^"]+)"\s*>(?![\s\S]*<\/\1>)/.exec(
+      raw.slice(scannedClose),
+    );
+    const text = open
+      ? `${open[1] === "write" ? "Writing" : "Editing"} ${open[2]}`
+      : `Generating · ${formatSize(raw.length)}`;
+    const now = Date.now();
+    // Persisted like every event, so only on a new file or every few seconds.
+    if (text === lastText || (!open && now - lastProgress < 3000)) return;
+    lastText = text;
+    lastProgress = now;
+    emit(runId, "agent.progress", { text });
+  };
+
+  try {
+    armIdle();
+    for await (const delta of provider.stream({
+      messages: compactHistory(messages),
+      signal: controller.signal,
+    })) {
+      if (signal.aborted) throw new CancelledError();
+      armIdle();
+      raw += delta;
+      const visible = visibleProse(raw);
+      if (visible.length > shown) {
+        emit(runId, "agent.delta", { text: visible.slice(shown) });
+        shown = visible.length;
+      }
+      if (delta.includes(">"))
+        await applyCompleted(Math.max(scannedClose, raw.length - delta.length - 16));
+      progress();
+    }
+  } catch (error) {
+    if (signal.aborted) throw new CancelledError();
+    if (!timedOut) throw error;
+  } finally {
+    if (idleTimer) clearTimeout(idleTimer);
+    signal.removeEventListener("abort", onAbort);
   }
   if (signal.aborted) throw new CancelledError();
-  return raw;
+  if (timedOut) {
+    if (!raw.trim() && !executed.length)
+      throw new ProviderError(
+        `${provider.label} stopped responding (no output for ${Math.round(idleMs / 1000)}s).`,
+        true,
+      );
+    log.warn("turn.stalled", { runId, chars: raw.length, applied: executed.length });
+    emit(runId, "agent.message", {
+      level: "warning",
+      text: `${provider.label} stopped responding mid-reply. Continuing with what it sent (${executed.length} file edit${executed.length === 1 ? "" : "s"} applied).`,
+    });
+    raw += `\n[PulseUI: the response stalled after ${formatSize(raw.length)} and was cut off.]`;
+  }
+  return { raw, executed };
 }
 
 async function agentLoop(
@@ -324,37 +425,66 @@ async function agentLoop(
   let actionsRun = 0;
   let nudges = 0;
 
+  const started = Date.now();
+  const budgetMs = serverEnv().AGENT_MAX_RUN_MINUTES * 60_000;
+
   for (let step = 0; step < maxSteps; step += 1) {
     if (ctx.signal.aborted) throw new CancelledError();
-    if (step === 0) ctx.setState("planning");
-
-    let raw: string;
-    try {
-      raw = await streamTurn(ctx.runId, providerRef.current, messages, ctx.signal);
-    } catch (error) {
-      if (ctx.signal.aborted) throw new CancelledError();
-      const fallback = resolveFallbackProvider(providerRef.current.id);
-      if (!fallback || step > 0) throw error;
+    if (Date.now() - started > budgetMs) {
       emit(ctx.runId, "agent.message", {
         level: "warning",
-        text: `${providerRef.current.label} failed (${error instanceof Error ? error.message : String(error)}). Falling back to ${fallback.label} · ${fallback.model}.`,
+        text: `Stopped after ${serverEnv().AGENT_MAX_RUN_MINUTES} minutes. The files written so far are kept and validated; ask Pulse to continue.`,
       });
-      providerRef.current = fallback;
-      runsRepo.update(ctx.runId, { provider: fallback.id, model: fallback.model });
-      raw = await streamTurn(ctx.runId, fallback, messages, ctx.signal);
+      return { done: null, prose, actionsRun, stepLimitHit: true };
     }
+    ctx.setState("planning");
+    const turnStarted = Date.now();
+
+    let turn: TurnResult;
+    try {
+      turn = await streamTurn(ctx, providerRef.current, messages);
+    } catch (error) {
+      if (ctx.signal.aborted) throw new CancelledError();
+      const retryable = error instanceof ProviderError && error.retryable;
+      const fallback = step === 0 ? resolveFallbackProvider(providerRef.current.id) : null;
+      if (fallback) {
+        emit(ctx.runId, "agent.message", {
+          level: "warning",
+          text: `${providerRef.current.label} failed (${error instanceof Error ? error.message : String(error)}). Falling back to ${fallback.label} · ${fallback.model}.`,
+        });
+        providerRef.current = fallback;
+        runsRepo.update(ctx.runId, { provider: fallback.id, model: fallback.model });
+      } else if (retryable) {
+        emit(ctx.runId, "agent.message", {
+          level: "warning",
+          text: `${error instanceof Error ? error.message : String(error)} Retrying once.`,
+        });
+      } else {
+        throw error;
+      }
+      turn = await streamTurn(ctx, providerRef.current, messages);
+    }
+    const { raw } = turn;
 
     const parsed = parseAgentOutput(raw);
     messages.push({ role: "assistant", content: raw });
     if (parsed.prose) prose.push(parsed.prose);
     if (parsed.plan) emit(ctx.runId, "agent.plan", { text: parsed.plan });
 
-    const results: ExecutedTool[] = [];
-    for (const action of parsed.actions) {
+    const results: ExecutedTool[] = [...turn.executed];
+    for (const action of parsed.actions.slice(turn.executed.length)) {
       if (ctx.signal.aborted) throw new CancelledError();
       results.push(await executeTool(ctx, action.tool, action.args));
-      actionsRun += 1;
     }
+    actionsRun += results.length;
+    log.info("turn.finish", {
+      runId: ctx.runId,
+      step: step + 1,
+      chars: raw.length,
+      tools: results.length,
+      failed: results.filter((result) => !result.ok).length,
+      durationMs: Date.now() - turnStarted,
+    });
 
     const failures = results.filter((result) => !result.ok);
     if (parsed.done !== null && !failures.length && !parsed.errors.length) {

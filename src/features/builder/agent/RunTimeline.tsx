@@ -102,7 +102,8 @@ export function RunTimeline({ view }: { view: RunView }) {
       })}
       {!view.finished && (
         <p className="flex items-center gap-2 px-1 pt-1 text-xs text-pulse-cyan" aria-live="polite">
-          <CircleDashed className="h-3.5 w-3.5 animate-spin" /> {STATE_LABELS[view.state]}…
+          <CircleDashed className="h-3.5 w-3.5 animate-spin" />{" "}
+          {view.activity ?? STATE_LABELS[view.state]}…
         </p>
       )}
     </div>

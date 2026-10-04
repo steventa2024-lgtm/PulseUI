@@ -155,6 +155,7 @@ export type AgentEventType =
   | "agent.delta"
   | "agent.plan"
   | "agent.message"
+  | "agent.progress"
   | "tool.started"
   | "tool.output"
   | "tool.completed"
