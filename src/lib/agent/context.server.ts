@@ -77,7 +77,8 @@ export function buildRunContext(input: ContextInput): { text: string; seen: stri
   const entry = ENTRY_CANDIDATES.find((candidate) => files.includes(candidate));
   if (entry) addFile(entry);
   // Design tokens and the home page shape almost every UI request.
-  for (const path of ["src/index.css", "src/pages/Index.tsx"]) addFile(path);
+  for (const path of ["src/index.css", "src/pages/Index.tsx", "src/components/blocks/README.md"])
+    addFile(path);
 
   const kit = uiKit(workspace, files);
   if (kit) sections.push(kit);

@@ -33,6 +33,8 @@ const envSchema = z.object({
   GEMINI_API_KEY: optionalString,
   GOOGLE_API_KEY: optionalString,
   GEMINI_MODEL: optionalString,
+  /** -1 = dynamic (model decides), 0 = off, N = token budget. */
+  GEMINI_THINKING_BUDGET: intFromEnv(-1, -1, 32_768),
 
   OPENROUTER_API_KEY: optionalString,
   OPENROUTER_MODEL: optionalString,

@@ -82,6 +82,33 @@ describe("GeminiProvider", () => {
     expect(headers?.get("x-goog-api-key")).toBe("secret-key");
   });
 
+  it("thinks by default, hides thought parts, and drops thinking if the model rejects it", async () => {
+    expect(JSON.parse(geminiBody({ messages: [] })).generationConfig.thinkingConfig).toEqual({
+      thinkingBudget: -1,
+    });
+    expect(JSON.parse(geminiBody({ messages: [] }, null)).generationConfig.thinkingConfig).toBe(
+      undefined,
+    );
+
+    const bodies: Array<{ generationConfig: { thinkingConfig?: unknown } }> = [];
+    const fakeFetch = (async (_url: string, init: RequestInit) => {
+      bodies.push(JSON.parse(String(init.body)));
+      if (bodies.length === 1)
+        return new Response("Thinking budget is not supported for this model", { status: 400 });
+      return sse([
+        JSON.stringify({
+          candidates: [{ content: { parts: [{ text: "hmm", thought: true }, { text: "ok" }] } }],
+        }),
+      ]);
+    }) as unknown as typeof fetch;
+    const provider = new GeminiProvider("k", "m", fakeFetch, 2048);
+    expect(await collect(provider.stream({ messages: [{ role: "user", content: "x" }] }))).toBe(
+      "ok",
+    );
+    expect(bodies[0]?.generationConfig.thinkingConfig).toEqual({ thinkingBudget: 2048 });
+    expect(bodies[1]?.generationConfig.thinkingConfig).toBe(undefined);
+  });
+
   it("fails fast on auth errors", async () => {
     const fakeFetch = (async () => new Response("no", { status: 403 })) as unknown as typeof fetch;
     const provider = new GeminiProvider("bad", "m", fakeFetch);

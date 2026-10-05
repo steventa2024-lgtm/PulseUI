@@ -18,7 +18,7 @@ const MAX_ATTEMPTS = 3;
 
 type GeminiChunk = {
   candidates?: Array<{
-    content?: { parts?: Array<{ text?: string }> };
+    content?: { parts?: Array<{ text?: string; thought?: boolean }> };
     finishReason?: string;
   }>;
 };
@@ -30,10 +30,17 @@ function isBlocked(reason: string | undefined) {
 }
 
 function chunkText(chunk: GeminiChunk): string {
-  return (chunk.candidates?.[0]?.content?.parts ?? []).map((part) => part.text ?? "").join("");
+  return (chunk.candidates?.[0]?.content?.parts ?? [])
+    .filter((part) => !part.thought)
+    .map((part) => part.text ?? "")
+    .join("");
 }
 
-export function geminiBody(request: GenerateRequest): string {
+/**
+ * @param thinkingBudget -1 lets the model decide how long to think, 0 turns
+ * thinking off, null omits the setting (for models that reject it).
+ */
+export function geminiBody(request: GenerateRequest, thinkingBudget: number | null = -1): string {
   const system = request.messages
     .filter((turn) => turn.role === "system")
     .map((turn) => turn.content)
@@ -55,9 +62,9 @@ export function geminiBody(request: GenerateRequest): string {
     generationConfig: {
       maxOutputTokens: request.maxTokens ?? 32_000,
       temperature: request.temperature ?? 0.4,
-      // Thinking off: measured ~4x faster for equivalent output quality on
-      // this model, and an interactive builder is judged on latency.
-      thinkingConfig: { thinkingBudget: 0 },
+      // Thinking costs latency but noticeably improves multi-file builds and
+      // design quality; GEMINI_THINKING_BUDGET=0 turns it off.
+      ...(thinkingBudget === null ? {} : { thinkingConfig: { thinkingBudget } }),
     },
   });
 }
@@ -71,6 +78,7 @@ export class GeminiProvider implements AIProvider {
     private readonly apiKey: string,
     readonly model: string = DEFAULT_GEMINI_MODEL,
     private readonly fetchImpl: typeof fetch = fetch,
+    private thinkingBudget: number | null = -1,
   ) {}
 
   supportsTools() {
@@ -91,7 +99,7 @@ export class GeminiProvider implements AIProvider {
           {
             method: "POST",
             headers: { "x-goog-api-key": this.apiKey, "Content-Type": "application/json" },
-            body: geminiBody(request),
+            body: geminiBody(request, this.thinkingBudget),
             ...(request.signal ? { signal: request.signal } : {}),
           },
         );
@@ -119,6 +127,11 @@ export class GeminiProvider implements AIProvider {
         throw new ProviderError(`${this.model} is busy right now. Try again in a moment.`, true);
       }
       const detail = await response.text().catch(() => "");
+      if (response.status === 400 && this.thinkingBudget !== null && /thinking/i.test(detail)) {
+        // This model does not accept the thinking setting: drop it and retry.
+        this.thinkingBudget = null;
+        continue;
+      }
       throw new ProviderError(
         `Gemini request failed (${response.status}). ${detail.slice(0, 300)}`,
       );

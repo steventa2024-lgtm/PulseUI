@@ -63,16 +63,22 @@ export function configuredProviderSpecs(): ProviderSpec[] {
     env.GOOGLE_API_KEY ??
     (preferred === "gemini" ? env.AI_API_KEY : undefined);
   if (geminiKey) {
-    const model =
+    // GEMINI_MODEL may list several models ("fast,smart"); the first is the default.
+    const models = (
       env.GEMINI_MODEL ??
       (preferred === "gemini" ? env.AI_MODEL : undefined) ??
-      DEFAULT_GEMINI_MODEL;
+      DEFAULT_GEMINI_MODEL
+    )
+      .split(",")
+      .map((name) => name.trim())
+      .filter(Boolean);
+    const thinking = env.GEMINI_THINKING_BUDGET;
     specs.push({
       id: "gemini",
       label: "Gemini",
       local: false,
-      models: [model],
-      create: (chosen) => new GeminiProvider(geminiKey, chosen),
+      models: models.length ? models : [DEFAULT_GEMINI_MODEL],
+      create: (chosen) => new GeminiProvider(geminiKey, chosen, fetch, thinking),
     });
   }
 
