@@ -9,50 +9,446 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AppConnectionsRouteImport } from './routes/_app/connections'
+import { Route as AppSearchRouteImport } from './routes/_app/search'
+import { Route as AppSettingsRouteImport } from './routes/_app/settings'
+import { Route as AppTemplatesRouteImport } from './routes/_app/templates'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as ProjectsProjectIdRouteImport } from './routes/projects.$projectId'
+import { Route as AppProjectsIndexRouteImport } from './routes/_app/projects.index'
+import { Route as ProjectsProjectIdIndexRouteImport } from './routes/projects.$projectId.index'
+import { Route as ProjectsProjectIdCodeRouteImport } from './routes/projects.$projectId.code'
+import { Route as ProjectsProjectIdDataRouteImport } from './routes/projects.$projectId.data'
+import { Route as ProjectsProjectIdDeployRouteImport } from './routes/projects.$projectId.deploy'
+import { Route as ProjectsProjectIdHistoryRouteImport } from './routes/projects.$projectId.history'
+import { Route as ProjectsProjectIdPreviewRouteImport } from './routes/projects.$projectId.preview'
+import { Route as ProjectsProjectIdSettingsRouteImport } from './routes/projects.$projectId.settings'
+import { Route as SitesDeploymentIdSplatRouteImport } from './routes/sites.$deploymentId.$'
+import { Route as ApiProjectsProjectIdPreviewLogsRouteImport } from './routes/api/projects.$projectId.preview-logs'
+import { Route as ApiRunsRunIdEventsRouteImport } from './routes/api/runs.$runId.events'
 
-const IndexRoute = IndexRouteImport.update({
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppConnectionsRoute = AppConnectionsRouteImport.update({
+  id: '/connections',
+  path: '/connections',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSearchRoute = AppSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTemplatesRoute = AppTemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
+  getParentRoute: () => AppRoute,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsProjectIdRoute = ProjectsProjectIdRouteImport.update({
+  id: '/projects/$projectId',
+  path: '/projects/$projectId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppProjectsIndexRoute = AppProjectsIndexRouteImport.update({
+  id: '/projects/',
+  path: '/projects/',
+  getParentRoute: () => AppRoute,
+} as any)
+const ProjectsProjectIdIndexRoute = ProjectsProjectIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProjectsProjectIdRoute,
+} as any)
+const ProjectsProjectIdCodeRoute = ProjectsProjectIdCodeRouteImport.update({
+  id: '/code',
+  path: '/code',
+  getParentRoute: () => ProjectsProjectIdRoute,
+} as any)
+const ProjectsProjectIdDataRoute = ProjectsProjectIdDataRouteImport.update({
+  id: '/data',
+  path: '/data',
+  getParentRoute: () => ProjectsProjectIdRoute,
+} as any)
+const ProjectsProjectIdDeployRoute = ProjectsProjectIdDeployRouteImport.update({
+  id: '/deploy',
+  path: '/deploy',
+  getParentRoute: () => ProjectsProjectIdRoute,
+} as any)
+const ProjectsProjectIdHistoryRoute =
+  ProjectsProjectIdHistoryRouteImport.update({
+    id: '/history',
+    path: '/history',
+    getParentRoute: () => ProjectsProjectIdRoute,
+  } as any)
+const ProjectsProjectIdPreviewRoute =
+  ProjectsProjectIdPreviewRouteImport.update({
+    id: '/preview',
+    path: '/preview',
+    getParentRoute: () => ProjectsProjectIdRoute,
+  } as any)
+const ProjectsProjectIdSettingsRoute =
+  ProjectsProjectIdSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => ProjectsProjectIdRoute,
+  } as any)
+const SitesDeploymentIdSplatRoute = SitesDeploymentIdSplatRouteImport.update({
+  id: '/sites/$deploymentId/$',
+  path: '/sites/$deploymentId/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiProjectsProjectIdPreviewLogsRoute =
+  ApiProjectsProjectIdPreviewLogsRouteImport.update({
+    id: '/api/projects/$projectId/preview-logs',
+    path: '/api/projects/$projectId/preview-logs',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiRunsRunIdEventsRoute = ApiRunsRunIdEventsRouteImport.update({
+  id: '/api/runs/$runId/events',
+  path: '/api/runs/$runId/events',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof AppIndexRoute
+  '/connections': typeof AppConnectionsRoute
+  '/search': typeof AppSearchRoute
+  '/settings': typeof AppSettingsRoute
+  '/templates': typeof AppTemplatesRoute
+  '/api/chat': typeof ApiChatRoute
+  '/projects/$projectId': typeof ProjectsProjectIdRouteWithChildren
+  '/projects/$projectId/code': typeof ProjectsProjectIdCodeRoute
+  '/projects/$projectId/data': typeof ProjectsProjectIdDataRoute
+  '/projects/$projectId/deploy': typeof ProjectsProjectIdDeployRoute
+  '/projects/$projectId/history': typeof ProjectsProjectIdHistoryRoute
+  '/projects/$projectId/preview': typeof ProjectsProjectIdPreviewRoute
+  '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
+  '/sites/$deploymentId/$': typeof SitesDeploymentIdSplatRoute
+  '/projects/': typeof AppProjectsIndexRoute
+  '/projects/$projectId/': typeof ProjectsProjectIdIndexRoute
+  '/api/projects/$projectId/preview-logs': typeof ApiProjectsProjectIdPreviewLogsRoute
+  '/api/runs/$runId/events': typeof ApiRunsRunIdEventsRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/connections': typeof AppConnectionsRoute
+  '/search': typeof AppSearchRoute
+  '/settings': typeof AppSettingsRoute
+  '/templates': typeof AppTemplatesRoute
+  '/api/chat': typeof ApiChatRoute
+  '/': typeof AppIndexRoute
+  '/projects/$projectId/code': typeof ProjectsProjectIdCodeRoute
+  '/projects/$projectId/data': typeof ProjectsProjectIdDataRoute
+  '/projects/$projectId/deploy': typeof ProjectsProjectIdDeployRoute
+  '/projects/$projectId/history': typeof ProjectsProjectIdHistoryRoute
+  '/projects/$projectId/preview': typeof ProjectsProjectIdPreviewRoute
+  '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
+  '/sites/$deploymentId/$': typeof SitesDeploymentIdSplatRoute
+  '/projects': typeof AppProjectsIndexRoute
+  '/projects/$projectId': typeof ProjectsProjectIdIndexRoute
+  '/api/projects/$projectId/preview-logs': typeof ApiProjectsProjectIdPreviewLogsRoute
+  '/api/runs/$runId/events': typeof ApiRunsRunIdEventsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/_app/connections': typeof AppConnectionsRoute
+  '/_app/search': typeof AppSearchRoute
+  '/_app/settings': typeof AppSettingsRoute
+  '/_app/templates': typeof AppTemplatesRoute
+  '/api/chat': typeof ApiChatRoute
+  '/projects/$projectId': typeof ProjectsProjectIdRouteWithChildren
+  '/_app/': typeof AppIndexRoute
+  '/projects/$projectId/code': typeof ProjectsProjectIdCodeRoute
+  '/projects/$projectId/data': typeof ProjectsProjectIdDataRoute
+  '/projects/$projectId/deploy': typeof ProjectsProjectIdDeployRoute
+  '/projects/$projectId/history': typeof ProjectsProjectIdHistoryRoute
+  '/projects/$projectId/preview': typeof ProjectsProjectIdPreviewRoute
+  '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
+  '/sites/$deploymentId/$': typeof SitesDeploymentIdSplatRoute
+  '/_app/projects/': typeof AppProjectsIndexRoute
+  '/projects/$projectId/': typeof ProjectsProjectIdIndexRoute
+  '/api/projects/$projectId/preview-logs': typeof ApiProjectsProjectIdPreviewLogsRoute
+  '/api/runs/$runId/events': typeof ApiRunsRunIdEventsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/connections'
+    | '/search'
+    | '/settings'
+    | '/templates'
+    | '/api/chat'
+    | '/projects/$projectId'
+    | '/projects/$projectId/code'
+    | '/projects/$projectId/data'
+    | '/projects/$projectId/deploy'
+    | '/projects/$projectId/history'
+    | '/projects/$projectId/preview'
+    | '/projects/$projectId/settings'
+    | '/sites/$deploymentId/$'
+    | '/projects/'
+    | '/projects/$projectId/'
+    | '/api/projects/$projectId/preview-logs'
+    | '/api/runs/$runId/events'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/connections'
+    | '/search'
+    | '/settings'
+    | '/templates'
+    | '/api/chat'
+    | '/'
+    | '/projects/$projectId/code'
+    | '/projects/$projectId/data'
+    | '/projects/$projectId/deploy'
+    | '/projects/$projectId/history'
+    | '/projects/$projectId/preview'
+    | '/projects/$projectId/settings'
+    | '/sites/$deploymentId/$'
+    | '/projects'
+    | '/projects/$projectId'
+    | '/api/projects/$projectId/preview-logs'
+    | '/api/runs/$runId/events'
+  id:
+    | '__root__'
+    | '/_app'
+    | '/_app/connections'
+    | '/_app/search'
+    | '/_app/settings'
+    | '/_app/templates'
+    | '/api/chat'
+    | '/projects/$projectId'
+    | '/_app/'
+    | '/projects/$projectId/code'
+    | '/projects/$projectId/data'
+    | '/projects/$projectId/deploy'
+    | '/projects/$projectId/history'
+    | '/projects/$projectId/preview'
+    | '/projects/$projectId/settings'
+    | '/sites/$deploymentId/$'
+    | '/_app/projects/'
+    | '/projects/$projectId/'
+    | '/api/projects/$projectId/preview-logs'
+    | '/api/runs/$runId/events'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  ApiChatRoute: typeof ApiChatRoute
+  ProjectsProjectIdRoute: typeof ProjectsProjectIdRouteWithChildren
+  SitesDeploymentIdSplatRoute: typeof SitesDeploymentIdSplatRoute
+  ApiProjectsProjectIdPreviewLogsRoute: typeof ApiProjectsProjectIdPreviewLogsRoute
+  ApiRunsRunIdEventsRoute: typeof ApiRunsRunIdEventsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/connections': {
+      id: '/_app/connections'
+      path: '/connections'
+      fullPath: '/connections'
+      preLoaderRoute: typeof AppConnectionsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/search': {
+      id: '/_app/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof AppSearchRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/templates': {
+      id: '/_app/templates'
+      path: '/templates'
+      fullPath: '/templates'
+      preLoaderRoute: typeof AppTemplatesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects/$projectId': {
+      id: '/projects/$projectId'
+      path: '/projects/$projectId'
+      fullPath: '/projects/$projectId'
+      preLoaderRoute: typeof ProjectsProjectIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/projects/': {
+      id: '/_app/projects/'
+      path: '/projects'
+      fullPath: '/projects/'
+      preLoaderRoute: typeof AppProjectsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/projects/$projectId/': {
+      id: '/projects/$projectId/'
+      path: '/'
+      fullPath: '/projects/$projectId/'
+      preLoaderRoute: typeof ProjectsProjectIdIndexRouteImport
+      parentRoute: typeof ProjectsProjectIdRoute
+    }
+    '/projects/$projectId/code': {
+      id: '/projects/$projectId/code'
+      path: '/code'
+      fullPath: '/projects/$projectId/code'
+      preLoaderRoute: typeof ProjectsProjectIdCodeRouteImport
+      parentRoute: typeof ProjectsProjectIdRoute
+    }
+    '/projects/$projectId/data': {
+      id: '/projects/$projectId/data'
+      path: '/data'
+      fullPath: '/projects/$projectId/data'
+      preLoaderRoute: typeof ProjectsProjectIdDataRouteImport
+      parentRoute: typeof ProjectsProjectIdRoute
+    }
+    '/projects/$projectId/deploy': {
+      id: '/projects/$projectId/deploy'
+      path: '/deploy'
+      fullPath: '/projects/$projectId/deploy'
+      preLoaderRoute: typeof ProjectsProjectIdDeployRouteImport
+      parentRoute: typeof ProjectsProjectIdRoute
+    }
+    '/projects/$projectId/history': {
+      id: '/projects/$projectId/history'
+      path: '/history'
+      fullPath: '/projects/$projectId/history'
+      preLoaderRoute: typeof ProjectsProjectIdHistoryRouteImport
+      parentRoute: typeof ProjectsProjectIdRoute
+    }
+    '/projects/$projectId/preview': {
+      id: '/projects/$projectId/preview'
+      path: '/preview'
+      fullPath: '/projects/$projectId/preview'
+      preLoaderRoute: typeof ProjectsProjectIdPreviewRouteImport
+      parentRoute: typeof ProjectsProjectIdRoute
+    }
+    '/projects/$projectId/settings': {
+      id: '/projects/$projectId/settings'
+      path: '/settings'
+      fullPath: '/projects/$projectId/settings'
+      preLoaderRoute: typeof ProjectsProjectIdSettingsRouteImport
+      parentRoute: typeof ProjectsProjectIdRoute
+    }
+    '/sites/$deploymentId/$': {
+      id: '/sites/$deploymentId/$'
+      path: '/sites/$deploymentId/$'
+      fullPath: '/sites/$deploymentId/$'
+      preLoaderRoute: typeof SitesDeploymentIdSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/projects/$projectId/preview-logs': {
+      id: '/api/projects/$projectId/preview-logs'
+      path: '/api/projects/$projectId/preview-logs'
+      fullPath: '/api/projects/$projectId/preview-logs'
+      preLoaderRoute: typeof ApiProjectsProjectIdPreviewLogsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/runs/$runId/events': {
+      id: '/api/runs/$runId/events'
+      path: '/api/runs/$runId/events'
+      fullPath: '/api/runs/$runId/events'
+      preLoaderRoute: typeof ApiRunsRunIdEventsRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
+interface AppRouteChildren {
+  AppConnectionsRoute: typeof AppConnectionsRoute
+  AppSearchRoute: typeof AppSearchRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppTemplatesRoute: typeof AppTemplatesRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppProjectsIndexRoute: typeof AppProjectsIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppConnectionsRoute: AppConnectionsRoute,
+  AppSearchRoute: AppSearchRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppTemplatesRoute: AppTemplatesRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppProjectsIndexRoute: AppProjectsIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
+interface ProjectsProjectIdRouteChildren {
+  ProjectsProjectIdCodeRoute: typeof ProjectsProjectIdCodeRoute
+  ProjectsProjectIdDataRoute: typeof ProjectsProjectIdDataRoute
+  ProjectsProjectIdDeployRoute: typeof ProjectsProjectIdDeployRoute
+  ProjectsProjectIdHistoryRoute: typeof ProjectsProjectIdHistoryRoute
+  ProjectsProjectIdPreviewRoute: typeof ProjectsProjectIdPreviewRoute
+  ProjectsProjectIdSettingsRoute: typeof ProjectsProjectIdSettingsRoute
+  ProjectsProjectIdIndexRoute: typeof ProjectsProjectIdIndexRoute
+}
+
+const ProjectsProjectIdRouteChildren: ProjectsProjectIdRouteChildren = {
+  ProjectsProjectIdCodeRoute: ProjectsProjectIdCodeRoute,
+  ProjectsProjectIdDataRoute: ProjectsProjectIdDataRoute,
+  ProjectsProjectIdDeployRoute: ProjectsProjectIdDeployRoute,
+  ProjectsProjectIdHistoryRoute: ProjectsProjectIdHistoryRoute,
+  ProjectsProjectIdPreviewRoute: ProjectsProjectIdPreviewRoute,
+  ProjectsProjectIdSettingsRoute: ProjectsProjectIdSettingsRoute,
+  ProjectsProjectIdIndexRoute: ProjectsProjectIdIndexRoute,
+}
+
+const ProjectsProjectIdRouteWithChildren =
+  ProjectsProjectIdRoute._addFileChildren(ProjectsProjectIdRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  ApiChatRoute: ApiChatRoute,
+  ProjectsProjectIdRoute: ProjectsProjectIdRouteWithChildren,
+  SitesDeploymentIdSplatRoute: SitesDeploymentIdSplatRoute,
+  ApiProjectsProjectIdPreviewLogsRoute: ApiProjectsProjectIdPreviewLogsRoute,
+  ApiRunsRunIdEventsRoute: ApiRunsRunIdEventsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
