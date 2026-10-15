@@ -25,7 +25,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { CodeView } from "@/components/studio/CodeView";
 import { PreviewFrame } from "@/components/studio/PreviewFrame";
+import { QualityReviewPanel } from "@/components/studio/QualityReviewPanel";
 import { MODIFIERS, PRESETS } from "@/lib/presets";
+import { DESIGN_RECIPES, RECIPE_IDS, type RecipeId } from "@/lib/design-quality";
 import { streamComponent, getGeneratorInfo } from "@/lib/component-generation.functions";
 import type { StreamFrame } from "@/lib/component-generation.types";
 import { cn } from "@/lib/utils";
@@ -132,7 +134,7 @@ const WELCOME = `function GeneratedComponent() {
 
 function Studio() {
   const [prompt, setPrompt] = useState("");
-  const [modifiers, setModifiers] = useState<string[]>(["dark", "gradients"]);
+  const [modifiers, setModifiers] = useState<string[]>(["dark"]);
   const [code, setCode] = useState(WELCOME);
   // Raw text as it streams in. The preview keeps rendering the last finished
   // component until a generation completes, since partial JSX cannot compile.
@@ -162,6 +164,7 @@ function Studio() {
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [refineMode, setRefineMode] = useState(false);
+  const [designRecipe, setDesignRecipe] = useState<RecipeId | "auto">("auto");
   const [composeMode, setComposeMode] = useState<"build" | "plan">("build");
   const [planText, setPlanText] = useState("");
   const [lightboxCode, setLightboxCode] = useState<string | null>(null);
@@ -280,7 +283,7 @@ function Studio() {
     let timer: ReturnType<typeof setTimeout>;
 
     const tick = () => {
-      const current = PLACEHOLDER_PROMPTS[placeholderPromptIdx % PLACEHOLDER_PROMPTS.length];
+      const current = PLACEHOLDER_PROMPTS[placeholderPromptIdx % PLACEHOLDER_PROMPTS.length] ?? "";
       if (!deleting) {
         charIdx++;
         setPlaceholderText(current.slice(0, charIdx));
@@ -372,14 +375,12 @@ function Studio() {
       }
     };
 
+    window.addEventListener("keydown", handleKey);
     window.addEventListener("keydown", handleEscape);
     return () => {
       window.removeEventListener("keydown", handleKey);
       window.removeEventListener("keydown", handleEscape);
     };
-
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
   }, []);
 
   const generate = useServerFn(streamComponent);
@@ -403,7 +404,7 @@ function Studio() {
       : 3;
 
   const mutation = useMutation({
-    mutationFn: async (input: { prompt: string; modifiers: string[]; mode: "build" | "plan"; baseUrl?: string; modelName?: string }) => {
+    mutationFn: async (input: { prompt: string; modifiers: string[]; mode: "build" | "plan"; baseUrl?: string; modelName?: string; recipeId?: RecipeId }) => {
       setStreamText("");
       // Show the code pane while tokens arrive; the preview has nothing to show
       // until the component is complete.
@@ -469,7 +470,7 @@ function Studio() {
         {
           role: "assistant" as const,
           content: assistantSummary,
-          code: isPlan ? undefined : result.code,
+          ...(isPlan ? {} : { code: result.code }),
         },
       ];
       setMessages(newMessages);
@@ -488,10 +489,10 @@ function Studio() {
       let historyPrompt = input.prompt;
       if (isPlan) {
         const m = input.prompt.match(/Request:\s*([\s\S]+)$/);
-        historyPrompt = "[Plan] " + (m ? m[1].trim() : "plan");
+        historyPrompt = "[Plan] " + (m?.[1]?.trim() ?? "plan");
       } else if (isRefine) {
         const m = input.prompt.match(/REQUESTED CHANGE:\s*\n([\s\S]+?)\n\nSTRICT RULES:/);
-        historyPrompt = "Refine: " + (m ? m[1].trim() : "refinement");
+        historyPrompt = "Refine: " + (m?.[1]?.trim() ?? "refinement");
       }
 
       const versionEntry = {
@@ -558,8 +559,8 @@ function Studio() {
     }
 
     setMessages((prev) => [...prev, { role: "user", content: displayText }]);
-    const activeModel = MODELS.find((m) => m.key === activeModelKey) ?? MODELS[0];
-    mutation.mutate({ prompt: finalPrompt, modifiers, mode: composeMode, baseUrl: activeModel.baseUrl, modelName: activeModel.model });
+    const activeModel = MODELS.find((m) => m.key === activeModelKey) ?? MODELS[0]!;
+    mutation.mutate({ prompt: finalPrompt, modifiers, mode: composeMode, baseUrl: activeModel.baseUrl, modelName: activeModel.model, ...(designRecipe !== "auto" ? { recipeId: designRecipe } : {}) });
   };
 
   const exportStandaloneHTML = (code: string, prompt: string) => {
@@ -671,7 +672,7 @@ try {
             className="flex items-center gap-1.5 rounded-full border border-border bg-panel px-3 py-1 font-mono text-[11px] text-muted-foreground transition-colors hover:bg-white/5"
           >
             <Sparkles className="size-3 text-primary" />
-            <span>{(MODELS.find((m) => m.key === activeModelKey) ?? MODELS[0]).label}</span>
+            <span>{(MODELS.find((m) => m.key === activeModelKey) ?? MODELS[0]!).label}</span>
             <span
               className={
                 "inline-block size-1.5 rounded-full " +
@@ -1210,35 +1211,14 @@ try {
               {mutation.isPending && (
               <div className="mb-5 flex justify-start">
                 <div className="w-full max-w-[85%] space-y-2.5 text-sm text-white/80">
-                  {(() => {
-                    const len = streamText.length;
-                    const ACTIVITY = [
-                      { at: 0, label: "Analyzing your prompt" },
-                      { at: 150, label: "Reviewing layout and glass styling concepts" },
-                      { at: 350, label: "Planning the component structure" },
-                      { at: 650, label: "Choosing color palette and typography" },
-                      { at: 1000, label: "Writing JSX structure" },
-                      { at: 1600, label: "Applying Tailwind classes" },
-                      { at: 2400, label: "Inserting icons and brand logos" },
-                      { at: 3200, label: "Adding hover and focus states" },
-                      { at: 4200, label: "Self-reviewing output" },
-                      { at: 5200, label: "Refining spacing and typography" },
-                    ];
-                    const visible = ACTIVITY.filter((a) => len >= a.at);
-                    const lastIdx = visible.length - 1;
-                    return (
-                      <div className="text-[13px] leading-relaxed">
-                        {visible.length > 0 && (
-                          <div className="flex items-center gap-2">
-                            <span className="inline-block size-1.5 animate-pulse rounded-full bg-violet-300" />
-                            <span className="text-white/90">
-                              {visible[visible.length - 1].label}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })()}
+                  <div className="flex items-center gap-2 text-[13px] leading-relaxed">
+                    <Loader2 className="size-3.5 animate-spin text-primary" />
+                    <span className="text-white/90">
+                      {streamText.length > 0
+                        ? "Receiving model output · " + streamText.length.toLocaleString() + " chars"
+                        : "Waiting for model response…"}
+                    </span>
+                  </div>
                 </div>
               </div>
             )}
@@ -1407,6 +1387,29 @@ try {
                   : "Generate component"}
               </Button>
               <p className="text-center font-mono text-[10px] text-muted-foreground">⌘ / Ctrl + ↵</p>
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="studio-design-recipe" className="block font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+                Design direction
+              </label>
+              <select
+                id="studio-design-recipe"
+                value={designRecipe}
+                onChange={(event) => setDesignRecipe(event.target.value as RecipeId | "auto")}
+                disabled={mutation.isPending}
+                className="w-full rounded-lg border border-border bg-panel px-3 py-2 text-xs text-foreground outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50"
+              >
+                <option value="auto">Auto · Match my request</option>
+                {RECIPE_IDS.map((id) => (
+                  <option key={id} value={id}>{DESIGN_RECIPES[id].title}</option>
+                ))}
+              </select>
+              <p className="text-[11px] leading-relaxed text-muted-foreground">
+                {designRecipe === "auto"
+                  ? "Automatically choose a layout and component vocabulary from your prompt."
+                  : DESIGN_RECIPES[designRecipe].useFor}
+              </p>
             </div>
 
             <div className="space-y-2.5">
@@ -2388,6 +2391,10 @@ try {
                 </div>
               )}
             </div>
+
+            {tab !== "plan" && code !== WELCOME && (
+              <QualityReviewPanel code={code} isGenerating={mutation.isPending} />
+            )}
 
             <div className="relative min-h-0 flex-1">
               {mutation.isPending && tab === "preview" && (
