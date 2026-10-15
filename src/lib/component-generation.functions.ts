@@ -1,5 +1,6 @@
 import { createServerFn, RawStream } from "@tanstack/react-start";
 import { z } from "zod";
+import { RECIPE_IDS } from "./design-quality";
 
 import {
   SYSTEM_PROMPT,
@@ -14,6 +15,7 @@ const inputSchema = z.object({
   prompt: z.string().trim().min(3).max(50000),
   modifiers: z.array(z.string().max(40)).max(8).default([]),
   mode: z.enum(["build", "plan"]).default("build"),
+  recipeId: z.enum(RECIPE_IDS).optional(),
   baseUrl: z.string().optional(),
   modelName: z.string().optional(),
 });
@@ -33,7 +35,7 @@ export const streamComponent = createServerFn({ method: "POST" })
       data.baseUrl && data.modelName
         ? localProvider({ baseUrl: data.baseUrl, model: data.modelName })
         : resolveProvider();
-    const userPrompt = buildUserPrompt(data.prompt, data.modifiers);
+    const userPrompt = buildUserPrompt(data.prompt, data.modifiers, data.recipeId);
     const systemPrompt = data.mode === "plan" ? PLAN_SYSTEM_PROMPT : SYSTEM_PROMPT;
 
     let stream: ReadableStream<Uint8Array>;
