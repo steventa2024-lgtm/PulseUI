@@ -27,6 +27,7 @@ import { CodeView } from "@/components/studio/CodeView";
 import { PreviewFrame } from "@/components/studio/PreviewFrame";
 import { QualityReviewPanel } from "@/components/studio/QualityReviewPanel";
 import { MODIFIERS, PRESETS } from "@/lib/presets";
+import { DESIGN_RECIPES, RECIPE_IDS, type RecipeId } from "@/lib/design-quality";
 import { streamComponent, getGeneratorInfo } from "@/lib/component-generation.functions";
 import type { StreamFrame } from "@/lib/component-generation.types";
 import { cn } from "@/lib/utils";
@@ -163,6 +164,7 @@ function Studio() {
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [refineMode, setRefineMode] = useState(false);
+  const [designRecipe, setDesignRecipe] = useState<RecipeId | "auto">("auto");
   const [composeMode, setComposeMode] = useState<"build" | "plan">("build");
   const [planText, setPlanText] = useState("");
   const [lightboxCode, setLightboxCode] = useState<string | null>(null);
@@ -402,7 +404,7 @@ function Studio() {
       : 3;
 
   const mutation = useMutation({
-    mutationFn: async (input: { prompt: string; modifiers: string[]; mode: "build" | "plan"; baseUrl?: string; modelName?: string }) => {
+    mutationFn: async (input: { prompt: string; modifiers: string[]; mode: "build" | "plan"; baseUrl?: string; modelName?: string; recipeId?: RecipeId }) => {
       setStreamText("");
       // Show the code pane while tokens arrive; the preview has nothing to show
       // until the component is complete.
@@ -558,7 +560,7 @@ function Studio() {
 
     setMessages((prev) => [...prev, { role: "user", content: displayText }]);
     const activeModel = MODELS.find((m) => m.key === activeModelKey) ?? MODELS[0]!;
-    mutation.mutate({ prompt: finalPrompt, modifiers, mode: composeMode, baseUrl: activeModel.baseUrl, modelName: activeModel.model });
+    mutation.mutate({ prompt: finalPrompt, modifiers, mode: composeMode, baseUrl: activeModel.baseUrl, modelName: activeModel.model, ...(designRecipe !== "auto" ? { recipeId: designRecipe } : {}) });
   };
 
   const exportStandaloneHTML = (code: string, prompt: string) => {
@@ -1385,6 +1387,29 @@ try {
                   : "Generate component"}
               </Button>
               <p className="text-center font-mono text-[10px] text-muted-foreground">⌘ / Ctrl + ↵</p>
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="studio-design-recipe" className="block font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+                Design direction
+              </label>
+              <select
+                id="studio-design-recipe"
+                value={designRecipe}
+                onChange={(event) => setDesignRecipe(event.target.value as RecipeId | "auto")}
+                disabled={mutation.isPending}
+                className="w-full rounded-lg border border-border bg-panel px-3 py-2 text-xs text-foreground outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50"
+              >
+                <option value="auto">Auto · Match my request</option>
+                {RECIPE_IDS.map((id) => (
+                  <option key={id} value={id}>{DESIGN_RECIPES[id].title}</option>
+                ))}
+              </select>
+              <p className="text-[11px] leading-relaxed text-muted-foreground">
+                {designRecipe === "auto"
+                  ? "Automatically choose a layout and component vocabulary from your prompt."
+                  : DESIGN_RECIPES[designRecipe].useFor}
+              </p>
             </div>
 
             <div className="space-y-2.5">
