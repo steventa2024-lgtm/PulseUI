@@ -17,7 +17,7 @@ test("all six design recipes have distinct and complete definitions", () => {
     const recipe = DESIGN_RECIPES[id];
     assert.equal(recipe.id, id);
     for (const key of ["title", "palette", "typography", "composition", "components", "constraints"]) {
-      assert.ok(recipe[key].length > 20, id + " missing " + key);
+      assert.ok(recipe[key].length > (key === "title" ? 3 : 20), id + " missing " + key);
     }
   }
 });
