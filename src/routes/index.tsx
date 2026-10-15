@@ -25,6 +25,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { CodeView } from "@/components/studio/CodeView";
 import { PreviewFrame } from "@/components/studio/PreviewFrame";
+import { QualityReviewPanel } from "@/components/studio/QualityReviewPanel";
 import { MODIFIERS, PRESETS } from "@/lib/presets";
 import { streamComponent, getGeneratorInfo } from "@/lib/component-generation.functions";
 import type { StreamFrame } from "@/lib/component-generation.types";
@@ -132,7 +133,7 @@ const WELCOME = `function GeneratedComponent() {
 
 function Studio() {
   const [prompt, setPrompt] = useState("");
-  const [modifiers, setModifiers] = useState<string[]>(["dark", "gradients"]);
+  const [modifiers, setModifiers] = useState<string[]>(["dark"]);
   const [code, setCode] = useState(WELCOME);
   // Raw text as it streams in. The preview keeps rendering the last finished
   // component until a generation completes, since partial JSX cannot compile.
@@ -372,14 +373,12 @@ function Studio() {
       }
     };
 
+    window.addEventListener("keydown", handleKey);
     window.addEventListener("keydown", handleEscape);
     return () => {
       window.removeEventListener("keydown", handleKey);
       window.removeEventListener("keydown", handleEscape);
     };
-
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
   }, []);
 
   const generate = useServerFn(streamComponent);
@@ -2388,6 +2387,10 @@ try {
                 </div>
               )}
             </div>
+
+            {tab !== "plan" && code !== WELCOME && (
+              <QualityReviewPanel code={code} isGenerating={mutation.isPending} />
+            )}
 
             <div className="relative min-h-0 flex-1">
               {mutation.isPending && tab === "preview" && (
