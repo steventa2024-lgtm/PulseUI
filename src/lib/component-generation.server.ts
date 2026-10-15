@@ -3,7 +3,7 @@
  * Never imported by client code directly (see *.functions.ts wrapper).
  */
 import type { StreamFrame } from "./component-generation.types";
-import { buildDesignAndUxBrief } from "./design-quality";
+import { buildDesignAndUxBrief, type RecipeId } from "./design-quality";
 
 const AMBITION_BLOCK = [
   "",
@@ -77,7 +77,7 @@ export const STYLE_MODIFIER_HINTS: Record<string, string> = {
   animated: "Add tasteful transitions: hover scale, color transitions, subtle motion utilities.",
 };
 
-export function buildUserPrompt(prompt: string, modifiers: string[]): string {
+export function buildUserPrompt(prompt: string, modifiers: string[], recipeId?: RecipeId): string {
   const hints = modifiers
     .map((modifier) => STYLE_MODIFIER_HINTS[modifier])
     .filter(Boolean)
@@ -87,7 +87,7 @@ export function buildUserPrompt(prompt: string, modifiers: string[]): string {
   return [
     "Component request: " + prompt,
     hints ? "User-selected style modifiers:\n" + hints : "",
-    isInternalRefinement ? "" : buildDesignAndUxBrief(prompt, modifiers),
+    isInternalRefinement ? "" : buildDesignAndUxBrief(prompt, modifiers, recipeId),
     "Respond with the component source only.",
   ].filter(Boolean).join("\n\n");
 }
