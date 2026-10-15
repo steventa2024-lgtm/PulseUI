@@ -56,7 +56,7 @@ test("design brief includes modifiers and anti-fake UX requirements", () => {
   assert.match(result, /light/);
   assert.match(result, /working React state/);
   assert.match(result, /Search\/filter\/tabs/);
-  assert.match(result, /explicit user styling choices/);
+  assert.match(result, /explicit user colors/);
 });
 
 test("source review ignores empty code", () => {
