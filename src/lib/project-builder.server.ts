@@ -8,7 +8,7 @@ import path from "path";
 import { planProject, type ProjectPlan } from "./plan.server";
 import { generateFile } from "./generate-file.server";
 
-const OUTPUT_ROOT = path.join(process.env.HOME || "/tmp", "ai_codespace", "generated");
+const OUTPUT_ROOT = path.join(process.env["HOME"] || "/tmp", "ai_codespace", "generated");
 
 export type BuildResult = {
   projectDir: string;
