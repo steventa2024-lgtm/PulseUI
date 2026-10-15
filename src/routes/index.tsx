@@ -281,7 +281,7 @@ function Studio() {
     let timer: ReturnType<typeof setTimeout>;
 
     const tick = () => {
-      const current = PLACEHOLDER_PROMPTS[placeholderPromptIdx % PLACEHOLDER_PROMPTS.length];
+      const current = PLACEHOLDER_PROMPTS[placeholderPromptIdx % PLACEHOLDER_PROMPTS.length] ?? "";
       if (!deleting) {
         charIdx++;
         setPlaceholderText(current.slice(0, charIdx));
@@ -468,7 +468,7 @@ function Studio() {
         {
           role: "assistant" as const,
           content: assistantSummary,
-          code: isPlan ? undefined : result.code,
+          ...(isPlan ? {} : { code: result.code }),
         },
       ];
       setMessages(newMessages);
@@ -487,10 +487,10 @@ function Studio() {
       let historyPrompt = input.prompt;
       if (isPlan) {
         const m = input.prompt.match(/Request:\s*([\s\S]+)$/);
-        historyPrompt = "[Plan] " + (m ? m[1].trim() : "plan");
+        historyPrompt = "[Plan] " + (m?.[1]?.trim() ?? "plan");
       } else if (isRefine) {
         const m = input.prompt.match(/REQUESTED CHANGE:\s*\n([\s\S]+?)\n\nSTRICT RULES:/);
-        historyPrompt = "Refine: " + (m ? m[1].trim() : "refinement");
+        historyPrompt = "Refine: " + (m?.[1]?.trim() ?? "refinement");
       }
 
       const versionEntry = {
@@ -557,7 +557,7 @@ function Studio() {
     }
 
     setMessages((prev) => [...prev, { role: "user", content: displayText }]);
-    const activeModel = MODELS.find((m) => m.key === activeModelKey) ?? MODELS[0];
+    const activeModel = MODELS.find((m) => m.key === activeModelKey) ?? MODELS[0]!;
     mutation.mutate({ prompt: finalPrompt, modifiers, mode: composeMode, baseUrl: activeModel.baseUrl, modelName: activeModel.model });
   };
 
@@ -670,7 +670,7 @@ try {
             className="flex items-center gap-1.5 rounded-full border border-border bg-panel px-3 py-1 font-mono text-[11px] text-muted-foreground transition-colors hover:bg-white/5"
           >
             <Sparkles className="size-3 text-primary" />
-            <span>{(MODELS.find((m) => m.key === activeModelKey) ?? MODELS[0]).label}</span>
+            <span>{(MODELS.find((m) => m.key === activeModelKey) ?? MODELS[0]!).label}</span>
             <span
               className={
                 "inline-block size-1.5 rounded-full " +
@@ -1209,35 +1209,14 @@ try {
               {mutation.isPending && (
               <div className="mb-5 flex justify-start">
                 <div className="w-full max-w-[85%] space-y-2.5 text-sm text-white/80">
-                  {(() => {
-                    const len = streamText.length;
-                    const ACTIVITY = [
-                      { at: 0, label: "Analyzing your prompt" },
-                      { at: 150, label: "Reviewing layout and glass styling concepts" },
-                      { at: 350, label: "Planning the component structure" },
-                      { at: 650, label: "Choosing color palette and typography" },
-                      { at: 1000, label: "Writing JSX structure" },
-                      { at: 1600, label: "Applying Tailwind classes" },
-                      { at: 2400, label: "Inserting icons and brand logos" },
-                      { at: 3200, label: "Adding hover and focus states" },
-                      { at: 4200, label: "Self-reviewing output" },
-                      { at: 5200, label: "Refining spacing and typography" },
-                    ];
-                    const visible = ACTIVITY.filter((a) => len >= a.at);
-                    const lastIdx = visible.length - 1;
-                    return (
-                      <div className="text-[13px] leading-relaxed">
-                        {visible.length > 0 && (
-                          <div className="flex items-center gap-2">
-                            <span className="inline-block size-1.5 animate-pulse rounded-full bg-violet-300" />
-                            <span className="text-white/90">
-                              {visible[visible.length - 1].label}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })()}
+                  <div className="flex items-center gap-2 text-[13px] leading-relaxed">
+                    <Loader2 className="size-3.5 animate-spin text-primary" />
+                    <span className="text-white/90">
+                      {streamText.length > 0
+                        ? "Receiving model output · " + streamText.length.toLocaleString() + " chars"
+                        : "Waiting for model response…"}
+                    </span>
+                  </div>
                 </div>
               </div>
             )}
