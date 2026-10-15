@@ -181,8 +181,8 @@ export function inferInteractionContracts(prompt: string): InteractionContract[]
 }
 
 /** Inject a compact contract for the model without changing provider APIs. */
-export function buildDesignAndUxBrief(prompt: string, modifiers: readonly string[]): string {
-  const recipe = selectDesignRecipe(prompt);
+export function buildDesignAndUxBrief(prompt: string, modifiers: readonly string[], selectedRecipe?: RecipeId): string {
+  const recipe = selectedRecipe ? DESIGN_RECIPES[selectedRecipe] : selectDesignRecipe(prompt);
   const contracts = inferInteractionContracts(prompt);
   const overrides = modifiers.length ? modifiers.join(", ") : "none";
   return [
